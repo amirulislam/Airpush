@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.2.1/libexec/bin/yarn.js init
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/ionelcrisu/Documents/phantomjs/bin
+
+Yarn version: 
+  1.2.1
+
+Node version: 
+  7.7.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/usr/local/Cellar/yarn/1.2.1/libexec/lib/cli.js:120971:13)
+      at emitNone (events.js:86:13)
+      at Interface.emit (events.js:188:7)
+      at Interface._ttyWrite (readline.js:725:16)
+      at ReadStream.onkeypress (readline.js:117:10)
+      at emitTwo (events.js:106:13)
+      at ReadStream.emit (events.js:194:7)
+      at emitKeys (internal/readline.js:403:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:972:36)
