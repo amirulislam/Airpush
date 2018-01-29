@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var debug = (0, _debug2.default)('loop:Authorization');
+var debug = (0, _debug2.default)('airpush:Authorization');
 
 var Authorization = function () {
 	function Authorization() {

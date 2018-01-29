@@ -1,5 +1,7 @@
 import React, { Component } from 'React';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 export default (WrappedComponent) => {
 
@@ -14,16 +16,29 @@ export default (WrappedComponent) => {
         }
 
         render() {
+            if (this.props.authenticated === false && !this.props.location.pathname.startsWith('/app/signin')) {
+                return(
+                    <Redirect to={{ pathname: `/app/signin${ this.props.location.search }` }} />
+                )
+            }
+			if (this.props.authenticated && this.props.location.pathname.startsWith('/app/signin')) {
+				return(
+					<Redirect to={{ pathname: `/app/welcome${ this.props.location.search }` }}/>
+				);
+            }     
             return(
                 <div>
-                    content 111
+                    <WrappedComponent />
                 </div>
             )
         }
     }
 
     RequireAuth.propTypes = {
-        authenticated: PropTypes.bool || PropTypes.object
+        authenticated: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.object
+        ]),
     }
 
     const mapStateToProps = ({ authenticated }, ownProps) => {
@@ -32,5 +47,5 @@ export default (WrappedComponent) => {
         }
     }
 
-    return RequireAuth;
+    return connect(mapStateToProps)(RequireAuth);
 }

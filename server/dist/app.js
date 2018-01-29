@@ -21,13 +21,29 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
+var _mongoose = require('mongoose');
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
 var _api = require('./routes/api');
 
 var _api2 = _interopRequireDefault(_api);
 
+var _debug = require('debug');
+
+var _debug2 = _interopRequireDefault(_debug);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
+
+var debug = (0, _debug2.default)('airpush:app');
+
+_mongoose2.default.connect('mongodb://localhost:27017/' + 'airpush').then(function () {
+	debug('mongodb connected');
+}).catch(function (err) {
+	debug('Could not connect to mongo DB! - start mongo daemon');
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -44,11 +60,11 @@ app.use('/app', function (req, res, next) {
 	res.render('app');
 });
 
+app.use('/api', _api2.default);
+
 app.use('/', function (req, res, next) {
 	res.render('index');
 });
-
-app.use('/api', _api2.default);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

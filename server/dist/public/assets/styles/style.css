@@ -1,4 +1,191 @@
-.body {
-  background: #000FFF; }
+.hr-line {
+  height: 1px;
+  background: rgba(204, 204, 204, 0.47);
+  clear: both; }
+
+.info-text-center {
+  text-align: center;
+  font-style: italic;
+  color: #989898; }
+
+.space-top-small {
+  margin-top: 10px; }
+
+.space-bottom-small {
+  margin-bottom: 10px; }
+
+.space-bottom-medium {
+  margin-bottom: 20px; }
+
+.space-bottom-large {
+  margin-bottom: 50px; }
+
+.space-top-medium {
+  margin-top: 20px; }
+
+.space-top-large {
+  margin-top: 50px; }
+
+.pull-left {
+  float: left; }
+
+.pull-right {
+  float: right; }
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0; }
+
+.clearfix {
+  display: inline-block; }
+
+/* start commented backslash hack \*/
+* html .clearfix {
+  height: 1%; }
+
+.clearfix {
+  display: block; }
+
+/* close commented backslash hack */
+.modal-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.8); }
+  .modal-overlay .generic-modal {
+    width: 380px;
+    background: #FFFFFF;
+    position: relative;
+    margin: auto;
+    margin-top: 10%;
+    border-radius: 2px; }
+    .modal-overlay .generic-modal .modal-header {
+      padding: 5px;
+      text-align: center;
+      position: relative; }
+      .modal-overlay .generic-modal .modal-header .title {
+        padding: 7px;
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #44484b;
+        font-family: 'Open Sans',sans-serif;
+        text-align: center;
+        width: 100%; }
+      .modal-overlay .generic-modal .modal-header .underline {
+        height: 1px;
+        background: #e6e6e6; }
+    .modal-overlay .generic-modal .body {
+      padding: 20px; }
+      .modal-overlay .generic-modal .body .content {
+        margin-bottom: 25px; }
+        .modal-overlay .generic-modal .body .content .error {
+          color: red;
+          text-align: center;
+          margin: 0; }
+      .modal-overlay .generic-modal .body .full-width {
+        width: 100% !important; }
+
+.sign-in-ui {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  z-index: 10000;
+  background-image: url("/assets/img/app-wallpaper-incentive.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover; }
+
+.login-base-button:link {
+  padding: 9px 20px;
+  font-size: 16px;
+  background: #FFF;
+  text-decoration: none;
+  outline: 0;
+  display: block;
+  border-radius: 2px;
+  width: 100%;
+  text-align: center;
+  background: #3B5998;
+  color: #FFF;
+  text-decoration: none !important;
+  font-family: 'Open Sans',sans-serif;
+  font-weight: 300; }
+
+.login-space-bottom {
+  margin-bottom: 15px; }
+
+.facebook-login:link {
+  background: #3B5998; }
+
+.facebook-login:visited {
+  background: #3B5998; }
+
+.facebook-login:hover {
+  background: #4a67a2; }
+
+.facebook-login:active {
+  background: #3B5998; }
+
+.twitter-login:link {
+  background: #4AB3F4; }
+
+.twitter-login:visited {
+  background: #4AB3F4; }
+
+.twitter-login:hover {
+  background: #58bbf9; }
+
+.twitter-login:active {
+  background: #4AB3F4; }
+
+/* google sign in button */
+#g-signin2 {
+  width: 100%; }
+
+#g-signin2 > div {
+  width: 100% !important;
+  height: 43px !important;
+  background: #db4437; }
+
+#g-signin2 > div .abcRioButtonContentWrapper {
+  position: relative; }
+
+#g-signin2 > div .abcRioButtonContentWrapper .abcRioButtonIcon {
+  position: absolute;
+  left: 0px;
+  top: 0px; }
+
+#g-signin2 > div .abcRioButtonContentWrapper > span {
+  margin-top: 4px;
+  display: block !important; }
+
+#g-signin2 > div .abcRioButtonContentWrapper span span {
+  display: none; }
+
+#g-signin2 > div .abcRioButtonContentWrapper > span:before {
+  content: "Sign in with Google";
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 300; }
+
+#g-signin2 > div .abcRioButtonContentWrapper .abcRioButtonIcon {
+  display: none; }
+
+#g-signin2 span {
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  font-size: 16px;
+  color: #FFFFFF !important; }
 
 /*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdHlsZXMvc3R5bGUuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

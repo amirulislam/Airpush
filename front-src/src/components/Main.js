@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import SingIn from './SignIn';
 
-class Main extends Comment {
+class Main extends Component {
     render() {
         return(
-            <p>Main component</p>
+            <Switch>
+                <Route path="/app/signin*" component={ SingIn } />
+                <Route path="/app/room" render={() => <p>room</p>} />
+                <Route render={() => <p>Not found</p>} />
+            </Switch>
         );
     }
 }

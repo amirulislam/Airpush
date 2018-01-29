@@ -2,7 +2,7 @@
 'use strict';
 
 import debugPck from 'debug';
-const debug = debugPck('loop:Authorization');
+const debug = debugPck('airpush:Authorization');
 import _ from 'lodash';
 import safe from 'undefsafe';
 

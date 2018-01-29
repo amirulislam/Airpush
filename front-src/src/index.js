@@ -19,8 +19,9 @@ const muiTheme = getMuiTheme({
 });
 
 import rootReducer from './reducers';
+import StorageUtils from '../src/utils/Storage';
 
-export const store = createStore(rootReducer, {}, compose(
+export const store = createStore(rootReducer, StorageUtils.getStorageData() || {}, compose(
 	applyMiddleware(ReduxThunk)
 ));
 

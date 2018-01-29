@@ -5,10 +5,20 @@ import express from 'express';
 import path from 'path';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
 
 import apiV1 from './routes/api';
 
 const app = express();
+
+import debugPck from 'debug';
+const debug = debugPck('airpush:app');
+
+mongoose.connect('mongodb://localhost:27017/' + 'airpush').then(() => {
+	debug('mongodb connected');
+}).catch(err => {
+	debug('Could not connect to mongo DB! - start mongo daemon');
+});
 
 
 // uncomment after placing your favicon in /public
@@ -26,11 +36,12 @@ app.use('/app', (req, res, next) => {
 	res.render('app');
 });
 
+app.use('/api', apiV1);
+
 app.use('/', (req, res, next) => {
 	res.render('index');
 });
 
-app.use('/api', apiV1);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
