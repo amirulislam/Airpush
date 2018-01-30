@@ -80,9 +80,9 @@ html, body {
 
 .callout-button:link {
 	text-decoration: none;
-	padding: 10px 25px;
+	padding: 15px 25px;
 	border-style: solid; border-width: 2px; border-color: #606fc3;
-	border-radius: 20px;
+	border-radius: 6px;
     color: #fff;
     background: #606fc3;
     font-weight: 300;	

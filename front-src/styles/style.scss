@@ -1,3 +1,151 @@
+$topbarHeight: 50;
+$topbarBackground: '#eeeeee';
+$topbarBorderColor: '#dbdbdb';
+$chatBottomBarBackground: '#eeeeee';
+$chatBottomBarBorderColor: '#dbdbdb';
+$chatBottomBarHeight: 65;
+
 @import 'utils.scss';
 @import 'modal.scss';
 @import 'buttons.scss';
+
+html, body, #airpush-ui {
+    height: 100%;
+    overflow: hidden;
+}
+#airpush-ui {
+    position: relative;
+    .airpush-main {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+
+        /* main menu */
+        .main-menu-ui {
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            background: #0f1b26;
+            width: 250px; height: 100%;
+            .close-menu-button {
+                position: absolute;
+                top: 5px; right: 5px;
+            }
+            .admin-logo {
+                text-align: center;
+                margin: 20px 0px;
+                margin-top: 50px;
+                letter-spacing: 2px;
+                img {
+                    display: inline-block;
+                    width: 35px;
+                    margin-right: 10px;
+                }
+                .logo-text {
+                    color: #FFFFFF;
+                    font-weight: bold;
+                    font-size: 20px;
+                    display: inline-block;
+                    vertical-align: top;
+                }
+            }
+            .menu-list {
+                list-style-type: none;
+                padding: 20px 10px;
+                padding-left: 45px;
+                li {
+                    display: block;
+                    margin: 8px 0px;
+                    .menu-link:link {
+                        color: #FFFFFF;
+                        text-decoration: none;
+                        font-weight: 300;
+                        font-size: 15px;
+                        position: relative;
+                        width: 100%;
+                        .menu-active {
+                            position: absolute; left: -22px; top: 5px;
+                            width: 10px; height: 10px; border-radius: 5px;
+                            background: #fc363b;
+                            display: block;
+                        }                         
+                    }
+                    .menu-link:visited {
+                        color: #FFFFFF;
+                    }
+                    .menu-link:hover {
+                        color: #606fc3;
+                    }
+                    .menu-link:active {
+                        color: #FFFFFF;
+                    }
+                    .menu-active-color {
+                        color: #606fc3 !important;
+                    }                       
+                }
+            }
+        }
+
+        .top-bar-main {
+            z-index: 998; position: fixed; left: 0; top: 0;
+            background: #{ $topbarBackground };
+            width: 100%; 
+            height: #{($topbarHeight) + 'px'};
+            border-bottom-style: solid; border-width: 1px; border-color: #{$topbarBorderColor};
+            .open-menu-button {
+
+            }     
+        }
+
+        /* generic app section */
+        .app-section {
+            height: 100%;
+            background-image: url("/assets/img/seigaiha.png");
+            background-repeat: repeat;
+            padding-top: #{($topbarHeight) + 'px'};
+            position: relative;
+
+            .section-content-ui {
+                height: 100%; 
+                overflow: hidden;
+                position: relative;
+                .section-content {
+                    position: relative;
+                    padding: 10px; 
+                    overflow-y: auto; overflow-x: hidden;                   
+                }
+                
+                /* chat section */
+                &.chat-section {
+                    .bottom-chat-bar {
+                        position: absolute;
+                        width: 100%; height: #{ ($chatBottomBarHeight) + 'px' }; background: #{ $chatBottomBarBackground };
+                        border-top-style: solid; border-width: 1px; border-color: #{$chatBottomBarBorderColor};
+                        left: 0; bottom: 0px;
+                        padding: 10px;
+                        .chat-room-input {
+                            height: 38px;
+                            outline: none;
+                            padding: 3px;
+                            border-radius: 4px;
+                            border: none;                            
+                            width: calc(100% - 100px);
+                            padding-left: 10px;
+                            color: #7b7b7b;
+                        }
+                        .chat-main-controls {
+                            
+                        }
+                    }   
+                }                
+            }
+        }
+    }
+}
+
+.user-avatar {
+    margin-top: 6px;
+    span {
+        text-transform: none !important;
+    }
+}

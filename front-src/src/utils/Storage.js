@@ -68,14 +68,14 @@ class StorageUtils {
 
 	static getToken() {		
 		const user = StorageUtils.getUser();
-		return user.token || null;
+		return (user && user.token) ? user.token : null ;
 	}
 
 	static removeUser() {
 		if (!StorageUtils.isStorageSupported()) {
 			return;
 		}		
-		StorageUtils.setUser(false);
+		StorageUtils.setUser(null);
 	}
 
 	static removeStorageData() {
