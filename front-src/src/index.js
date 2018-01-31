@@ -7,11 +7,11 @@ import { BrowserRouter, Route, browserHistory } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { blueA200 } from 'material-ui/styles/colors';
+import { deepPurple900 } from 'material-ui/styles/colors';
 
-const muiTheme = getMuiTheme({
+export const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: blueA200
+    primary1Color: deepPurple900
   },
   appBar: {
     height: 50,
@@ -30,7 +30,7 @@ import Main from './components/Main';
 
 
 ReactDom.render(
-	<MuiThemeProvider>
+	<MuiThemeProvider muiTheme={muiTheme}>
 		<Provider store={store}>
 			<BrowserRouter history={ browserHistory }>
 				<Route path="/app" component={ RequireAuth(Main) } />

@@ -22,7 +22,9 @@ var _cluster2 = _interopRequireDefault(_cluster);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var debug = (0, _debug2.default)('loop:server');
+// import sticky from 'sticky-session';
+
+var debug = (0, _debug2.default)('airpush:server');
 var numCPUs = _os2.default.cpus().length;
 
 /**

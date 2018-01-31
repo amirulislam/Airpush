@@ -100,8 +100,6 @@ html, body, #airpush-ui {
         /* generic app section */
         .app-section {
             height: 100%;
-            background-image: url("/assets/img/seigaiha.png");
-            background-repeat: repeat;
             padding-top: #{($topbarHeight) + 'px'};
             position: relative;
 
@@ -109,6 +107,8 @@ html, body, #airpush-ui {
                 height: 100%; 
                 overflow: hidden;
                 position: relative;
+                color: #797979;
+                
                 .section-content {
                     position: relative;
                     padding: 10px; 
@@ -117,6 +117,10 @@ html, body, #airpush-ui {
                 
                 /* chat section */
                 &.chat-section {
+                    .create-chatroom {
+                        text-align: center;
+                        margin-top: 10%;
+                    }                   
                     .bottom-chat-bar {
                         position: absolute;
                         width: 100%; height: #{ ($chatBottomBarHeight) + 'px' }; background: #{ $chatBottomBarBackground };
@@ -133,10 +137,11 @@ html, body, #airpush-ui {
                             padding-left: 10px;
                             color: #7b7b7b;
                         }
-                        .chat-main-controls {
-                            
-                        }
-                    }   
+                    }  
+                }
+                &.chat-room-background {
+                    background-image: url("/assets/img/seigaiha.png");
+                    background-repeat: repeat; 
                 }                
             }
         }

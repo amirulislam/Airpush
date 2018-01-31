@@ -4,8 +4,9 @@ import http from 'http';
 import os from 'os';
 import cluster from 'cluster';
 import debugPck from 'debug';
+// import sticky from 'sticky-session';
 
-const debug = debugPck('loop:server');
+const debug = debugPck('airpush:server');
 const numCPUs = os.cpus().length;
 
 

@@ -45,7 +45,6 @@ var SignInController = function () {
     _createClass(SignInController, null, [{
         key: 'logUser',
         value: function logUser(req, res, next) {
-            debug(req.body);
             _GoogleService2.default.verify(req.body.accessToken, req.body.email).then(function (result) {
                 _User2.default.findOneAndUpdate({
                     email: result.email
@@ -53,7 +52,6 @@ var SignInController = function () {
                     new: true, upsert: true
                 }).then(function (user) {
                     if (!_lodash2.default.isNil(user)) {
-                        //user.token = token: JWT.createUserToken(user._id);
                         SignInController.response(res, {
                             user: user, token: _JWT2.default.createUserToken(user._id)
                         });
@@ -61,7 +59,7 @@ var SignInController = function () {
                 });
             }).catch(function (e) {
                 return res.status(403).json({
-                    title: 'Not authorizied to see this',
+                    message: 'Not authorizied to see this',
                     status: 403
                 });
             });

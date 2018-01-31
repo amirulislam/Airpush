@@ -271,20 +271,22 @@ html, body, #airpush-ui {
       border-color: #dbdbdb; }
     #airpush-ui .airpush-main .app-section {
       height: 100%;
-      background-image: url("/assets/img/seigaiha.png");
-      background-repeat: repeat;
       padding-top: 50px;
       position: relative; }
       #airpush-ui .airpush-main .app-section .section-content-ui {
         height: 100%;
         overflow: hidden;
         position: relative;
+        color: #797979;
         /* chat section */ }
         #airpush-ui .airpush-main .app-section .section-content-ui .section-content {
           position: relative;
           padding: 10px;
           overflow-y: auto;
           overflow-x: hidden; }
+        #airpush-ui .airpush-main .app-section .section-content-ui.chat-section .create-chatroom {
+          text-align: center;
+          margin-top: 10%; }
         #airpush-ui .airpush-main .app-section .section-content-ui.chat-section .bottom-chat-bar {
           position: absolute;
           width: 100%;
@@ -305,6 +307,9 @@ html, body, #airpush-ui {
             width: calc(100% - 100px);
             padding-left: 10px;
             color: #7b7b7b; }
+        #airpush-ui .airpush-main .app-section .section-content-ui.chat-room-background {
+          background-image: url("/assets/img/seigaiha.png");
+          background-repeat: repeat; }
 
 .user-avatar {
   margin-top: 6px; }

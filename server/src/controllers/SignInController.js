@@ -11,7 +11,6 @@ import JWT from '../utils/JWT';
 class SignInController {
 
     static logUser(req, res, next) {
-        debug(req.body);
         GoogleService.verify(req.body.accessToken, req.body.email)
         .then(result => {
             User.findOneAndUpdate({
@@ -21,7 +20,6 @@ class SignInController {
             })
             .then(user => {
                 if (!_.isNil(user)) {
-                    //user.token = token: JWT.createUserToken(user._id);
                     SignInController.response(res, {
                         user, token: JWT.createUserToken(user._id)
                     });
@@ -30,7 +28,7 @@ class SignInController {
         })
         .catch(e => {
 			return res.status(403).json({
-				title: 'Not authorizied to see this',
+				message: 'Not authorizied to see this',
 				status: 403
 			});	
         });

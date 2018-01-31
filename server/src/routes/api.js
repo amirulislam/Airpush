@@ -4,8 +4,9 @@
 import express from 'express';
 const router = express.Router({ mergeParams: true });
 
-import Authorization from '../controllers/authorization';
+import AuthorizationController from '../controllers/AuthorizationController';
 import SignInController from '../controllers/SignInController';
+import RoomsController from '../controllers/RoomsController';
 
 router.post('/signin', SignInController.logUser);
 
@@ -15,13 +16,17 @@ router.get('/', (req, res, next) => {
   	});
 });
 
+router.use(AuthorizationController.validateSignature);
+
+router.post('/chat-room', RoomsController.createRoom);
+
+
 router.use('*', (req, res, next) => {
 	res.json({
 		data: '404 endpoint'
 	});
 });
 
-router.use(Authorization.validateSignature);
 
 export default router;
 

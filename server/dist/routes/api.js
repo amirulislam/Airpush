@@ -9,13 +9,17 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
-var _authorization = require('../controllers/authorization');
+var _AuthorizationController = require('../controllers/AuthorizationController');
 
-var _authorization2 = _interopRequireDefault(_authorization);
+var _AuthorizationController2 = _interopRequireDefault(_AuthorizationController);
 
 var _SignInController = require('../controllers/SignInController');
 
 var _SignInController2 = _interopRequireDefault(_SignInController);
+
+var _RoomsController = require('../controllers/RoomsController');
+
+var _RoomsController2 = _interopRequireDefault(_RoomsController);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29,12 +33,14 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.use(_AuthorizationController2.default.validateSignature);
+
+router.post('/chat-room', _RoomsController2.default.createRoom);
+
 router.use('*', function (req, res, next) {
   res.json({
     data: '404 endpoint'
   });
 });
-
-router.use(_authorization2.default.validateSignature);
 
 exports.default = router;

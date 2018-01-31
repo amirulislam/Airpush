@@ -6,7 +6,7 @@ import TokenUtils from '../utils/TokenUtils';
 TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
-import { AUTHENTICATED, MENU_OPEN, LOG_OUT
+import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM
  } from './Types';
 
 // retrive apps data
@@ -58,4 +58,30 @@ export const logOut = () => {
 		})
 		location.reload();	
 	};	
+}
+
+// create chat room
+export const createChatRoom = (onSuccess, onError) => {
+	return (dispatch, getState) => {
+		const { authenticated } = getState();
+		if (!_.isNil(safe(authenticated, '_id'))) {
+			axios.post(`${API_ROOT}/chat-room`, { userId: authenticated._id })
+			.then(({ data }) => {
+				console.log('CREATE RESULT', data)
+				if (onSuccess) {
+					onSuccess();
+				}
+				dispatch({
+					type: CREATE_CHAT_ROOM,
+					payload: data.data	
+				})
+			})
+			.catch(err => {
+				console.log('errrrr', err.message);
+				if (safe(err, 'err.message') && _.isFunction(onError)) {
+					onError(err.message);
+				}
+			});
+		}
+	}
 }
