@@ -13,9 +13,11 @@ var SOCKET_EVENTS = exports.SOCKET_EVENTS = {
     CREATE_ROOM: 'CREATE_ROOM',
     ROOM_CREATED: 'ROOM_CREATED',
     JOIN_ROOM: 'JOIN_ROOM',
+    LEAVE_ROOM: 'LEAVE_ROOM',
     DISCONNECT: 'disconnect',
     CONNECT: 'connect',
     MESSAGE: 'MESSAGE',
     SIGNAL: 'SIGNAL',
+    USER_LEFT: 'USER_LEFT',
     ERROR: 'error'
 };

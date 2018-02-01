@@ -119,10 +119,14 @@ html, body, #airpush-ui {
                     
                     /* chat section */
                     &.chat-section {
+                        position: relative;
                         .create-chatroom {
                             text-align: center;
                             margin-top: 10%;
-                        }                   
+                        }
+                        .chat-left-controlls {
+                            position: absolute; left: 10px; top: 10px;
+                        }                
                         .bottom-chat-bar {
                             position: absolute;
                             width: 100%; height: #{ ($chatBottomBarHeight) + 'px' }; background: #{ $chatBottomBarBackground };
@@ -139,7 +143,7 @@ html, body, #airpush-ui {
                                 padding-left: 10px;
                                 color: #7b7b7b;
                             }
-                        }  
+                        }
                     }
                     &.chat-room-background {
                         background-image: url("/assets/img/seigaiha.png");

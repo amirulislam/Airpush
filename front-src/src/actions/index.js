@@ -10,6 +10,8 @@ const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION } from './Types';
 
+import { SOCKET_EVENTS } from '../config';
+
 import { store } from '../index';
 
 
@@ -80,28 +82,39 @@ export const createChatGroup = () => {
 	}
 }
 
+// room joined event
 export const roomJoined = roomId => {
 	console.log('Dispatch room 1')
 	store.dispatch({
 		type: JOINED_ROOM,
 		payload: roomId	
 	});
-	store.dispatch({
-		type: OPEN_NOTIFICATION,
-		payload: {
-			message: 'Room joined!'
-		}
-	});	
+	sendNotification('Room joined!');
 }
 
+// room leaved event (current user)
 export const roomLeaved = roomId => {
 	return (dispatch, getState) => {
+		sendNotification('You have left the chatroom!');
 		dispatch({
 			type: LEAVED_ROOM,
 			payload: false
-		})
-		// SocketService.getInstance().createRoom();
+		});
 	}
+}
+
+// leave room now
+export const leaveRoom = () => {
+	console.log('Leave room');
+	SocketService.getInstance().send({}, SOCKET_EVENTS.LEAVE_ROOM);
+	return roomLeaved();
+}
+
+export const sendNotification = (message, timeout) => {
+	store.dispatch({
+		type: OPEN_NOTIFICATION,
+		payload: { message, timeout }
+	});	
 }
 
 

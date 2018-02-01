@@ -28,9 +28,7 @@ class SocketManager {
         this._io.on('connection', (socket) => {
             console.log('ON CONNECTION ', socket.user);
 
-            socket.on('greet', (data) => {
-                console.log('GREET', data);
-            })
+            this.handleLeaveRoom(socket);
 
             this.handleCreateRoom(socket);
 
@@ -58,6 +56,16 @@ class SocketManager {
         socket.on(SOCKET_EVENTS.DISCONNECT, s => {
             // inform others in the room
             console.log('SOcket server disconnect');
+        })
+    }
+
+    handleLeaveRoom(socket) {
+        socket.on(SOCKET_EVENTS.LEAVE_ROOM, data => {
+            // inform others
+            if (!_.isNil(safe(socket, 'room.roomId'))) {
+                socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.USER_LEFT, socket.user);
+                socket.leave(socket.room.roomId);
+            }
         })
     }
 

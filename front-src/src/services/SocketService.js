@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS } from '../config';
-import { roomJoined } from '../actions';
+import { roomJoined, sendNotification } from '../actions';
 
 let instance;
 class SocketService {
@@ -36,7 +36,7 @@ class SocketService {
     // on connected
     onConnected() {
         this._socket.on(SOCKET_EVENTS.CONNECT, () => {
-            console.log('connected!');
+            // sendNotification("Connected!");
             this._isConnected = true;
             this._socket.emit('greet', { message: 'Hello Mr.Server!' });
         });
@@ -49,13 +49,12 @@ class SocketService {
         } 
         this._socket.disconnect();
         this._isConnected = false;
-        console.log('Disconnect socket');
     }
     // on socket disconnected
     onDisconnected() {
         this._socket.on(SOCKET_EVENTS.DISCONNECT, () => {
             this._isConnected = false;
-            console.log('Disconnected!');
+            sendNotification('Disconnected');
         });
     }
 
@@ -74,19 +73,26 @@ class SocketService {
         });
     }
 
+    // on user left
+    onUserLeft() {
+        this._socket.on(SOCKET_EVENTS.USER_LEFT, data => {
+            console.log(SOCKET_EVENTS.USER_LEFT, data);
+        });
+    }
+
     // join a room
     joinRoom(roomId) {
         if (!this._isConnected) {
             return;
-        }         
+        }
     }
 
-    // send message
-    sendMessage() {
+    // send data
+    send(data, eventType) {
         if (!this._isConnected) {
             return;
         }         
-        this._socket.emit('greet', { message: 'Hello Mr.Server!' });
+        this._socket.emit(eventType, data);
     }
 
     onError() {

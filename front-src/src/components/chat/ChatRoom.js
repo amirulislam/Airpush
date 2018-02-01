@@ -12,6 +12,7 @@ import VideoCallIcon from 'material-ui/svg-icons/notification/ondemand-video';
 import AudioCallIcon from 'material-ui/svg-icons/image/audiotrack';
 
 import CreateRoom from './CreateRoom';
+import ChatControllsLeft from './ChatControllsLeft';
 
 class ChatRoom extends Component {
 
@@ -34,7 +35,7 @@ class ChatRoom extends Component {
 
     _renderChatRoomBottomActions() {
         return(
-            <div className="bottom-chat-bar">
+            <div className="bottom-chat-bar" key="bottom-ctrls">
                 <div className="chat-main-control pull-left">
                 <IconMenu style={{ marginTop: '-6px' }} tooltip="Attach file"
                     iconButtonElement={
@@ -62,7 +63,10 @@ class ChatRoom extends Component {
 
     _render() {
         if (this.props.roomId) {
-            return this._renderChatRoomBottomActions();
+            return [
+                <ChatControllsLeft key="chat-controlls-left" />,
+                this._renderChatRoomBottomActions()
+            ]
         } else {
             return <CreateRoom />;
         }        

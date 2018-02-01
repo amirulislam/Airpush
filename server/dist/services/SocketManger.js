@@ -53,9 +53,7 @@ var SocketManager = function () {
             this._io.on('connection', function (socket) {
                 console.log('ON CONNECTION ', socket.user);
 
-                socket.on('greet', function (data) {
-                    console.log('GREET', data);
-                });
+                _this.handleLeaveRoom(socket);
 
                 _this.handleCreateRoom(socket);
 
@@ -89,6 +87,17 @@ var SocketManager = function () {
             socket.on(_config.SOCKET_EVENTS.DISCONNECT, function (s) {
                 // inform others in the room
                 console.log('SOcket server disconnect');
+            });
+        }
+    }, {
+        key: 'handleLeaveRoom',
+        value: function handleLeaveRoom(socket) {
+            socket.on(_config.SOCKET_EVENTS.LEAVE_ROOM, function (data) {
+                // inform others
+                if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
+                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.USER_LEFT, socket.user);
+                    socket.leave(socket.room.roomId);
+                }
             });
         }
 
