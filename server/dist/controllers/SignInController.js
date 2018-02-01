@@ -53,7 +53,7 @@ var SignInController = function () {
                 }).then(function (user) {
                     if (!_lodash2.default.isNil(user)) {
                         SignInController.response(res, {
-                            user: user, token: _JWT2.default.createUserToken(user._id)
+                            user: user, token: _JWT2.default.createUserToken(user)
                         });
                     }
                 });

@@ -10,9 +10,12 @@ const debug = debugPck('TheLoop:JWT');
 class JWT {
 	constructor() {}
 
-	static createUserToken(userId) {
+	static createUserToken(user) {
 		return jwt.sign({
-			userId: userId
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			photo: user.photo
 		}, USER_TOKEN_SECRET);
 	}
 

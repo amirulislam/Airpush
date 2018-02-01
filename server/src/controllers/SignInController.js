@@ -21,7 +21,7 @@ class SignInController {
             .then(user => {
                 if (!_.isNil(user)) {
                     SignInController.response(res, {
-                        user, token: JWT.createUserToken(user._id)
+                        user, token: JWT.createUserToken(user)
                     });
                 }
             })

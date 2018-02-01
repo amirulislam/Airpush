@@ -61,4 +61,4 @@ app.use(function(err, req, res, next) {
 	res.send(err);
 });
 
-export default app;
+module.exports = app;

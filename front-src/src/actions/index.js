@@ -2,12 +2,21 @@ import axios from 'axios';
 import safe from 'undefsafe';
 import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
+import SocketService from '../services/SocketService';
 import TokenUtils from '../utils/TokenUtils';
 TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM
  } from './Types';
+
+
+if (StorageUtils.getUser()) {
+	SocketService.getInstance().connect();
+} else {
+	SocketService.getInstance().disconnect();
+}
+
 
 // retrive apps data
 export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
@@ -21,7 +30,8 @@ export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
 		.then(({ data }) => {
 			StorageUtils.setUser(Object.assign({
                 token: data.data.token
-            }, data.data.user));
+			}, data.data.user));
+			SocketService.getInstance().connect();
             if (onSuccess) {
                 onSuccess();
             }
@@ -52,6 +62,7 @@ export const toggleMenu = (open = true) => {
 export const logOut = () => {
 	return (dispatch, getState) => {
 		StorageUtils.removeUser();
+		SocketService.getInstance().disconnect();
 		dispatch({
 			type: LOG_OUT,
 			payload: open

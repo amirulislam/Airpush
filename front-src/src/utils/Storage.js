@@ -56,7 +56,7 @@ class StorageUtils {
 
 	static getUser() {
 		if (!StorageUtils.isStorageSupported()) {
-			return;
+			return false;
 		}
 		const allData = StorageUtils.getStorageData();
 		let authenticated = false;

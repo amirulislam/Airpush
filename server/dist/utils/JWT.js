@@ -34,9 +34,12 @@ var JWT = function () {
 
 	_createClass(JWT, null, [{
 		key: 'createUserToken',
-		value: function createUserToken(userId) {
+		value: function createUserToken(user) {
 			return _jsonwebtoken2.default.sign({
-				userId: userId
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				photo: user.photo
 			}, _config.USER_TOKEN_SECRET);
 		}
 	}, {

@@ -37,7 +37,7 @@ var GoogleService = function () {
         value: function verify(authToken, email) {
             var oAuth2Client = new OAuth2Client(CLIENT_ID);
             return oAuth2Client.verifyIdToken({ idToken: authToken }).then(function (LoginTicket) {
-                console.log('Result', LoginTicket);
+                // console.log('Result', LoginTicket);
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(LoginTicket, 'payload.email')) && LoginTicket.payload.email === email) {
                     return {
                         email: LoginTicket.payload.email,

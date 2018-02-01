@@ -15,7 +15,7 @@ class GoogleService {
         );
         return oAuth2Client.verifyIdToken({idToken: authToken})
         .then(LoginTicket => {
-            console.log('Result', LoginTicket);
+            // console.log('Result', LoginTicket);
             if (!_.isNil(safe(LoginTicket, 'payload.email')) && LoginTicket.payload.email === email) {
                 return {
                     email: LoginTicket.payload.email,
