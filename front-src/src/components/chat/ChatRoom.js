@@ -21,7 +21,7 @@ class ChatRoom extends Component {
     }
 
     static defaultProps = {
-        chatRoom: false
+        roomId: false
     }
 
     onKeyUp(e) {
@@ -29,7 +29,7 @@ class ChatRoom extends Component {
     }
 
     _renderChatRoomBackground() {
-        return (this.props.chatRoom) ? ' chat-room-background' : '';
+        return (this.props.roomId) ? ' chat-room-background' : '';
     }
 
     _renderChatRoomBottomActions() {
@@ -61,7 +61,7 @@ class ChatRoom extends Component {
     }
 
     _render() {
-        if (this.props.chatRoom) {
+        if (this.props.roomId) {
             return this._renderChatRoomBottomActions();
         } else {
             return <CreateRoom />;
@@ -77,17 +77,17 @@ class ChatRoom extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = ({ roomId }, ownProps) => {
     return {
-
+        roomId
     }
 }
 
 ChatRoom.propTypes = {
-    chatRoom: PropTypes.oneOfType([
+    roomId: PropTypes.oneOfType([
         PropTypes.bool,
-        PropTypes.object
+        PropTypes.string
     ]),    
 }
 
-export default ChatRoom;
+export default connect(mapStateToProps)(ChatRoom);

@@ -19,6 +19,7 @@
     "mongoose": "^5.0.2",
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2",
+    "shortid": "^2.2.8",
     "socket.io": "^2.0.4",
     "socket.io-redis": "^5.2.0",
     "sticky-session": "^1.1.2",

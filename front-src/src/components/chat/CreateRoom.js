@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { createChatRoom } from '../../actions';
+import { createChatGroup } from '../../actions';
 import RaisedButton from 'material-ui/RaisedButton';
 import ChatIcon from 'material-ui/svg-icons/communication/chat-bubble-outline';
 
@@ -18,10 +18,11 @@ class CreateRoom extends PureComponent {
             return;
         }
         this.setState({ isCreatingRoom: true });
-        this.props.createChatRoom(() => {
-            console.log('Room created');
-            this.setState({ isCreatingRoom: false });
-        });
+        this.props.createChatGroup();
+        // this.props.createChatRoom(() => {
+        //     console.log('Room created');
+        //     this.setState({ isCreatingRoom: false });
+        // });
     }
 
     render() {
@@ -35,4 +36,4 @@ class CreateRoom extends PureComponent {
     }
 }
 
-export default connect(null, { createChatRoom })(CreateRoom);
+export default connect(null, { createChatGroup })(CreateRoom);

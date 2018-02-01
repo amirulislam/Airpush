@@ -7,8 +7,10 @@ import TokenUtils from '../utils/TokenUtils';
 TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
-import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM
- } from './Types';
+import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
+JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION } from './Types';
+
+import { store } from '../index';
 
 
 if (StorageUtils.getUser()) {
@@ -71,28 +73,60 @@ export const logOut = () => {
 	};	
 }
 
-// create chat room
-export const createChatRoom = (onSuccess, onError) => {
+// create chat group
+export const createChatGroup = () => {
 	return (dispatch, getState) => {
-		const { authenticated } = getState();
-		if (!_.isNil(safe(authenticated, '_id'))) {
-			axios.post(`${API_ROOT}/chat-room`, { userId: authenticated._id })
-			.then(({ data }) => {
-				console.log('CREATE RESULT', data)
-				if (onSuccess) {
-					onSuccess();
-				}
-				dispatch({
-					type: CREATE_CHAT_ROOM,
-					payload: data.data	
-				})
-			})
-			.catch(err => {
-				console.log('errrrr', err.message);
-				if (safe(err, 'err.message') && _.isFunction(onError)) {
-					onError(err.message);
-				}
-			});
-		}
+		SocketService.getInstance().createRoom();
 	}
 }
+
+export const roomJoined = roomId => {
+	console.log('Dispatch room 1')
+	store.dispatch({
+		type: JOINED_ROOM,
+		payload: roomId	
+	});
+	store.dispatch({
+		type: OPEN_NOTIFICATION,
+		payload: {
+			message: 'Room joined!'
+		}
+	});	
+}
+
+export const roomLeaved = roomId => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: LEAVED_ROOM,
+			payload: false
+		})
+		// SocketService.getInstance().createRoom();
+	}
+}
+
+
+// create chat room
+// export const createChatRoom = (onSuccess, onError) => {
+// 	return (dispatch, getState) => {
+// 		const { authenticated } = getState();
+// 		if (!_.isNil(safe(authenticated, '_id'))) {
+// 			axios.post(`${API_ROOT}/chat-room`, { userId: authenticated._id })
+// 			.then(({ data }) => {
+// 				console.log('CREATE RESULT', data)
+// 				if (onSuccess) {
+// 					onSuccess();
+// 				}
+// 				dispatch({
+// 					type: CREATE_CHAT_ROOM,
+// 					payload: data.data	
+// 				})
+// 			})
+// 			.catch(err => {
+// 				console.log('errrrr', err.message);
+// 				if (safe(err, 'err.message') && _.isFunction(onError)) {
+// 					onError(err.message);
+// 				}
+// 			});
+// 		}
+// 	}
+// }

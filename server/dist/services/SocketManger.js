@@ -19,6 +19,12 @@ var _undefsafe = require('undefsafe');
 
 var _undefsafe2 = _interopRequireDefault(_undefsafe);
 
+var _config = require('../config');
+
+var _shortid = require('shortid');
+
+var _shortid2 = _interopRequireDefault(_shortid);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34,6 +40,8 @@ var SocketManager = function () {
     _createClass(SocketManager, [{
         key: 'handleConnection',
         value: function handleConnection() {
+            var _this = this;
+
             this._io.use(function (socket, next) {
                 var user = SocketManager.isValidAuth(socket.handshake.query.x__authorization);
                 if (!user) {
@@ -44,14 +52,48 @@ var SocketManager = function () {
             });
             this._io.on('connection', function (socket) {
                 console.log('ON CONNECTION ', socket.user);
+
                 socket.on('greet', function (data) {
                     console.log('GREET', data);
                 });
-                socket.on('disconnect', function (s) {
-                    console.log('SOcket server disconnect');
-                });
+
+                _this.handleCreateRoom(socket);
+
+                _this.handleDisconnect(socket);
             });
         }
+
+        // handle create room
+
+    }, {
+        key: 'handleCreateRoom',
+        value: function handleCreateRoom(socket) {
+            socket.on(_config.SOCKET_EVENTS.CREATE_ROOM, function (data) {
+                console.log('CREATE ROOM', data, 'SOket', socket.id);
+
+                var roomId = String(_shortid2.default.generate());
+                socket.room = {
+                    isCreator: true,
+                    roomId: roomId
+                };
+                socket.join(roomId);
+                socket.emit(_config.SOCKET_EVENTS.ROOM_CREATED, { roomId: roomId });
+            });
+        }
+
+        // handle disconnect
+
+    }, {
+        key: 'handleDisconnect',
+        value: function handleDisconnect(socket) {
+            socket.on(_config.SOCKET_EVENTS.DISCONNECT, function (s) {
+                // inform others in the room
+                console.log('SOcket server disconnect');
+            });
+        }
+
+        // validate auth
+
     }], [{
         key: 'isValidAuth',
         value: function isValidAuth(x__authorization) {
