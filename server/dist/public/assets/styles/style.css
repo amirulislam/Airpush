@@ -305,12 +305,14 @@ html, body, #airpush-ui {
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-left-controlls {
               position: absolute;
               left: 10px;
-              top: 10px; }
+              top: 10px;
+              z-index: 100; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .users-panel {
               position: absolute;
               top: 10%;
-              right: 7px;
-              width: 40px; }
+              right: 15px;
+              width: 40px;
+              z-index: 101; }
               #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .users-panel .user-ui .user-avatar {
                 position: absolute;
                 width: 40px;
@@ -326,6 +328,39 @@ html, body, #airpush-ui {
                   left: 0;
                   top: 0;
                   border-radius: 20px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger {
+              position: relative;
+              height: calc(100% - 65px);
+              overflow-x: hidden;
+              overflow-y: scroll;
+              padding: 0px 50px;
+              font-size: 14px; }
+              #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content {
+                padding: 20px 0px; }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .message-user-activity {
+                  text-align: center; }
+                  #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .message-user-activity .user-activity {
+                    background: #FFFFFF;
+                    margin: 12px 0px;
+                    display: inline-block;
+                    padding: 11px 14px;
+                    border-radius: 8px; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .message-user-activity .user-activity .user-photo {
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 20px;
+                      display: inline-block; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .message-user-activity .user-activity .user-name {
+                      display: inline-block; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger::-webkit-scrollbar-track {
+              -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+              background-color: #F5F5F5; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger::-webkit-scrollbar {
+              width: 6px;
+              background-color: #F5F5F5; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger::-webkit-scrollbar-thumb {
+              background-color: #888888;
+              border-radius: 2px; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .bottom-chat-bar {
               position: absolute;
               width: 100%;

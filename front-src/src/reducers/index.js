@@ -6,6 +6,7 @@ import RoomReducer from './RoomReducer';
 import NotificationReducer from './NotificationReducer';
 import RoomCreated from './RoomCreated';
 import Users from './Users';
+import Messages from './Messages';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
@@ -13,7 +14,8 @@ const rootReducers = combineReducers({
     roomId: RoomReducer,
     notification: NotificationReducer,
     roomJustCreated: RoomCreated,
-    users: Users
+    users: Users,
+    messages: Messages
 });
 
 export default rootReducers;

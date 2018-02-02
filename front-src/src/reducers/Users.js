@@ -4,8 +4,13 @@ export default (state = [], action) => {
         case NEW_USER_JOIN:
             return [action.payload, ...state];
         case USER_LEFT:
-            console.log('Substract user');
-            return [];
+            let usersClone = _.cloneDeep(state);
+            for (let i = 0; i < usersClone.length; i++) {
+                if(usersClone[i]._id === action.payload._id) {
+                    usersClone.splice(i, 1);
+                }
+            }
+            return usersClone;
         default:
             return state;
     }

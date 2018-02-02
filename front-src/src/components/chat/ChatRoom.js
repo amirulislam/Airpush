@@ -10,6 +10,7 @@ import ChatControllsLeft from './ChatControllsLeft';
 import JoiningRoom from './JoiningRoom';
 import UsersRightSide from './UsersRightSide';
 import ChatBottomActions from './ChatBottomActions';
+import ChatMessenger from './ChatMessenger';
 
 class ChatRoom extends Component {
 
@@ -45,6 +46,7 @@ class ChatRoom extends Component {
             return [
                 <ChatControllsLeft key="chat-controlls-left" />,
                 <UsersRightSide key="right-side-users-panel" />,
+                <ChatMessenger key="msg-key" />,
                 <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
             ]
         } else {

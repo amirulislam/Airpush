@@ -8,7 +8,8 @@ TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
-JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN } from './Types';
+JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
+USER_LEFT, MESSAGE } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -180,11 +181,31 @@ export const sendNotificationFromComponent = (message, timeout) => {
 // add new user
 export const addUser = (user) => {
 	if (user) {
+		dispatchInternalMessage(user);
 		store.dispatch({
 			type: NEW_USER_JOIN,
 			payload: user	
 		});
 	}
+}
+
+// remove user
+export const removeUser = (user) => {
+	if (user) {
+		dispatchInternalMessage(user);
+		store.dispatch({
+			type: USER_LEFT,
+			payload: user
+		});
+	}
+}
+
+// dispatch internal message
+export const dispatchInternalMessage = (message) => {
+	store.dispatch({
+		type: MESSAGE,
+		payload: message	
+	});	
 }
 
 export const test = () => {
@@ -193,41 +214,17 @@ export const test = () => {
 		iat: 1517557279,
 		name: "Eblocks Shopify Apps",
 		photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
-		_id: "5a74161feddff24834fbaf88"
+		_id: "5a74161feddff24834fbaf88",
+		msgType: "NEW_USER_JOINED"
 	}
 	store.dispatch({
 		type: NEW_USER_JOIN,
 		payload: user	
-	});	
+	});
+	dispatchInternalMessage(user);	
 }
 setTimeout(() => {
-	test();	
+	for (let index = 0; index < 10; index++) {
+		//test();
+	}	
 }, 2000);
-
-
-
-// create chat room
-// export const createChatRoom = (onSuccess, onError) => {
-// 	return (dispatch, getState) => {
-// 		const { authenticated } = getState();
-// 		if (!_.isNil(safe(authenticated, '_id'))) {
-// 			axios.post(`${API_ROOT}/chat-room`, { userId: authenticated._id })
-// 			.then(({ data }) => {
-// 				console.log('CREATE RESULT', data)
-// 				if (onSuccess) {
-// 					onSuccess();
-// 				}
-// 				dispatch({
-// 					type: CREATE_CHAT_ROOM,
-// 					payload: data.data	
-// 				})
-// 			})
-// 			.catch(err => {
-// 				console.log('errrrr', err.message);
-// 				if (safe(err, 'err.message') && _.isFunction(onError)) {
-// 					onError(err.message);
-// 				}
-// 			});
-// 		}
-// 	}
-// }

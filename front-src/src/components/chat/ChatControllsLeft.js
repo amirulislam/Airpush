@@ -26,7 +26,7 @@ class ChatControllsLeft extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
         if (newProps.roomJustCreated) {
-            this.inviteOthers();
+            //this.inviteOthers();
             roomCreatedFirstTime(false);
         }
     }    

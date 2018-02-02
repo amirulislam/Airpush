@@ -3,7 +3,7 @@ import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
- addUser } from '../actions';
+ addUser, removeUser, dispatchInternalMessage } from '../actions';
 
 let instance;
 class SocketService {
@@ -111,7 +111,7 @@ class SocketService {
     send(data, eventType) {
         if (!this._isConnected) {
             return;
-        }         
+        } 
         this._socket.emit(eventType, data);
     }
 
@@ -121,11 +121,12 @@ class SocketService {
             console.log('Message received', data);
             switch(data.type) {
                 case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
-                    console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);
+                    console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);                    
                     addUser(data.payload);
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
-                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED);   
+                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
+                    removeUser(data.payload);
                     break;
             }
         });         

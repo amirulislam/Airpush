@@ -134,10 +134,10 @@ html, body, #airpush-ui {
                             margin-top: 10%;
                         }
                         .chat-left-controlls {
-                            position: absolute; left: 10px; top: 10px;
+                            position: absolute; left: 10px; top: 10px; z-index: 100;
                         }
                         .users-panel {
-                            position: absolute; top: 10%; right: 7px; width: 40px;
+                            position: absolute; top: 10%; right: 15px; width: 40px; z-index: 101;
                             .user-ui {
                                 .user-avatar {
                                     position: absolute; width: 40px; height: 40px; border-radius: 20px; left: 0; top: 0;
@@ -147,7 +147,45 @@ html, body, #airpush-ui {
                                     }                                    
                                 }
                             }
-                        }               
+                        }
+                        .chat-messenger {
+                            position: relative;
+                            height: calc(100% - #{($chatBottomBarHeight) + 'px'});
+                            overflow-x: hidden; overflow-y: scroll;
+                            padding: 0px 50px;
+                            font-size: 14px;
+                            .messages-content {
+                                padding: 20px 0px;
+                                .message-user-activity {
+                                    text-align: center;
+                                    .user-activity {
+                                        background: #FFFFFF; margin: 12px 0px;
+                                        display: inline-block;
+                                        padding: 11px 14px;
+                                        border-radius: 8px;                                        
+                                        .user-photo {
+                                            width: 40px; height: 40px; border-radius: 20px;
+                                            display: inline-block;
+                                        }
+                                        .user-name {
+                                            display: inline-block;
+                                        }
+                                    }
+                                }
+                            }                         
+                        }
+                        .chat-messenger::-webkit-scrollbar-track {
+                            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                            background-color: #F5F5F5;
+                        }
+                        .chat-messenger::-webkit-scrollbar {
+                            width: 6px;
+                            background-color: #F5F5F5;                            
+                        } 
+                        .chat-messenger::-webkit-scrollbar-thumb {
+                            background-color: #888888;
+                            border-radius: 2px;
+                        }                                                         
                         .bottom-chat-bar {
                             position: absolute;
                             width: 100%; height: #{ ($chatBottomBarHeight) + 'px' }; background: #{ $chatBottomBarBackground };

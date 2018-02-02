@@ -58,10 +58,10 @@ class SocketManager {
             console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 // send leave message
-                debug('USER LEVE MESSSAGE');
+                debug('USER LEAVE MESSSAGE');
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    payload: socket.user
+                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });
                 socket.leave(socket.room.roomId);
             }
@@ -77,7 +77,7 @@ class SocketManager {
                 // emit to others
                 socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: socket.user
+                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
                 });
             }
         });
@@ -87,6 +87,15 @@ class SocketManager {
     handleDisconnect(socket) {
         socket.on(SOCKET_EVENTS.DISCONNECT, s => {
             // inform others in the room
+            if (!_.isNil(safe(socket, 'room.roomId'))) {
+                socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
+                });
+                try {
+                    socket.leave(socket.room.roomId);
+                } catch (e) {};
+            }            
             console.log('SOcket server disconnect');
         })
     }
@@ -97,7 +106,7 @@ class SocketManager {
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    payload: socket.user
+                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });                
                 socket.leave(socket.room.roomId);
             }

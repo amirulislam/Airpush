@@ -8,5 +8,6 @@ export const OPEN_NOTIFICATION = 'OPEN_NOTIFICATION';
 export const CLOSE_NOTIFICATION = 'CLOSE_NOTIFICATION';
 export const ROOM_CREATED_NOW = 'ROOM_CREATED_NOW';
 export const NEW_USER_JOIN = 'NEW_USER_JOIN';
-export const USER_LEFT = 'NEW_USER_JOIN';
+export const USER_LEFT = 'USER_LEFT';
+export const MESSAGE = 'MESSAGE';
 

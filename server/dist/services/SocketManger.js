@@ -89,10 +89,10 @@ var SocketManager = function () {
                 console.log(_config.SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                     // send leave message
-                    debug('USER LEVE MESSSAGE');
+                    debug('USER LEAVE MESSSAGE');
                     socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                        payload: socket.user
+                        payload: Object.assign({ msgType: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
                     });
                     socket.leave(socket.room.roomId);
                 }
@@ -109,7 +109,7 @@ var SocketManager = function () {
                     // emit to others
                     socket.broadcast.to(roomToJoin).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                        payload: socket.user
+                        payload: Object.assign({ msgType: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED }, socket.user)
                     });
                 }
             });
@@ -122,6 +122,15 @@ var SocketManager = function () {
         value: function handleDisconnect(socket) {
             socket.on(_config.SOCKET_EVENTS.DISCONNECT, function (s) {
                 // inform others in the room
+                if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
+                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                        payload: Object.assign({ msgType: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
+                    });
+                    try {
+                        socket.leave(socket.room.roomId);
+                    } catch (e) {};
+                }
                 console.log('SOcket server disconnect');
             });
         }
@@ -133,7 +142,7 @@ var SocketManager = function () {
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                     socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                        payload: socket.user
+                        payload: Object.assign({ msgType: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
                     });
                     socket.leave(socket.room.roomId);
                 }
