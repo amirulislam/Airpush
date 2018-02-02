@@ -87,9 +87,13 @@ var SocketManager = function () {
         value: function handleJoinRoom(socket) {
             socket.on(_config.SOCKET_EVENTS.JOIN_ROOM, function (data) {
                 console.log(_config.SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
-                console.log(socket.room);
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                     // send leave message
+                    debug('USER LEVE MESSSAGE');
+                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                        payload: socket.user
+                    });
                     socket.leave(socket.room.roomId);
                 }
                 var roomToJoin = data.roomToJoin;
@@ -105,7 +109,7 @@ var SocketManager = function () {
                     // emit to others
                     socket.broadcast.to(roomToJoin).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                        user: socket.user
+                        payload: socket.user
                     });
                 }
             });
@@ -129,7 +133,7 @@ var SocketManager = function () {
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                     socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                        user: socket.user
+                        payload: socket.user
                     });
                     socket.leave(socket.room.roomId);
                 }

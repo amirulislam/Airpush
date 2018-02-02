@@ -56,9 +56,13 @@ class SocketManager {
     handleJoinRoom(socket) {
         socket.on(SOCKET_EVENTS.JOIN_ROOM, data => {
             console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
-            console.log(socket.room);
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 // send leave message
+                debug('USER LEVE MESSSAGE');
+                socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                    payload: socket.user
+                });
                 socket.leave(socket.room.roomId);
             }
             const { roomToJoin } = data;
@@ -73,7 +77,7 @@ class SocketManager {
                 // emit to others
                 socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    user: socket.user
+                    payload: socket.user
                 });
             }
         });
@@ -93,7 +97,7 @@ class SocketManager {
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    user: socket.user
+                    payload: socket.user
                 });                
                 socket.leave(socket.room.roomId);
             }

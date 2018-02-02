@@ -2,7 +2,8 @@ import io from 'socket.io-client';
 import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
-import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf } from '../actions';
+import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
+ addUser } from '../actions';
 
 let instance;
 class SocketService {
@@ -118,6 +119,15 @@ class SocketService {
     onDataReceive() {
         this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
             console.log('Message received', data);
+            switch(data.type) {
+                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
+                    console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);
+                    addUser(data.payload);
+                    break;
+                case SOCKET_MESSAGE_TYPES.USER_LEAVED:
+                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED);   
+                    break;
+            }
         });         
     }
 

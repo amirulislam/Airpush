@@ -135,7 +135,19 @@ html, body, #airpush-ui {
                         }
                         .chat-left-controlls {
                             position: absolute; left: 10px; top: 10px;
-                        }                
+                        }
+                        .users-panel {
+                            position: absolute; top: 10%; right: 7px; width: 40px;
+                            .user-ui {
+                                .user-avatar {
+                                    position: absolute; width: 40px; height: 40px; border-radius: 20px; left: 0; top: 0;
+                                    background: #CCCCCC;
+                                    .user-img {
+                                        width: 40px; height: 40px; position: absolute; left: 0; top: 0; border-radius: 20px;
+                                    }                                    
+                                }
+                            }
+                        }               
                         .bottom-chat-bar {
                             position: absolute;
                             width: 100%; height: #{ ($chatBottomBarHeight) + 'px' }; background: #{ $chatBottomBarBackground };

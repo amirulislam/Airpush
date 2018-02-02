@@ -8,7 +8,7 @@ TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
-JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW } from './Types';
+JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -142,6 +142,7 @@ export const roomJoinedBySelf = roomId => {
 	sendNotification('Room joined!');
 }
 
+
 // room leaved event (current user)
 export const roomLeaved = roomId => {
 	return (dispatch, getState) => {
@@ -175,6 +176,33 @@ export const sendNotificationFromComponent = (message, timeout) => {
 		});		
 	}
 }
+
+// add new user
+export const addUser = (user) => {
+	if (user) {
+		store.dispatch({
+			type: NEW_USER_JOIN,
+			payload: user	
+		});
+	}
+}
+
+export const test = () => {
+	const user = {
+		email: "eblocksapps@gmail.com",
+		iat: 1517557279,
+		name: "Eblocks Shopify Apps",
+		photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
+		_id: "5a74161feddff24834fbaf88"
+	}
+	store.dispatch({
+		type: NEW_USER_JOIN,
+		payload: user	
+	});	
+}
+setTimeout(() => {
+	test();	
+}, 2000);
 
 
 
