@@ -1,13 +1,15 @@
 import io from 'socket.io-client';
 import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
-import { SOCKET_EVENTS } from '../config';
-import { roomJoined, sendNotification, roomCreated } from '../actions';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
+import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf } from '../actions';
 
 let instance;
 class SocketService {
     _isConnected = false;
     _socket;
+    _joinTrials = 0;
+    _maxJoinTrials = 5;
 
     constructor() {
         if (instance) {
@@ -30,6 +32,8 @@ class SocketService {
         this.onConnected();
         this.onDisconnected();
         this.onRoomCreated();
+        this.onRoomJoin();
+        this.onDataReceive();
         this.onError();               
     }
 
@@ -37,6 +41,7 @@ class SocketService {
     onConnected() {
         this._socket.on(SOCKET_EVENTS.CONNECT, () => {
             // sendNotification("Connected!");
+            console.log('Connected!');
             this._isConnected = true;
             this._socket.emit('greet', { message: 'Hello Mr.Server!' });
         });
@@ -73,6 +78,14 @@ class SocketService {
         });
     }
 
+    // on room created
+    onRoomJoin() {
+        this._socket.on(SOCKET_EVENTS.JOINED_ROOM, data => {
+            console.log(SOCKET_EVENTS.JOINED_ROOM, data);
+            roomJoinedBySelf(data.roomId);
+        });
+    }
+
     // on user left
     onUserLeft() {
         this._socket.on(SOCKET_EVENTS.USER_LEFT, data => {
@@ -81,10 +94,16 @@ class SocketService {
     }
 
     // join a room
-    joinRoom(roomId) {
-        if (!this._isConnected) {
+    joinRoom(roomToJoin) {
+        if (!this._isConnected && this._joinTrials < this._maxJoinTrials) {
+            this._joinTrials++;
+            setTimeout(() => {
+                this.joinRoom(roomToJoin);
+            }, 1500);
             return;
         }
+        this._joinTrials = 0;
+        this._socket.emit(SOCKET_EVENTS.JOIN_ROOM, { roomToJoin });
     }
 
     // send data
@@ -93,6 +112,13 @@ class SocketService {
             return;
         }         
         this._socket.emit(eventType, data);
+    }
+
+    // on message received
+    onDataReceive() {
+        this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
+            console.log('Message received', data);
+        });         
     }
 
     onError() {

@@ -289,6 +289,16 @@ html, body, #airpush-ui {
             overflow-x: hidden; }
           #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section {
             position: relative; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .joining-chatroom p {
+              text-align: center;
+              margin-top: 50px;
+              margin-bottom: 20px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .joining-chatroom div {
+              width: 30px;
+              position: relative;
+              margin: auto; }
+              #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .joining-chatroom div img {
+                width: 100%; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .create-chatroom {
               text-align: center;
               margin-top: 10%; }

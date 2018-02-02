@@ -91,8 +91,33 @@ export const roomJoined = roomId => {
 	});
 	sendNotification('Room joined!');
 }
+
+// join room
+export const joinRoomNow = (roomToJoin) => {
+	return (dispatch, getState) => {
+		const { roomId } = getState();
+		if (roomId) {
+			// disconnect from room 
+			roomLeaved();
+		}
+		console.log('JOIN ROOM NOW', roomToJoin, getState());
+		SocketService.getInstance().joinRoom(roomToJoin);
+		dispatch({
+			type: 'AAAA',
+			payload: { message: 'bbbb' }
+		});		
+	}	
+
+	// return (dispatch, getState) => {
+	// 	sendNotification('You have left the chatroom!');
+	// 	dispatch({
+	// 		type: SOCKET_EVENTS.JOIN_ROOM,
+	// 		payload: false
+	// 	});
+	// }	
+}
+
 export const roomCreated = roomId => {
-	console.log('Dispatch room created 1')
 	store.dispatch({
 		type: JOINED_ROOM,
 		payload: roomId	
@@ -106,6 +131,15 @@ export const roomCreatedFirstTime = (val = true) => {
 		type: ROOM_CREATED_NOW,
 		payload: true	
 	});	
+}
+
+// self joined room
+export const roomJoinedBySelf = roomId => {
+	store.dispatch({
+		type: JOINED_ROOM,
+		payload: roomId	
+	});
+	sendNotification('Room joined!');
 }
 
 // room leaved event (current user)

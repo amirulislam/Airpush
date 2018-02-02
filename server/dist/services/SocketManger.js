@@ -53,10 +53,11 @@ var SocketManager = function () {
             this._io.on('connection', function (socket) {
                 console.log('ON CONNECTION ', socket.user);
 
+                // console.log('CLIENTS  ', this._io.sockets.clients());
+
                 _this.handleLeaveRoom(socket);
-
                 _this.handleCreateRoom(socket);
-
+                _this.handleJoinRoom(socket);
                 _this.handleDisconnect(socket);
             });
         }
@@ -79,6 +80,37 @@ var SocketManager = function () {
             });
         }
 
+        // handle join room
+
+    }, {
+        key: 'handleJoinRoom',
+        value: function handleJoinRoom(socket) {
+            socket.on(_config.SOCKET_EVENTS.JOIN_ROOM, function (data) {
+                console.log(_config.SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
+                console.log(socket.room);
+                if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
+                    // send leave message
+                    socket.leave(socket.room.roomId);
+                }
+                var roomToJoin = data.roomToJoin;
+
+                if (_lodash2.default.isString(roomToJoin) && String(roomToJoin).length < 20) {
+                    socket.room = {
+                        isCreator: false,
+                        roomId: roomToJoin
+                    };
+                    socket.join(roomToJoin);
+                    // emit to self
+                    socket.emit(_config.SOCKET_EVENTS.JOINED_ROOM, { roomId: roomToJoin });
+                    // emit to others
+                    socket.broadcast.to(roomToJoin).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                        user: socket.user
+                    });
+                }
+            });
+        }
+
         // handle disconnect
 
     }, {
@@ -95,7 +127,10 @@ var SocketManager = function () {
             socket.on(_config.SOCKET_EVENTS.LEAVE_ROOM, function (data) {
                 // inform others
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.USER_LEFT, socket.user);
+                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                        user: socket.user
+                    });
                     socket.leave(socket.room.roomId);
                 }
             });

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import safe from 'undefsafe';
 
 import IconButton from 'material-ui/IconButton';
 import AttachementIcon from 'material-ui/svg-icons/editor/attach-file';
@@ -13,11 +15,13 @@ import AudioCallIcon from 'material-ui/svg-icons/image/audiotrack';
 
 import CreateRoom from './CreateRoom';
 import ChatControllsLeft from './ChatControllsLeft';
+import JoiningRoom from './JoiningRoom';
 
 class ChatRoom extends Component {
 
     constructor(props) {
         super(props);
+        this.state = { isJoiningRoom: false };
         this.onKeyUp = this.onKeyUp.bind(this);
     }
 
@@ -27,6 +31,13 @@ class ChatRoom extends Component {
 
     onKeyUp(e) {
         console.log(e.target, e.key, e.keyCode);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const joinRoom = safe(this.props, 'location.state.joinRoom');
+        if (!_.isNil(joinRoom) && nextProps.roomId != this.props.roomId) {
+            delete this.props.location.state.joinRoom;
+        }
     }
 
     _renderChatRoomBackground() {
@@ -62,6 +73,9 @@ class ChatRoom extends Component {
     }
 
     _render() {
+        if (!_.isNil(safe(this.props, 'location.state.joinRoom'))) {
+            return <JoiningRoom roomToJoin={this.props.location.state.joinRoom} />
+        } 
         if (this.props.roomId) {
             return [
                 <ChatControllsLeft key="chat-controlls-left" />,
@@ -76,7 +90,7 @@ class ChatRoom extends Component {
         return(
             <div className={ `section-content-ui chat-section${this._renderChatRoomBackground()}` }>
                 { this._render() }
-            </div>                
+            </div>
         )
     }
 }
