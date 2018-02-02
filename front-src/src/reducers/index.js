@@ -4,12 +4,14 @@ import AuthReducer from './AuthReducer';
 import MenuReducer from './MenuReducer';
 import RoomReducer from './RoomReducer';
 import NotificationReducer from './NotificationReducer';
+import RoomCreated from './RoomCreated';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
     menuOpen: MenuReducer,
     roomId: RoomReducer,
-    notification: NotificationReducer
+    notification: NotificationReducer,
+    roomJustCreated: RoomCreated
 });
 
 export default rootReducers;

@@ -13,6 +13,13 @@ class BaseAlert extends Component {
         this.setState({ nodes: nodes });
     }
 
+    close() {
+        this.setState({ open: false });
+        if (this.props.onCancel) {
+            this.props.onCancel();
+        }         
+    }
+
     handleAccept() {
         this.setState({ open: false });
         if (this.props.onAccept) {
@@ -24,7 +31,7 @@ class BaseAlert extends Component {
         this.setState({ open: false });
         if (this.props.onCancel) {
             this.props.onCancel();
-        }          
+        } 
     }    
 
     _getActions() {
@@ -32,7 +39,7 @@ class BaseAlert extends Component {
         if (this.props.onAccept) {
             actions.push(<FlatButton label="OK" primary={true} onClick={() => this.handleAccept()}/>)
         }
-        if (this.props.onCancel) {
+        if (this.props.onCancel && !this.props.hideCancelButton) {
             actions.push(<FlatButton label="Cancel" primary={false} onClick={() => this.handleClose()}/>)
         }        
         return actions;

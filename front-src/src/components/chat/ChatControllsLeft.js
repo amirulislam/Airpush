@@ -1,12 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { leaveRoom, roomCreatedFirstTime, sendNotificationFromComponent } from '../../actions';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/link';
 import ContentPowerOff from 'material-ui/svg-icons/action/power-settings-new';
 import BaseAlert from '../modals/BaseAlert';
-import { leaveRoom } from '../../actions';
+import InviteModal from '../modals/InviteModal';
+// import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class ChatControllsLeft extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { value: '', copied: false }
+    }
+
+    static defaultProps = {
+        roomId: '',
+        roomJustCreated: false
+    }
+
+    componentWillReceiveProps(newProps) {
+        this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
+        if (newProps.roomJustCreated) {
+            this.inviteOthers();
+            roomCreatedFirstTime(false);
+        }
+    }    
 
     leaveChatRoom() {
         if (this.alert) {
@@ -16,21 +39,66 @@ class ChatControllsLeft extends Component {
         }
     }
 
+    handleCopy() {
+        this.setState({copied: true});
+        if (this.invite) { this.invite.close() };
+    }
+
+    inviteOnClose() {
+        this.props.sendNotificationFromComponent('Link copied!', 2000);
+    }
+
+    inviteOthers() {
+        if (this.invite) {
+            this.invite.open([
+                <p key="invite-txt">Invite others to this chat room. Copy the link below &amp; send it to your friends.</p>,
+                <div key="share-link" className="share-link">
+                    <div className="room-share-url pull-left">
+                        {`${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}`}
+                    </div>
+                    <div className="pull-left">
+                        <CopyToClipboard text={this.state.value}
+                            onCopy={() => { this.handleCopy() }}>
+                            <RaisedButton label="Copy Link" primary={true} />
+                        </CopyToClipboard>
+                    </div>
+
+                    <div className="clearfix"></div>
+                </div>
+            ]);
+        }        
+    }
+
     render(){
         return(
             <div className="chat-left-controlls">
-                <FloatingActionButton mini={false} style={{display: 'block', marginBottom: '15px'}}>
+                <FloatingActionButton onClick={ e => this.inviteOthers() } mini={false} style={{display: 'block', marginBottom: '15px'}}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <FloatingActionButton onClick={e => this.leaveChatRoom()} mini={true} secondary={true} style={{
-                    marginLeft: '8px'
+                    marginLeft: '7px'
                 }} iconStyle={{ backgroundColor: '#CCCCCC' }}>
                     <ContentPowerOff />
                 </FloatingActionButton>
                 <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />              
+                <InviteModal onCancel={() => {this.inviteOnClose()}} hideCancelButton={true} maxWidth={500} ref={ r => this.invite = r } />
             </div>
         )
     }
 }
 
-export default connect(null, { leaveRoom })(ChatControllsLeft);
+const mapStateToProps = ({ roomId, roomJustCreated }, ownProps) => {
+    return {
+        roomId, roomJustCreated
+    }
+}
+
+ChatControllsLeft.propTypes = {
+    roomId: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.string
+    ]),
+    roomJustCreated: PropTypes.bool
+}
+
+export default connect(mapStateToProps, { leaveRoom, roomCreatedFirstTime, sendNotificationFromComponent })(ChatControllsLeft);

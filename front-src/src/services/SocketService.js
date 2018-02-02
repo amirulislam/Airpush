@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import _ from 'lodash';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS } from '../config';
-import { roomJoined, sendNotification } from '../actions';
+import { roomJoined, sendNotification, roomCreated } from '../actions';
 
 let instance;
 class SocketService {
@@ -69,7 +69,7 @@ class SocketService {
     onRoomCreated() {
         this._socket.on(SOCKET_EVENTS.ROOM_CREATED, (data) => {
             console.log('ROOM_CREATED', data);
-            roomJoined(data.roomId);
+            roomCreated(data.roomId);
         });
     }
 

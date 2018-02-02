@@ -23,7 +23,8 @@ class Notifications extends Component {
         if (notification) {
             this.setState({
                 message: notification.message,
-                open: true
+                open: true,
+                closeTime: (_.isNumber(notification.timeout)) ? notification.timeout : this.setState.closeTime
             })
         }
     }

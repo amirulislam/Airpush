@@ -6,6 +6,7 @@ import MainMenu from '../menu/MainMenu';
 import { ROUTES } from '../../config';
 import AppSectionUI from '../AppSectionUI';
 import TopBar from '../menu/TopBar';
+import _ from 'lodash';
 
 export default (WrappedComponent) => {
 
@@ -20,7 +21,7 @@ export default (WrappedComponent) => {
         }
 
         render() {
-            if (this.props.authenticated === false && !this.props.location.pathname.startsWith(`${ROUTES.SIGN_IN}`)) {
+            if ((this.props.authenticated === false || _.isNil(this.props.authenticated)) && !this.props.location.pathname.startsWith(`${ROUTES.SIGN_IN}`)) {
                 return(
                     <Redirect to={{ pathname: `${ROUTES.SIGN_IN}${ this.props.location.search }` }} />
                 )

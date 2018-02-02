@@ -8,7 +8,7 @@ TokenUtils.useToken(axios);
 
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
-JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION } from './Types';
+JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -91,6 +91,22 @@ export const roomJoined = roomId => {
 	});
 	sendNotification('Room joined!');
 }
+export const roomCreated = roomId => {
+	console.log('Dispatch room created 1')
+	store.dispatch({
+		type: JOINED_ROOM,
+		payload: roomId	
+	});
+	roomCreatedFirstTime(true);
+	sendNotification('Room joined!');
+}
+
+export const roomCreatedFirstTime = (val = true) => {
+	store.dispatch({
+		type: ROOM_CREATED_NOW,
+		payload: true	
+	});	
+}
 
 // room leaved event (current user)
 export const roomLeaved = roomId => {
@@ -116,6 +132,16 @@ export const sendNotification = (message, timeout) => {
 		payload: { message, timeout }
 	});	
 }
+
+export const sendNotificationFromComponent = (message, timeout) => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: OPEN_NOTIFICATION,
+			payload: { message, timeout }
+		});		
+	}
+}
+
 
 
 // create chat room
