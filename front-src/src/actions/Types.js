@@ -11,3 +11,5 @@ export const NEW_USER_JOIN = 'NEW_USER_JOIN';
 export const USER_LEFT = 'USER_LEFT';
 export const MESSAGE = 'MESSAGE';
 
+export const JOINED_ROOM_ID = 'JOINED_ROOM_ID';
+

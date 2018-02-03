@@ -9,7 +9,7 @@ TokenUtils.useToken(axios);
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
-USER_LEFT, MESSAGE } from './Types';
+USER_LEFT, MESSAGE, JOINED_ROOM_ID } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -124,6 +124,7 @@ export const roomCreated = roomId => {
 		payload: roomId	
 	});
 	roomCreatedFirstTime(true);
+	joinedRoomId(roomId);
 	sendNotification('Room joined!');
 }
 
@@ -140,6 +141,7 @@ export const roomJoinedBySelf = roomId => {
 		type: JOINED_ROOM,
 		payload: roomId	
 	});
+	joinedRoomId(roomId);
 	sendNotification('Room joined!');
 }
 
@@ -147,7 +149,8 @@ export const roomJoinedBySelf = roomId => {
 // room leaved event (current user)
 export const roomLeaved = roomId => {
 	return (dispatch, getState) => {
-		sendNotification('You have left the chatroom!');
+		sendNotification('You have left the group!');
+		joinedRoomId(false);
 		dispatch({
 			type: LEAVED_ROOM,
 			payload: false
@@ -205,8 +208,17 @@ export const dispatchInternalMessage = (message) => {
 	store.dispatch({
 		type: MESSAGE,
 		payload: message	
+	});
+}
+
+export const joinedRoomId = (joinedRoomId) => {
+	StorageUtils.setJoinedRoom(joinedRoomId);
+	store.dispatch({
+		type: JOINED_ROOM_ID,
+		payload: joinedRoomId	
 	});	
 }
+
 
 export const test = () => {
 	const user = {

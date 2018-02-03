@@ -23,6 +23,18 @@ class SocketManager {
                 return next(new Error('AUTH_ERROR'));    
             }
             socket.user = user;
+            const joinedRoomId = socket.handshake.query.joinedRoomId;
+            if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+                console.log('CONNECTED & JOINED ROOM: ', joinedRoomId);
+                socket.join(joinedRoomId);
+                // emit to self
+                socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
+                // emit to others
+                socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                });
+            }
             return next();
         });  
         this._io.on('connection', (socket) => {
@@ -40,9 +52,9 @@ class SocketManager {
     // handle create room
     handleCreateRoom(socket) {
         socket.on(SOCKET_EVENTS.CREATE_ROOM, data => {
-            console.log('CREATE ROOM', data, 'SOket', socket.id);
-
             const roomId = String(shortId.generate());
+            console.log('CREATE ROOM', data, 'room id', roomId);
+
             socket.room = {
                 isCreator: true,
                 roomId: roomId

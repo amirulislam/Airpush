@@ -48,6 +48,18 @@ var SocketManager = function () {
                     return next(new Error('AUTH_ERROR'));
                 }
                 socket.user = user;
+                var joinedRoomId = socket.handshake.query.joinedRoomId;
+                if (joinedRoomId != 'false' && !_lodash2.default.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+                    console.log('CONNECTED & JOINED ROOM: ', joinedRoomId);
+                    socket.join(joinedRoomId);
+                    // emit to self
+                    socket.emit(_config.SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
+                    // emit to others
+                    socket.broadcast.to(joinedRoomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                        payload: Object.assign({ msgType: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED }, socket.user)
+                    });
+                }
                 return next();
             });
             this._io.on('connection', function (socket) {
@@ -68,9 +80,9 @@ var SocketManager = function () {
         key: 'handleCreateRoom',
         value: function handleCreateRoom(socket) {
             socket.on(_config.SOCKET_EVENTS.CREATE_ROOM, function (data) {
-                console.log('CREATE ROOM', data, 'SOket', socket.id);
-
                 var roomId = String(_shortid2.default.generate());
+                console.log('CREATE ROOM', data, 'room id', roomId);
+
                 socket.room = {
                     isCreator: true,
                     roomId: roomId

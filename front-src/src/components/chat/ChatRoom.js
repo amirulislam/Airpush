@@ -20,7 +20,7 @@ class ChatRoom extends Component {
     }
 
     static defaultProps = {
-        roomId: false
+        roomId: false, joinedRoomId: false
     }
 
     componentWillReceiveProps(nextProps) {
@@ -63,9 +63,9 @@ class ChatRoom extends Component {
     }
 }
 
-const mapStateToProps = ({ roomId }, ownProps) => {
+const mapStateToProps = ({ roomId, joinedRoomId }, ownProps) => {
     return {
-        roomId
+        roomId, joinedRoomId
     }
 }
 
@@ -73,7 +73,11 @@ ChatRoom.propTypes = {
     roomId: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.string
-    ]),    
+    ]),
+    joinedRoomId: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.string
+    ]) 
 }
 
 export default connect(mapStateToProps)(ChatRoom);

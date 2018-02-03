@@ -78,6 +78,38 @@ class StorageUtils {
 		StorageUtils.setUser(null);
 	}
 
+	static setJoinedRoom(joinedRoomId) {
+		if (!StorageUtils.isStorageSupported()) {
+			return;
+		}
+		let allData = StorageUtils.getStorageData();
+		if (_.isNil(allData)) {
+			allData = {};
+		}
+		allData.joinedRoomId = joinedRoomId;
+		StorageUtils.setStorageData(allData);
+	}
+
+	static getJoinedRoom() {
+		if (!StorageUtils.isStorageSupported()) {
+			return false;
+		}
+		const allData = StorageUtils.getStorageData();
+		let joinedRoomId = false;
+		if (allData && allData.joinedRoomId) {
+			joinedRoomId = allData.joinedRoomId;
+		}
+		console.log('GET ROOM', joinedRoomId);
+		return joinedRoomId;
+	}
+
+	static removeJoinedRoom() {
+		if (!StorageUtils.isStorageSupported()) {
+			return;
+		}		
+		StorageUtils.setJoinedRoom(false);
+	}	
+
 	static removeStorageData() {
 		if (!StorageUtils.isStorageSupported()) {
 			return;

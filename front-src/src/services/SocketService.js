@@ -4,6 +4,7 @@ import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
  addUser, removeUser, dispatchInternalMessage } from '../actions';
+import Storage from '../utils/Storage';
 
 let instance;
 class SocketService {
@@ -26,7 +27,8 @@ class SocketService {
         this._socket = io(uri, {
             transports: ['websocket'],
             query: {
-                x__authorization: StorageUtils.getToken()
+                x__authorization: StorageUtils.getToken(),
+                joinedRoomId: StorageUtils.getJoinedRoom()
             }
         });
 
@@ -41,10 +43,8 @@ class SocketService {
     // on connected
     onConnected() {
         this._socket.on(SOCKET_EVENTS.CONNECT, () => {
-            // sendNotification("Connected!");
             console.log('Connected!');
             this._isConnected = true;
-            this._socket.emit('greet', { message: 'Hello Mr.Server!' });
         });
     }
 
