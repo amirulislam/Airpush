@@ -108,14 +108,6 @@ export const joinRoomNow = (roomToJoin) => {
 			payload: { message: 'bbbb' }
 		});		
 	}	
-
-	// return (dispatch, getState) => {
-	// 	sendNotification('You have left the chatroom!');
-	// 	dispatch({
-	// 		type: SOCKET_EVENTS.JOIN_ROOM,
-	// 		payload: false
-	// 	});
-	// }	
 }
 
 export const roomCreated = roomId => {

@@ -96,6 +96,7 @@ class SocketService {
 
     // join a room
     joinRoom(roomToJoin) {
+        console.log('JOIN_ROOM_NOW!!!!>>>>>');
         if (!this._isConnected && this._joinTrials < this._maxJoinTrials) {
             this._joinTrials++;
             setTimeout(() => {
@@ -128,6 +129,10 @@ class SocketService {
                     console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
                     removeUser(data.payload);
                     break;
+                case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
+                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
+                    dispatchInternalMessage(data);
+                    break;                    
             }
         });         
     }

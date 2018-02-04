@@ -152,7 +152,7 @@ html, body, #airpush-ui {
                             position: relative;
                             height: calc(100% - #{($chatBottomBarHeight) + 'px'});
                             overflow-x: hidden; overflow-y: scroll;
-                            padding: 0px 50px;
+                            padding: 0px 67px;
                             font-size: 14px;
                             .messages-content {
                                 padding: 20px 0px;
@@ -164,7 +164,7 @@ html, body, #airpush-ui {
                                         padding: 11px 14px;
                                         border-radius: 8px;                                        
                                         .user-photo {
-                                            width: 40px; height: 40px; border-radius: 20px;
+                                            width: 30px; height: 30px; border-radius: 15px;
                                             display: inline-block;
                                         }
                                         .user-name {
@@ -172,7 +172,54 @@ html, body, #airpush-ui {
                                         }
                                     }
                                 }
-                            }                         
+                                .user-message {
+                                    margin: 16px 0px;
+                                    .user-message-content {
+                                        padding: 10px 16px; border-radius: 4px;
+                                        background: #FFFFFF;
+                                        max-width: 50%;
+                                        position: relative;
+                                        .message-arrow {
+                                            width: 26px; position: absolute; top: 0px;
+                                            img {
+                                                width: 100%;
+                                            }
+                                            &.left {
+                                                left: -18px;
+                                            }                                            
+                                            &.right {
+                                                right: -18px;
+                                            }
+                                        }
+                                        .user {
+                                            margin-bottom: 9px;
+                                            .user-photo {
+                                                margin-right: 13px; width: 30px; height: 30px; border-radius: 15px;
+                                            }
+                                            .user-name {
+                                                font-weight: 600; margin-top: 2px; margin-bottom: 0px;
+                                            }
+                                        }
+                                        .message-body {
+                                            .text-content {}
+                                        }
+                                        &.owner {
+                                            float: right; background: #ece9f7;
+                                        }
+                                        &.stranger {
+                                            float: left; background: #FFFFFF;
+                                        }                                                                               
+                                    }                                   
+                                } 
+                                @media screen and (max-width: 800px) {
+                                    .user-message {
+                                        .user-message-content {
+                                            max-width: 100%;
+                                            background: #fc363b;                                            
+                                        }
+                                    }
+                                }                                  
+                            }                      
                         }
                         .chat-messenger::-webkit-scrollbar-track {
                             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);

@@ -6,11 +6,8 @@ import safe from 'undefsafe';
 
 import IconButton from 'material-ui/IconButton';
 import CreateRoom from './CreateRoom';
-import ChatControllsLeft from './ChatControllsLeft';
 import JoiningRoom from './JoiningRoom';
-import UsersRightSide from './UsersRightSide';
-import ChatBottomActions from './ChatBottomActions';
-import ChatMessenger from './ChatMessenger';
+import MainChatRoom from './MainChatRoom';
 
 class ChatRoom extends Component {
 
@@ -30,10 +27,6 @@ class ChatRoom extends Component {
         }
     }
 
-    _sendMessage(message) {
-        console.log('Send message', message);
-    }
-
     _renderChatRoomBackground() {
         return (this.props.roomId) ? ' chat-room-background' : '';
     }
@@ -43,12 +36,7 @@ class ChatRoom extends Component {
             return <JoiningRoom roomToJoin={this.props.location.state.joinRoom} />
         } 
         if (this.props.roomId) {
-            return [
-                <ChatControllsLeft key="chat-controlls-left" />,
-                <UsersRightSide key="right-side-users-panel" />,
-                <ChatMessenger key="msg-key" />,
-                <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
-            ]
+            return <MainChatRoom />
         } else {
             return <CreateRoom />;
         }        

@@ -88,7 +88,7 @@ TopBar.propTypes = {
     authenticated: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.object
-    ]),    
+    ])    
 }
 
 export default connect(mapStateToProps, { toggleMenu, logOut })(TopBar);

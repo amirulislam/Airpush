@@ -1,7 +1,7 @@
 import React from 'react';
 import Utils from '../../../utils';
 export default (props) => {
-    if (!props.message || !props.message.msgType) {
+    if (!props.message || !props.message.type) {
         return <noscript key={Utils.uid()} />;
     }
     return(

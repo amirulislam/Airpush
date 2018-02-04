@@ -9,6 +9,7 @@
     "debugsocket": "NODE_ENV=dev DEBUG=*.Socket.IO nodemon ./bin/server.js"
   },
   "dependencies": {
+    "autolinker": "^1.6.0",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
@@ -23,6 +24,7 @@
     "socket.io": "^2.0.4",
     "socket.io-redis": "^5.2.0",
     "sticky-session": "^1.1.2",
+    "striptags": "^3.1.1",
     "undefsafe": "^2.0.1"
   },
   "devDependencies": {

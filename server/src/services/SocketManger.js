@@ -6,6 +6,7 @@ import _ from 'lodash';
 import safe from 'undefsafe';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import shortId from 'shortid';
+import HtmlValidator from '../utils/HtmlValidator';
 
 
 class SocketManager {
@@ -27,12 +28,16 @@ class SocketManager {
             if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
                 console.log('CONNECTED & JOINED ROOM: ', joinedRoomId);
                 socket.join(joinedRoomId);
+                socket.room = {
+                    isCreator: false,
+                    roomId: joinedRoomId
+                }                
                 // emit to self
                 socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
                 // emit to others
                 socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
                 });
             }
             return next();
@@ -45,6 +50,7 @@ class SocketManager {
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
             this.handleJoinRoom(socket);
+            this.handleMessages(socket);
             this.handleDisconnect(socket);
         });        
     }
@@ -70,10 +76,10 @@ class SocketManager {
             console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 // send leave message
-                debug('USER LEAVE MESSSAGE');
+                // debug('USER LEAVE MESSSAGE');
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });
                 socket.leave(socket.room.roomId);
             }
@@ -89,7 +95,7 @@ class SocketManager {
                 // emit to others
                 socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
                 });
             }
         });
@@ -102,7 +108,7 @@ class SocketManager {
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });
                 try {
                     socket.leave(socket.room.roomId);
@@ -118,12 +124,40 @@ class SocketManager {
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                    payload: Object.assign({msgType: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });                
                 socket.leave(socket.room.roomId);
             }
         })
     }
+
+    // handle messages
+    handleMessages(socket) {
+        socket.on(SOCKET_EVENTS.MESSAGE, data => {
+            console.log('NEW MESSAGE RECEIVED', socket.room, data);
+            if (_.isNil(safe(data, 'type'))) {
+                return;
+            }
+            switch(data.type) {
+                case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
+                    let text = HtmlValidator.removeAllTags(data.textMessage);
+                    text = HtmlValidator.linkify(text);
+                    text = HtmlValidator.validateMaxLength(text);
+                    data.textMessage = text;
+                    console.log('ROOM DTA', socket.room, data, SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
+                    console.log('@@@@@', SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
+                    // socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
+                    //     payload: data
+                    // });                     
+                    this._io.in(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                        type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
+                        payload: data
+                    });
+                break;
+            }
+        })
+    }    
 
     // validate auth
     static isValidAuth(x__authorization) {

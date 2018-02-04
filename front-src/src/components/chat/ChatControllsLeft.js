@@ -23,7 +23,13 @@ class ChatControllsLeft extends Component {
         roomJustCreated: false
     }
 
+    componentDidMount() {
+        console.log('DID MOUNT', this.props.roomId);
+        this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
+    }
+
     componentWillReceiveProps(newProps) {
+        console.log('Will receive props', newProps);
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
         if (newProps.roomJustCreated) {
             //this.inviteOthers();
@@ -41,6 +47,7 @@ class ChatControllsLeft extends Component {
 
     handleCopy() {
         this.setState({copied: true});
+        console.log('Copied', this.state.value);
         if (this.invite) { this.invite.close() };
     }
 
