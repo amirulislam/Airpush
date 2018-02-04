@@ -3,6 +3,7 @@ export default (state = [], action) => {
     switch (action.type) {
         case NEW_USER_JOIN:
             return [action.payload, ...state];
+            break;
         case USER_LEFT:
             let usersClone = _.cloneDeep(state);
             for (let i = 0; i < usersClone.length; i++) {
@@ -11,6 +12,7 @@ export default (state = [], action) => {
                 }
             }
             return usersClone;
+            break;
         default:
             return state;
     }

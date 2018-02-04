@@ -10,6 +10,7 @@ export const ROOM_CREATED_NOW = 'ROOM_CREATED_NOW';
 export const NEW_USER_JOIN = 'NEW_USER_JOIN';
 export const USER_LEFT = 'USER_LEFT';
 export const MESSAGE = 'MESSAGE';
+export const REMOVE_GROUP_MESSAGES = 'REMOVE_GROUP_MESSAGES';
 
 export const JOINED_ROOM_ID = 'JOINED_ROOM_ID';
 

@@ -9,7 +9,7 @@ TokenUtils.useToken(axios);
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
-USER_LEFT, MESSAGE, JOINED_ROOM_ID } from './Types';
+USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -145,6 +145,10 @@ export const roomLeaved = roomId => {
 		joinedRoomId(false);
 		dispatch({
 			type: LEAVED_ROOM,
+			payload: false
+		});
+		dispatch({
+			type: REMOVE_GROUP_MESSAGES,
 			payload: false
 		});
 	}

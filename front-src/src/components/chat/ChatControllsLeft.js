@@ -24,15 +24,15 @@ class ChatControllsLeft extends Component {
     }
 
     componentDidMount() {
-        console.log('DID MOUNT', this.props.roomId);
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
     }
 
     componentWillReceiveProps(newProps) {
-        console.log('Will receive props', newProps);
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
         if (newProps.roomJustCreated) {
-            //this.inviteOthers();
+            setTimeout(() => {
+                this.inviteOthers();
+            }, 1000);
             roomCreatedFirstTime(false);
         }
     }    
@@ -58,9 +58,9 @@ class ChatControllsLeft extends Component {
     inviteOthers() {
         if (this.invite) {
             this.invite.open([
-                <p key="invite-txt">Invite others to this chat room. Copy the link below &amp; send it to your friends.</p>,
+                <p key="invite-txt">Invite others to this chat group. Copy the link below &amp; send it to your friends.</p>,
                 <div key="share-link" className="share-link">
-                    <div className="room-share-url pull-left">
+                    <div className="room-share-url noselect pull-left">
                         {`${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}`}
                     </div>
                     <div className="pull-left">
