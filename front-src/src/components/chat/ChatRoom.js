@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import safe from 'undefsafe';
+import { ROUTES } from '../../config';
 
 import IconButton from 'material-ui/IconButton';
 import CreateRoom from './CreateRoom';
@@ -14,7 +16,6 @@ class ChatRoom extends Component {
     constructor(props) {
         super(props);
         this.state = { isJoiningRoom: false };
-        // console.log('PPPPPPROOOOOPS', this.props.location.state.joinRoom)
     }
 
     static defaultProps = {
@@ -22,11 +23,11 @@ class ChatRoom extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const joinRoom = safe(this.props, 'location.state.joinRoom');
-        console.log('JOIN ROOM 333>>>>> ', joinRoom)
-        if (!_.isNil(joinRoom) && nextProps.roomId != this.props.roomId) {
-            delete this.props.location.state.joinRoom;
-        }
+        // const joinRoom = safe(this.props, 'location.state.joinRoom');
+        // console.log('JOIN ROOM 333>>>>> ', joinRoom)
+        // if (!_.isNil(joinRoom) && nextProps.roomId != this.props.roomId) {
+        //     delete this.props.location.state.joinRoom;
+        // }
     }
 
     _renderChatRoomBackground() {
@@ -34,9 +35,20 @@ class ChatRoom extends Component {
     }
 
     _render() {
-        if (!_.isNil(safe(this.props, 'location.state.joinRoom'))) {
-            return <JoiningRoom roomToJoin={this.props.location.state.joinRoom} />
-        } 
+        const isRoute_id = !_.isNil(safe(this.props, 'match.params.route_id'));
+        if (this.props.roomId && isRoute_id && this.props.match.params.route_id != this.props.roomId) {
+            return <Redirect to={{
+                pathname: `${ROUTES.CHAT_ROOM}/${this.props.roomId}`
+            }} /> 
+        }
+        if (this.props.location.pathname == ROUTES.CHAT_ROOM && this.props.roomId) {
+            return <Redirect to={{
+                pathname: `${ROUTES.CHAT_ROOM}/${this.props.roomId}`
+            }} />              
+        }
+        // if (!_.isNil(safe(this.props, 'location.state.joinRoom'))) {
+        //     return <JoiningRoom roomToJoin={this.props.location.state.joinRoom} />
+        // } 
         if (this.props.roomId) {
             return <MainChatRoom />
         } else {

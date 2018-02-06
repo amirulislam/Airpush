@@ -3,7 +3,7 @@ export const ROUTES = {
     MAIN: '/app/main',
     SIGN_IN: '/app/signin',
     WELCOME: '/app/welcome',
-    CHAT_ROOM: '/app/chat-room'
+    CHAT_ROOM: '/app/chat'
 }
 
 export const MENU_WIDTH = '250px';

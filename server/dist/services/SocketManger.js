@@ -54,10 +54,15 @@ var SocketManager = function () {
                 socket.user = user;
                 return next();
             });
+            this._io.use(function (socket, next) {
+                // implement existing socket ERROR
+                return next();
+            });
             this._io.on('connection', function (socket) {
                 console.log('ON CONNECTION ', socket.user);
 
                 // console.log('CLIENTS  ', this._io.sockets.clients());
+                // implement max user in ROOM
                 _this.handleJoinRoomEvent(socket);
                 _this.handleLeaveRoom(socket);
                 _this.handleCreateRoom(socket);
@@ -141,13 +146,13 @@ var SocketManager = function () {
                         payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED }, socket.user)
                     });
                 } else {
-                    // emit to self
-                    socket.emit(_config.SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
-                    // emit to others
-                    socket.broadcast.to(roomToJoin).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                        type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                        payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED }, socket.user)
-                    });
+                    // // emit to self
+                    // socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
+                    // // emit to others
+                    // socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
+                    //     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                    //     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                    // });                
                 }
             });
         }

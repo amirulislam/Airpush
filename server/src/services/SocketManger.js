@@ -21,15 +21,20 @@ class SocketManager {
         this._io.use((socket, next) => {
             const user = SocketManager.isValidAuth(socket.handshake.query.x__authorization);
             if (!user) {
-                return next(new Error('AUTH_ERROR'));    
+                return next(new Error('AUTH_ERROR'));
             }
             socket.user = user;
             return next();
-        });  
+        });
+        this._io.use((socket, next) => {
+            // implement existing socket ERROR
+            return next();
+        });          
         this._io.on('connection', (socket) => {
             console.log('ON CONNECTION ', socket.user);
 
             // console.log('CLIENTS  ', this._io.sockets.clients());
+            // implement max user in ROOM
             this.handleJoinRoomEvent(socket);
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
@@ -107,13 +112,13 @@ class SocketManager {
                     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
                 });
             } else {
-                // emit to self
-                socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
-                // emit to others
-                socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
-                    type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-                });                
+                // // emit to self
+                // socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
+                // // emit to others
+                // socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
+                //     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                //     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                // });                
             }
         });
     }    

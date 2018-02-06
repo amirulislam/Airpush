@@ -9,6 +9,11 @@ import ChatRoom from './chat/ChatRoom';
 import Notifications from '../components/notifications/Notifications';
 import RootSection from './RootSection';
 
+import StorageUtils from '../utils/Storage';
+import SocketService from '../services/SocketService';
+import queryString from 'query-string';
+
+
 class Main extends Component {
 
     // static defaultProps = {
@@ -17,10 +22,11 @@ class Main extends Component {
 
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        
+        if (StorageUtils.getUser()) {
+            SocketService.getInstance().connect();
+        } else {
+            SocketService.getInstance().disconnect();
+        }        
     }
 
     render() {
@@ -28,7 +34,9 @@ class Main extends Component {
             <div className="app-section-content">
                 <Switch>
                     <Route path={`${ROUTES.SIGN_IN}*`} component={ SingIn } />
+                    <Route path={`${ROUTES.CHAT_ROOM}/:route_id`} component={ ChatRoom } />
                     <Route path={`${ROUTES.CHAT_ROOM}`} component={ ChatRoom } />
+                    <Route path={`${ROUTES.WELCOME}`} render={ () => { return <p>hello</p>} } />
                     <Route path={`${ROUTES.ROOT}`} component={ RootSection } />
                     <Route render={() => <p>Not found</p>} />
                 </Switch>

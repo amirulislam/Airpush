@@ -26,6 +26,7 @@ class SocketService {
         if (this._isConnected) {
             return;
         }
+        this._isConnected = true;
         console.log('CONNECT ', StorageUtils.getJoinedRoom());
         const uri = `${window.location.protocol}//${window.location.host}`;
         this._socket = io(uri, {
@@ -41,7 +42,8 @@ class SocketService {
         this.onRoomCreated();
         this.onRoomJoin();
         this.onDataReceive();
-        this.onError();               
+        this.onError();
+        this.onDisconnected();              
     }
 
     // on connected
@@ -151,6 +153,12 @@ class SocketService {
         this._socket.on(SOCKET_EVENTS.ERROR, err => {
             console.log('Errror', err);
         });         
+    }
+
+    onDisconnect() {
+        this._socket.on('disconnect', reason => {
+            this._isConnected = false;
+        });
     }
 
     static getInstance() {

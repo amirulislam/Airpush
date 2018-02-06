@@ -8,8 +8,6 @@ import AppSectionUI from '../AppSectionUI';
 import TopBar from '../menu/TopBar';
 import _ from 'lodash';
 
-import StorageUtils from '../../utils/Storage';
-import SocketService from '../../services/SocketService';
 
 export default (WrappedComponent) => {
 
@@ -20,12 +18,7 @@ export default (WrappedComponent) => {
         }
 
         constructor(props) {
-            super(props);
-            if (StorageUtils.getUser()) {
-                SocketService.getInstance().connect();
-            } else {
-                SocketService.getInstance().disconnect();
-            }             
+            super(props);    
         }
 
         render() {
@@ -36,7 +29,7 @@ export default (WrappedComponent) => {
             }
 			if (this.props.authenticated && this.props.location.pathname.startsWith(`${ROUTES.SIGN_IN}`)) {
 				return(
-					<Redirect to={{ pathname: `${ROUTES.CHAT_ROOM}${ this.props.location.search }` }}/>
+					<Redirect to={{ pathname: `${ROUTES.CHAT_ROOM}` }}/>
 				);
             }     
             return(

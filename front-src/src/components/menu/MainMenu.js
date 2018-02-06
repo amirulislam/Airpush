@@ -24,7 +24,7 @@ class MainMenu extends Component {
     }
 
     renderActiveClass(path) {
-        if (path == this.props.location.pathname) {
+        if (String(this.props.location.pathname).startsWith(path)) {
             return `menu-link menu-active-color`;
         } else {
             return `menu-link`;
@@ -32,7 +32,7 @@ class MainMenu extends Component {
     }
 
     renderDot(path) {
-        if (path == this.props.location.pathname) {
+        if (String(this.props.location.pathname).startsWith(path)) {
             return <span className="menu-active"></span>;
         }
     }    

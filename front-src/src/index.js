@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import { withRouter } from 'react-router';
 import ReduxThunk from 'redux-thunk';
 import { BrowserRouter, Route, browserHistory } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -23,10 +24,8 @@ import StorageUtils from '../src/utils/Storage';
 import queryString from 'query-string';
 
 const parsed = queryString.parse(window.location.search);
-
-if (parsed.r) {
+if (parsed.r && (window.location.pathname === '/app' || window.location.pathname === '/app/')) {
 	StorageUtils.setJoinedRoom(parsed.r);
-	console.log('AAAA>>>>>>>', StorageUtils.getJoinedRoom());
 }
 
 export const store = createStore(rootReducer, StorageUtils.getStorageData() || {}, compose(
@@ -41,7 +40,7 @@ ReactDom.render(
 	<MuiThemeProvider muiTheme={muiTheme}>
 		<Provider store={store}>
 			<BrowserRouter history={ browserHistory }>
-				<Route path="/app" component={ RequireAuth(Main) } />
+				<Route path="/app" component={ RequireAuth(withRouter(Main)) } />
 			</BrowserRouter>
 		</Provider>
 	</MuiThemeProvider>
