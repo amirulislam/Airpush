@@ -1,8 +1,10 @@
 import BaseModel from './BaseModel';
+import _ from 'lodash';
+
 class User extends BaseModel {
-    constructor(user) {
+    constructor(user, exclude) {
         super(user, {
-            excludeProps: ['token', 'email', 'role']
+            excludeProps: _.isArray(exclude) ? exclude : ['token', 'email', 'role']
         });
     }
 }

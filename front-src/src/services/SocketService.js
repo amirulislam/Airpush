@@ -5,6 +5,8 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
  addUser, removeUser, dispatchInternalMessage } from '../actions';
 import Storage from '../utils/Storage';
+import PeerService from './peer/PeerService';
+import User from '../models/User';
 
 let instance;
 class SocketService {
@@ -17,12 +19,14 @@ class SocketService {
         if (instance) {
             throw new Error('Can not instantiate like this');
         }
+        PeerService.getInstance();
     }
 
     connect() {
         if (this._isConnected) {
             return;
         }
+        console.log('CONNECT ', StorageUtils.getJoinedRoom());
         const uri = `${window.location.protocol}//${window.location.host}`;
         this._socket = io(uri, {
             transports: ['websocket'],
@@ -79,7 +83,7 @@ class SocketService {
         });
     }
 
-    // on room created
+    // on room join by myself
     onRoomJoin() {
         this._socket.on(SOCKET_EVENTS.JOINED_ROOM, data => {
             console.log(SOCKET_EVENTS.JOINED_ROOM, data);
@@ -124,17 +128,23 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
                     console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);                    
                     addUser(data.payload);
+                    // PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
                     console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
                     removeUser(data.payload);
+                    // PeerService.getInstance().removePeer(new User(data.payload));
                     break;
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
                     console.log('--->>>' + SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     dispatchInternalMessage(data);
-                    break;                    
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
+                    console.log('PEER SIGNAL RECEIVED--->>>', data);
+                    // PeerService.getInstance().connectToPeer(data);
+                    break;                                         
             }
-        });         
+        });
     }
 
     onError() {

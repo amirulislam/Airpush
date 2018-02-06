@@ -14,6 +14,7 @@ class ChatRoom extends Component {
     constructor(props) {
         super(props);
         this.state = { isJoiningRoom: false };
+        // console.log('PPPPPPROOOOOPS', this.props.location.state.joinRoom)
     }
 
     static defaultProps = {
@@ -22,6 +23,7 @@ class ChatRoom extends Component {
 
     componentWillReceiveProps(nextProps) {
         const joinRoom = safe(this.props, 'location.state.joinRoom');
+        console.log('JOIN ROOM 333>>>>> ', joinRoom)
         if (!_.isNil(joinRoom) && nextProps.roomId != this.props.roomId) {
             delete this.props.location.state.joinRoom;
         }

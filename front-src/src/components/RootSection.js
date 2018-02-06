@@ -1,12 +1,16 @@
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom'
-import queryString from 'query-string';
 import { ROUTES } from '../config';
+// import StorageUtils from '../utils/Storage';
+import { joinRoomNow } from '../actions';
 
 class RootSection extends PureComponent {
 
     render() {
-        const parsed = queryString.parse(this.props.location.search);   
+        return <Redirect to={{
+            pathname: ROUTES.CHAT_ROOM
+        }} />  
+
         if (parsed.r && this.props.location.pathname != ROUTES.CHAT_ROOM) {
             return <Redirect to={{
                 pathname: ROUTES.CHAT_ROOM,

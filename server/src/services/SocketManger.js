@@ -24,35 +24,39 @@ class SocketManager {
                 return next(new Error('AUTH_ERROR'));    
             }
             socket.user = user;
-            const joinedRoomId = socket.handshake.query.joinedRoomId;
-            if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-                console.log('CONNECTED & JOINED ROOM: ', joinedRoomId);
-                socket.join(joinedRoomId);
-                socket.room = {
-                    isCreator: false,
-                    roomId: joinedRoomId
-                }                
-                // emit to self
-                socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
-                // emit to others
-                socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
-                    type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-                });
-            }
             return next();
         });  
         this._io.on('connection', (socket) => {
             console.log('ON CONNECTION ', socket.user);
 
             // console.log('CLIENTS  ', this._io.sockets.clients());
-
+            this.handleJoinRoomEvent(socket);
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
             this.handleJoinRoom(socket);
             this.handleMessages(socket);
             this.handleDisconnect(socket);
         });        
+    }
+
+    handleJoinRoomEvent(socket) {
+        const joinedRoomId = socket.handshake.query.joinedRoomId;
+        console.log('joinedRoomId', joinedRoomId);
+        if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+            console.log('>>>>> CONNECTED & JOINED ROOM: ', joinedRoomId);
+            socket.join(joinedRoomId);
+            socket.room = {
+                isCreator: false,
+                roomId: joinedRoomId
+            }                
+            // emit to self
+            socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
+            // emit to others
+            socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
+                type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+            });
+        }
     }
 
     // handle create room
@@ -73,8 +77,11 @@ class SocketManager {
     // handle join room
     handleJoinRoom(socket) {
         socket.on(SOCKET_EVENTS.JOIN_ROOM, data => {
-            console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.id);
-            if (!_.isNil(safe(socket, 'room.roomId'))) {
+            console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.room);
+            const { roomToJoin } = data;
+
+
+            if (!_.isNil(safe(socket, 'room.roomId')) && roomToJoin != socket.room.roomId) {
                 // send leave message
                 // debug('USER LEAVE MESSSAGE');
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
@@ -83,8 +90,10 @@ class SocketManager {
                 });
                 socket.leave(socket.room.roomId);
             }
-            const { roomToJoin } = data;
-            if (_.isString(roomToJoin) && String(roomToJoin).length < 20) { 
+            
+            const isAlreadyConnectedToRoom = !_.isNil(safe(socket, 'room.roomId')) && roomToJoin == socket.room.roomId;
+            console.log('IS ALREADY CONNECTED TO THE SAME ROOM >>>>>', isAlreadyConnectedToRoom);
+            if (!isAlreadyConnectedToRoom && _.isString(roomToJoin) && String(roomToJoin).length < 20) { 
                 socket.room = {
                     isCreator: false,
                     roomId: roomToJoin
@@ -97,6 +106,14 @@ class SocketManager {
                     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
                     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
                 });
+            } else {
+                // emit to self
+                socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
+                // emit to others
+                socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
+                    type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                });                
             }
         });
     }    
@@ -111,7 +128,7 @@ class SocketManager {
                     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
                 });
                 try {
-                    socket.leave(socket.room.roomId);
+                    // socket.leave(socket.room.roomId);
                 } catch (e) {};
             }            
             console.log('SOcket server disconnect');
@@ -121,6 +138,7 @@ class SocketManager {
     handleLeaveRoom(socket) {
         socket.on(SOCKET_EVENTS.LEAVE_ROOM, data => {
             // inform others
+            console.log(SOCKET_EVENTS.LEAVE_ROOM, socket.user);
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
@@ -134,7 +152,7 @@ class SocketManager {
     // handle messages
     handleMessages(socket) {
         socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            console.log('NEW MESSAGE RECEIVED', socket.room, data);
+            console.log('NEW MESSAGE RECEIVED', socket.room);
             if (_.isNil(safe(data, 'type'))) {
                 return;
             }
@@ -144,16 +162,40 @@ class SocketManager {
                     text = HtmlValidator.linkify(text);
                     text = HtmlValidator.validateMaxLength(text);
                     data.textMessage = text;
-                    console.log('ROOM DTA', socket.room, data, SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
+                    console.log('ROOM DTA', socket.room, SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     console.log('@@@@@', SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     // socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
                     //     payload: data
-                    // });                     
-                    this._io.in(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                        type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
-                        payload: data
-                    });
+                    // });
+
+                    console.log('SEND TO ROOM>>>> ', socket.room.roomId);
+                    // this._io.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
+                    //     payload: data
+                    // });
+                    if (!_.isNil(safe(socket, 'room.roomId'))) {
+                        // let clients = this.findClientsSocket(socket.room.roomId);
+                        
+                        //var clients = io.of('/').clients('room');
+                        //console.log('>>>>>CLIENTS IN ROOM>>>>', clients);                        
+                        this._io.in(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                            type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
+                            payload: data
+                        });
+                    } else {
+                        console.log('ERROR >>>> NO ROOM >>>>');
+                    }
+                break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
+                    console.log('RECEIVED PEER SIGNAL', data.peerData.signal)
+                    if (!_.isNil(safe(socket, 'room.roomId'))) {
+                        socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                            type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
+                            payload: data.peerData
+                        });                
+                        socket.leave(socket.room.roomId);
+                    }                    
                 break;
             }
         })
@@ -166,7 +208,7 @@ class SocketManager {
 			return decoded;
         }
         return false;
-    }
+    }  
 }
 
 export default SocketManager;

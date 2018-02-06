@@ -8,16 +8,24 @@ import AppSectionUI from '../AppSectionUI';
 import TopBar from '../menu/TopBar';
 import _ from 'lodash';
 
+import StorageUtils from '../../utils/Storage';
+import SocketService from '../../services/SocketService';
+
 export default (WrappedComponent) => {
 
     class RequireAuth extends Component {
-
+        
         static defaultProps = {
             authenticated: false
         }
 
         constructor(props) {
             super(props);
+            if (StorageUtils.getUser()) {
+                SocketService.getInstance().connect();
+            } else {
+                SocketService.getInstance().disconnect();
+            }             
         }
 
         render() {

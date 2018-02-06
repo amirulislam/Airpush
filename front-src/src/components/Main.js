@@ -28,7 +28,7 @@ class Main extends Component {
             <div className="app-section-content">
                 <Switch>
                     <Route path={`${ROUTES.SIGN_IN}*`} component={ SingIn } />
-                    <Route path={`${ROUTES.CHAT_ROOM}*`} component={ ChatRoom } />
+                    <Route path={`${ROUTES.CHAT_ROOM}`} component={ ChatRoom } />
                     <Route path={`${ROUTES.ROOT}`} component={ RootSection } />
                     <Route render={() => <p>Not found</p>} />
                 </Switch>

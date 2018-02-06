@@ -20,6 +20,14 @@ export const muiTheme = getMuiTheme({
 
 import rootReducer from './reducers';
 import StorageUtils from '../src/utils/Storage';
+import queryString from 'query-string';
+
+const parsed = queryString.parse(window.location.search);
+
+if (parsed.r) {
+	StorageUtils.setJoinedRoom(parsed.r);
+	console.log('AAAA>>>>>>>', StorageUtils.getJoinedRoom());
+}
 
 export const store = createStore(rootReducer, StorageUtils.getStorageData() || {}, compose(
 	applyMiddleware(ReduxThunk)

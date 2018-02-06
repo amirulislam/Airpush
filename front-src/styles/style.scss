@@ -201,7 +201,20 @@ html, body, #airpush-ui {
                                             }
                                         }
                                         .message-body {
-                                            .text-content {}
+                                            .text-content {
+                                                a:link {
+                                                    color: #4fa3f7;
+                                                }
+                                                a:visited {
+                                                    color: #4fa3f7;
+                                                }
+                                                a:hover {
+                                                    color: #70b5fb;
+                                                }
+                                                a:active {
+                                                    color: #4fa3f7;
+                                                }                                                
+                                            }
                                         }
                                         &.owner {
                                             float: right; background: #ece9f7;
@@ -275,6 +288,7 @@ html, body, #airpush-ui {
         font-size: 14px;
         margin-right: 14px;
         margin-top: 3px;
-        color: #F2F2F2;                          
+        color: #F2F2F2;
+        margin-bottom: 15px;                          
     }
 }

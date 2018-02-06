@@ -76,6 +76,7 @@ class StorageUtils {
 			return;
 		}		
 		StorageUtils.setUser(null);
+		StorageUtils.setJoinedRoom(false);
 	}
 
 	static setJoinedRoom(joinedRoomId) {

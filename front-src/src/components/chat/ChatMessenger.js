@@ -14,7 +14,6 @@ class ChatMessenger extends Component {
         authenticated: false
     }
 
-    test = 'xxxxx';
     messangerUI;
 
     constructor(props) {
@@ -25,13 +24,7 @@ class ChatMessenger extends Component {
         this.messangerUI.scrollTop = this.messangerUI.scrollHeight;
     }
 
-    componentDidMount() {
-        console.log('AICI !!!!', this.messangerUI)
-    }
-
     _renderMessage(m) {
-        console.log('RENDER MESSAGE now', m);
-        // console.log('USER_ID', this.props.authenticated);
         if (!m || !m.type) {
             return <noscript key={Utils.uid()} />;
         }

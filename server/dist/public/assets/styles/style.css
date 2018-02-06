@@ -396,6 +396,14 @@ html, body, #airpush-ui {
                         font-weight: 600;
                         margin-top: 2px;
                         margin-bottom: 0px; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .user-message .user-message-content .message-body .text-content a:link {
+                      color: #4fa3f7; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .user-message .user-message-content .message-body .text-content a:visited {
+                      color: #4fa3f7; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .user-message .user-message-content .message-body .text-content a:hover {
+                      color: #70b5fb; }
+                    #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .user-message .user-message-content .message-body .text-content a:active {
+                      color: #4fa3f7; }
                     #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger .messages-content .user-message .user-message-content.owner {
                       float: right;
                       background: #ece9f7; }
@@ -450,6 +458,7 @@ html, body, #airpush-ui {
   font-size: 14px;
   margin-right: 14px;
   margin-top: 3px;
-  color: #F2F2F2; }
+  color: #F2F2F2;
+  margin-bottom: 15px; }
 
 /*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdHlsZXMvc3R5bGUuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

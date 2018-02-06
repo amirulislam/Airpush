@@ -16,13 +16,6 @@ import { SOCKET_EVENTS } from '../config';
 import { store } from '../index';
 
 
-if (StorageUtils.getUser()) {
-	SocketService.getInstance().connect();
-} else {
-	SocketService.getInstance().disconnect();
-}
-
-
 // retrive apps data
 export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
 	console.log('sign in');

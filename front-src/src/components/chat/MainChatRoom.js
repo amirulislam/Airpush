@@ -22,7 +22,6 @@ class MainChatRoom extends Component {
     constructor(props) {
         super(props);
         this._sendMessage = this._sendMessage.bind(this);
-        console.log('CONSTRUCT', props);
     }
 
     _sendMessage(message) {
