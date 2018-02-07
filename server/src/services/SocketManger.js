@@ -24,6 +24,7 @@ class SocketManager {
                 return next(new Error('AUTH_ERROR'));
             }
             socket.user = user;
+            socket.user.socketId = socket.id;
             return next();
         });
         this._io.use((socket, next) => {
@@ -169,21 +170,8 @@ class SocketManager {
                     data.textMessage = text;
                     console.log('ROOM DTA', socket.room, SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     console.log('@@@@@', SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                    // socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                    //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
-                    //     payload: data
-                    // });
-
                     console.log('SEND TO ROOM>>>> ', socket.room.roomId);
-                    // this._io.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                    //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
-                    //     payload: data
-                    // });
-                    if (!_.isNil(safe(socket, 'room.roomId'))) {
-                        // let clients = this.findClientsSocket(socket.room.roomId);
-                        
-                        //var clients = io.of('/').clients('room');
-                        //console.log('>>>>>CLIENTS IN ROOM>>>>', clients);                        
+                    if (!_.isNil(safe(socket, 'room.roomId'))) {                      
                         this._io.in(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                             type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
                             payload: data
@@ -193,15 +181,41 @@ class SocketManager {
                     }
                 break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                    console.log('RECEIVED PEER SIGNAL', data.peerData.signal)
-                    if (!_.isNil(safe(socket, 'room.roomId'))) {
-                        socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                            type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
-                            payload: data.peerData
-                        });                
-                        socket.leave(socket.room.roomId);
-                    }                    
+                    console.log('RECEIVED PEER SIGNAL');
+                    if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
+                        const sendToSocketId = data.peerData.user.socketId;
+                        data.peerData.user = socket.user;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
+                                payload: data.peerData
+                            }
+                        );
+                    }
                 break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
+                    console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
+                    if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
+                        const sendToSocketId = data.peerData.user.socketId;
+                        data.peerData.user = socket.user;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER,
+                                payload: data.peerData
+                            }
+                        );
+                    }               
+                break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
+                    console.log('RECEIVED PEER_SIGNAL_ICE', data);
+                    if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
+                        const sendToSocketId = data.peerData.user.socketId;
+                        data.peerData.user = socket.user;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+                                payload: data.peerData
+                            }
+                        );
+                    }               
+                break;                                
             }
         })
     }    

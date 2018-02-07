@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "detectrtc": "^1.3.5",
     "lodash": "^4.17.4",
     "material-ui": "^0.20.0",
     "prop-types": "^15.5.10",
@@ -23,7 +24,6 @@
     "redux": "^3.0.4",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
-    "simple-peer": "^8.3.0",
     "socket.io": "^2.0.4",
     "undefsafe": "^2.0.1"
   },

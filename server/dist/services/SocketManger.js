@@ -52,6 +52,7 @@ var SocketManager = function () {
                     return next(new Error('AUTH_ERROR'));
                 }
                 socket.user = user;
+                socket.user.socketId = socket.id;
                 return next();
             });
             this._io.use(function (socket, next) {
@@ -212,21 +213,8 @@ var SocketManager = function () {
                         data.textMessage = text;
                         console.log('ROOM DTA', socket.room, _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                         console.log('@@@@@', _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                        // socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                        //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
-                        //     payload: data
-                        // });
-
                         console.log('SEND TO ROOM>>>> ', socket.room.roomId);
-                        // this._io.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                        //     type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
-                        //     payload: data
-                        // });
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                            // let clients = this.findClientsSocket(socket.room.roomId);
-
-                            //var clients = io.of('/').clients('room');
-                            //console.log('>>>>>CLIENTS IN ROOM>>>>', clients);                        
                             _this2._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
                                 payload: data
@@ -236,13 +224,36 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                        console.log('RECEIVED PEER SIGNAL', data.peerData.signal);
-                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                            socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        console.log('RECEIVED PEER SIGNAL');
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
+                            var sendToSocketId = data.peerData.user.socketId;
+                            data.peerData.user = socket.user;
+                            socket.to(sendToSocketId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
                                 payload: data.peerData
                             });
-                            socket.leave(socket.room.roomId);
+                        }
+                        break;
+                    case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
+                        console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
+                            var _sendToSocketId = data.peerData.user.socketId;
+                            data.peerData.user = socket.user;
+                            socket.to(_sendToSocketId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER,
+                                payload: data.peerData
+                            });
+                        }
+                        break;
+                    case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
+                        console.log('RECEIVED PEER_SIGNAL_ICE', data);
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
+                            var _sendToSocketId2 = data.peerData.user.socketId;
+                            data.peerData.user = socket.user;
+                            socket.to(_sendToSocketId2).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+                                payload: data.peerData
+                            });
                         }
                         break;
                 }

@@ -27,7 +27,6 @@ class SocketService {
             return;
         }
         this._isConnected = true;
-        console.log('CONNECT ', StorageUtils.getJoinedRoom());
         const uri = `${window.location.protocol}//${window.location.host}`;
         this._socket = io(uri, {
             transports: ['websocket'],
@@ -130,21 +129,29 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
                     console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);                    
                     addUser(data.payload);
-                    // PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
+                    PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
-                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
-                    removeUser(data.payload);
-                    // PeerService.getInstance().removePeer(new User(data.payload));
+                    // console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
+                    PeerService.getInstance().removePeer(new User(data.payload));
+                    removeUser(data.payload);                    
                     break;
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
-                    console.log('--->>>' + SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
+                    // console.log('--->>>' + SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     dispatchInternalMessage(data);
                     break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
                     console.log('PEER SIGNAL RECEIVED--->>>', data);
-                    // PeerService.getInstance().connectToPeer(data);
-                    break;                                         
+                    PeerService.getInstance().creatAndSetRemoteDescription(data);
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
+                    console.log('PEER_SIGNAL_ANSWER--->>>', data);
+                    PeerService.getInstance().setAnswerFromRemote(data);
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
+                    console.log('PEER_SIGNAL_ICE--->>>', data);
+                    PeerService.getInstance().setIncomingIceCandidate(data);
+                    break;                                                                                     
             }
         });
     }

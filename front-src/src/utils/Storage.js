@@ -100,7 +100,6 @@ class StorageUtils {
 		if (allData && allData.joinedRoomId) {
 			joinedRoomId = allData.joinedRoomId;
 		}
-		console.log('GET ROOM', joinedRoomId);
 		return joinedRoomId;
 	}
 

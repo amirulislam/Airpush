@@ -1,6 +1,8 @@
-import PeerTransport from './PeerTransport';
-import SimplePeer from 'simple-peer';
+import CustomPeer from './CustomPeer';
 import User from '../../models/User';
+import _ from 'lodash';
+import safe from 'undefsafe';
+import FileTransferHelper from '../../services/peer/transport/FileTransferHelper';
 
 let instance;
 
@@ -18,29 +20,45 @@ class PeerService {
     }
 
     init() {
-        if (!SimplePeer.WEBRTC_SUPPORT) {
+        if (!CustomPeer.isRtcSupported()) {
             return;
         }
         this._isWebRtcSupported = true;
     }
 
-    createPeer(user = {}, isInitiator = true, signal = false) {
+    createPeer(user, signal = false) {
         if (!this._isWebRtcSupported) {
             return;
         }
         if (this._peerExists(user)) {
             return;
         }
-        let peer = new PeerTransport({
-            user,
-            isInitiator,
-            signal
+        let peer = new CustomPeer({
+            user
         });
         peer.onClose = p => {
             console.log('Peer connection CLOSED')
-        }         
-        this._peers.push(peer);
-        return peer;
+        }
+        this._peers.push(peer);        
+        if (!signal) {
+            peer.createChanel().createOffer();
+            return peer;
+        } else {
+			peer.setRemoteDescription(signal);
+			// peer.onIceCandidate = candidate => {
+            //     if (candidate) {
+            //         console.log('Remote peer ice candidate send it');
+            //     }
+			// 	// localPeer.addIceCandidate(candidate);
+			// }			
+			// peer.onAnswerCreated = answerDesc => {
+			// 	console.log('ON ANSWER CREATED - send it to source', answerDesc);
+			// 	// onDescriptionFromRemote(answerDesc);
+            // }
+            peer.createAnswer();
+        }
+        console.log('CODE FOR PEER TO SET SIGNAL')
+        console.log('PEER CREATED ', this._peers.length);
     }
 
     removePeer(user) {
@@ -48,8 +66,54 @@ class PeerService {
         if (!peerData) {
             return;
         }
-        peerData.peer.diconnect();
+        peerData.peer.disconnect();
         this._peers.splice(peerData.index, 1);
+        console.log('PEER REMOVED ', this._peers.length);
+    }
+
+    creatAndSetRemoteDescription(data) {
+        console.log('CREATE SET REMOTE DESCRIPTION', data)
+        if (_.isNil(safe(data, 'payload.user')) || _.isNil(safe(data, 'payload.signal'))) {
+            return;
+        }
+        let peer = this.createPeer(new User(data.payload.user), data.payload.signal);
+    }
+
+    // set answer from remote
+    setAnswerFromRemote(data) {
+        if (_.isNil(safe(data, 'payload.user')) || _.isNil(safe(data, 'payload.signal'))) {
+            return;
+        }
+        const peeerExists = this._peerExists(data.payload.user);
+        if (peeerExists && !_.isNil(peeerExists.peer)) {
+            const peer = peeerExists.peer;
+            console.log('ANSWER SET>>> ');
+            peer.setRemoteDescription(data.payload.signal);
+        }
+    }
+
+    setIncomingIceCandidate(data) {
+        if (_.isNil(safe(data, 'payload.user')) || _.isNil(safe(data, 'payload.candidate'))) {
+            return;
+        }
+        const peeerExists = this._peerExists(data.payload.user);
+        if (peeerExists && !_.isNil(peeerExists.peer)) {
+            const peer = peeerExists.peer;
+            console.log('ANSWER SET>>> ');
+            peer.addIceCandidate(data.payload.candidate);
+        } 
+    }
+
+    // send file to all peers
+    sendFile(file) {
+        if (!this._isWebRtcSupported || this._peers.length === 0 || !file) {
+            return false;
+        }
+        for (let i = 0; i < this._peers.length; i++) {
+            console.log('send to peer');
+            new FileTransferHelper(file, this._peers[i]);
+            // this._peers[i].sendFile();
+        }
     }
 
     // retun peer of exists
@@ -65,17 +129,6 @@ class PeerService {
             }
         }
         return p;
-    }
-
-    connectToPeer(peerToConnect) {
-        let existingPeer = this._peerExists(peerToConnect.payload.user);
-        console.log('CONNECTING TO PEER ', this._peers.length, existingPeer);
-        if (existingPeer) {
-            return;
-        }
-        const peer = this.createPeer(new User(peerToConnect.payload.user), false, peerToConnect.payload.signal);
-        console.log('CONNECTING TO PEER 2', peer);
-        // peer.triggerSignal();
     }
 
     static getInstance() {
