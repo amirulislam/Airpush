@@ -19,7 +19,7 @@ class SocketService {
         if (instance) {
             throw new Error('Can not instantiate like this');
         }
-        PeerService.getInstance();
+        // PeerService.getInstance();
     }
 
     connect() {
@@ -121,6 +121,18 @@ class SocketService {
         this._socket.emit(eventType, data);
     }
 
+    // inform newly created user about self
+    informNewUserAboutSelf(newUser) {
+        let me = new User(StorageUtils.getUser());
+        this.send({
+			type: SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
+			peerData: {
+                sender: me,
+                sendTo: newUser.socketId
+			}
+		}, SOCKET_EVENTS.MESSAGE);
+    }
+
     // on message received
     onDataReceive() {
         this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
@@ -129,15 +141,17 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
                     console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);                    
                     addUser(data.payload);
-                    PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
+                    this.informNewUserAboutSelf(data.payload);
+                    //PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
-                    // console.log('--->>>' + SOCKET_MESSAGE_TYPES.USER_LEAVED, data.payload);
                     PeerService.getInstance().removePeer(new User(data.payload));
                     removeUser(data.payload);                    
                     break;
+                case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
+                    addUser(data.payload);
+                    break;                    
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
-                    // console.log('--->>>' + SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
                     dispatchInternalMessage(data);
                     break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:

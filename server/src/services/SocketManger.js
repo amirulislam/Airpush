@@ -180,6 +180,15 @@ class SocketManager {
                         console.log('ERROR >>>> NO ROOM >>>>');
                     }
                 break;
+                case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
+                    if (!_.isNil(safe(data, 'peerData.sender')) && !_.isNil(safe(data, 'peerData.sendTo'))) {
+                        socket.to(data.peerData.sendTo).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
+                                payload: data.peerData.sender
+                            }
+                        );
+                    }
+                break;                
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
                     console.log('RECEIVED PEER SIGNAL');
                     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
