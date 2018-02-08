@@ -180,8 +180,19 @@ class SocketManager {
                         console.log('ERROR >>>> NO ROOM >>>>');
                     }
                 break;
+                case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
+                    // console.log(SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE, data);
+                    if (!_.isNil(safe(socket, 'room.roomId'))) {      
+                        data.user = socket.user;
+                        socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                            type: data.type,
+                            payload: data
+                        });
+                    }
+                break;                
                 case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
                     if (!_.isNil(safe(data, 'peerData.sender')) && !_.isNil(safe(data, 'peerData.sendTo'))) {
+                        data.peerData.sender.socketId = socket.user.socketId;
                         socket.to(data.peerData.sendTo).emit(SOCKET_EVENTS.MESSAGE, {
                                 type: SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
                                 payload: data.peerData.sender
@@ -191,9 +202,10 @@ class SocketManager {
                 break;                
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
                     console.log('RECEIVED PEER SIGNAL');
-                    if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
-                        const sendToSocketId = data.peerData.user.socketId;
+                    if (!_.isNil(safe(data, 'peerData.toUser.socketId'))) {
+                        const sendToSocketId = data.peerData.toUser.socketId;
                         data.peerData.user = socket.user;
+                        delete data.peerData.toUser;
                         socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
                                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
                                 payload: data.peerData

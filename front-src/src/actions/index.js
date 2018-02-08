@@ -9,7 +9,7 @@ TokenUtils.useToken(axios);
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
-USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES } from './Types';
+USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -200,12 +200,38 @@ export const dispatchInternalMessage = (message) => {
 	});
 }
 
+// dispatch internal message from within component
+export const dispatchInternalMessageFromComponent = (message) => {
+	return {
+		type: MESSAGE,
+		payload: message		
+	}
+}
+
+// remove internal message
+export const removeInternalMessage = messageId => {
+	return {
+		type: REMOVE_INTERNAL_MESSAGE,
+		payload: messageId		
+	}
+}
+
 export const joinedRoomId = (joinedRoomId) => {
 	StorageUtils.setJoinedRoom(joinedRoomId);
 	store.dispatch({
 		type: JOINED_ROOM_ID,
 		payload: joinedRoomId	
 	});	
+}
+
+// retrive all other users
+export const getOthers = () => {
+	if (store) {
+		const { users } = store.getState();
+		return users || [];
+	} else {
+		return [];
+	}
 }
 
 

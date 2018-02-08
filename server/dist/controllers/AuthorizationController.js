@@ -48,21 +48,6 @@ var AuthorizationController = function () {
 			if (!_lodash2.default.isNil((0, _undefsafe2.default)(decoded, '_id'))) {
 				req.userData = decoded;
 				next();
-				// AuthorizationController.getUserById(decoded._id)
-				// .then(user => {	
-				// 	if (!_.isNil(user)) {
-				// 		req.userData = user;
-				// 		return next();
-				// 	}
-				// 	return Promise.reject("Could not find the user");
-				// })
-				// .catch(e => {
-				// 	debug('Error', e);
-				// 	return res.status(404).json({
-				// 		message: 'Could not find the user',
-				// 		status: 403
-				// 	});				
-				// });
 			}
 		}
 

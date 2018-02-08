@@ -9,7 +9,11 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ShareScreenIcon from 'material-ui/svg-icons/communication/screen-share';
 import VideoCallIcon from 'material-ui/svg-icons/notification/ondemand-video';
 import AudioCallIcon from 'material-ui/svg-icons/image/audiotrack';
-import PeerService from '../../services/peer/PeerService';
+import FileService from '../../services/files/FileService';
+import AcceptFileMessage from '../../models/AcceptFileMessage';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
+import SocketService from '../../services/SocketService';
+import { dispatchInternalMessageFromComponent } from '../../actions';
 
 class ChatBottomActions extends Component {
 
@@ -43,9 +47,18 @@ class ChatBottomActions extends Component {
                 alert('File is empty, please select a non-empty file');
                 return;
             }
-            console.log('File selected');
-            // PeerService.getInstance().sendFile(file);
-        }     
+            // console.log(FileService.getInstance().addFile(file));
+            const fileModel = FileService.getInstance().addFile(file);
+            const acceptFileMessageModel = new AcceptFileMessage(fileModel.getTransportData());
+            SocketService.getInstance().send(acceptFileMessageModel, SOCKET_EVENTS.MESSAGE);
+            
+            // self message
+            const offerFileMessageModel = new AcceptFileMessage(fileModel, SOCKET_MESSAGE_TYPES.INTERNAL_MESSAGE_OFFER);
+            this.props.dispatchInternalMessageFromComponent({
+                payload: offerFileMessageModel,
+                type: offerFileMessageModel.type
+            });
+        }
     }
 
     onInputChange(e) {
@@ -53,6 +66,8 @@ class ChatBottomActions extends Component {
     }
 
     onAttachedFileAction() {
+        // PeerService.getInstance().createPeers();
+        // return;
         if (this._fileInput.click) {
             this._fileInput.click();
         }
@@ -88,5 +103,5 @@ class ChatBottomActions extends Component {
     }
 }
 
-export default ChatBottomActions;
+export default connect(null, { dispatchInternalMessageFromComponent })(ChatBottomActions);
 

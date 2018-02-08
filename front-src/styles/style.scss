@@ -197,10 +197,12 @@ html, body, #airpush-ui {
                                                 margin-right: 13px; width: 30px; height: 30px; border-radius: 15px;
                                             }
                                             .user-name {
+                                                font-size: 13px;
                                                 font-weight: 600; margin-top: 2px; margin-bottom: 0px;
                                             }
                                         }
                                         .message-body {
+                                            font-size: 13px;
                                             .text-content {
                                                 a:link {
                                                     color: #4fa3f7;
@@ -214,6 +216,9 @@ html, body, #airpush-ui {
                                                 a:active {
                                                     color: #4fa3f7;
                                                 }                                                
+                                            }
+                                            .accept-message-content {
+                                                .file-name { font-style: italic; };
                                             }
                                         }
                                         &.owner {

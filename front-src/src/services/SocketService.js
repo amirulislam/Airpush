@@ -145,7 +145,7 @@ class SocketService {
                     //PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
-                    PeerService.getInstance().removePeer(new User(data.payload));
+                    // PeerService.getInstance().removePeer(new User(data.payload));
                     removeUser(data.payload);                    
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
@@ -154,9 +154,11 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
                     dispatchInternalMessage(data);
                     break;
+                case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
+                    dispatchInternalMessage(data);
+                    break;                    
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                    console.log('PEER SIGNAL RECEIVED--->>>', data);
-                    PeerService.getInstance().creatAndSetRemoteDescription(data);
+                    PeerService.getInstance().createFilePeerAndSetRemoteDescription(data);
                     break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
                     console.log('PEER_SIGNAL_ANSWER--->>>', data);

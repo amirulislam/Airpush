@@ -1,8 +1,9 @@
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
-import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, PEER_TYPES} from '../../config';
 import _ from 'lodash';
 import DetectRTC from 'detectrtc';
+import shortid from 'shortid';
 
 class CustomPeer {
 	
@@ -14,34 +15,72 @@ class CustomPeer {
     _receiveChanel;
     _rawLocalDescription;
     _rawRemoteDescription;
-	_readyState;
-	_user = {};
+    _readyState;
+    _readyReceiveState;
+    _user = {};
+    _fileModel = {};
+    _peerType = PEER_TYPES.FILE_TRANSPORT;
+    _id = shortid.generate();
+    _remotePeerId;
 
     constructor(data) {        
         if (!_.isNil(data.user)) {
             this._user = data.user;
-		}
+        }
+        
+        if (!_.isNil(data.fileModel)) {
+            this._fileModel = data.fileModel;
+        }
+        
+        if (!_.isNil(data.peerType)) {
+            this._peerType = data.peerType;
+        }  
+
+        if (!_.isNil(data.remotePeerId)) {
+            this._remotePeerId = data.remotePeerId;
+        }
+        
+        if (!_.isNil(data._id)) {
+            this._id = data._id;
+        }         
 		
         if (!_.isNil(data.iceServers)) {
             this._servers.iceServers = data.iceServers;
-        }		
+        }
+        
+        // this._sendIceCandidate = this._sendIceCandidate.bind(this);
 
         this._pc = new RTCPeerConnection(this._servers);
         this._pc.onicecandidate = event => {
-			this._sendIceCandidate(event.candidate);
-            this.onIceCandidate(event.candidate);
+
+            if (event.candidate) {
+                SocketService.getInstance().send({
+                    type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+                    peerData: {
+                        candidate: event.candidate,
+                        user: this._user,
+                        toPeerId: this._remotePeerId
+                    }
+                }, SOCKET_EVENTS.MESSAGE);			
+            }
+
+            this.onIceCandidate(event.candidate, this._remotePeerId);
         };
         this._pc.oniceconnectionstatechange = event => {
         };
         this._pc.ondatachannel = this._onDataChannelCallback.bind(this);
     }
 
+    setRemotePeerId(id) {
+        this._remotePeerId = id;
+    }
+
 	// create chanel
     createChanel() {
         this._dataChanel = this._pc.createDataChannel('sendDataChannel');
         this._dataChanel.binaryType = 'arraybuffer';
-        this._dataChanel.onopen = this._onDataChannelStateChange.bind(this);
-        this._dataChanel.onclose = this._onDataChannelStateChange.bind(this);
+        this._dataChanel.onopen = this._onOriginDataChannelStateChange.bind(this);
+        this._dataChanel.onclose = this._onOriginDataChannelStateChange.bind(this);
         this._dataChanel.onmessage = this._onReceiveMessageCallback.bind(this);
         return this;
     }
@@ -53,28 +92,28 @@ class CustomPeer {
         }				
     }
 
-    _onDataChannelStateChange() {        
+    _onOriginDataChannelStateChange() { 
         if (!this._dataChanel) {
             this._readyState = false;
             return;
 		}
-		console.log('DATA CHANEL STATE CHANGE', this._dataChanel.readyState);
+        this._readyState = this._dataChanel.readyState === 'open' ? true : false;
+        console.log('OrIGIN CHANEL STATE CHANGE ', this._dataChanel.readyState);
+        if (!this._readyState && this.onClose) {
+			this.onClose(this);
+		}
+    }     
+
+    _onDataChannelStateChange() { 
+        if (!this._dataChanel) {
+            this._readyState = false;
+            return;
+		}
 		this._readyState = this._dataChanel.readyState === 'open' ? true : false;
         if (!this._readyState && this.onClose) {
 			this.onClose(this);
 		}
-    }
-
-    _onReceiveChannelStateChange() {
-        if (!this._receiveChanel) {
-            this.readyStateReceive = false;
-            return;
-        }
-        this.readyStateReceive = this._receiveChanel.readyState === 'open' ? true : false;
-        console.log('Receive channel state is: ' + this.readyStateReceive);
-        // if (readyState === 'open') {
-        // }
-    }
+    } 
     
     _onReceiveMessageCallback(event) {
         console.log('ON RECEIVE BITES', event.data);
@@ -150,39 +189,50 @@ class CustomPeer {
 	// signal other peer 
 	// use your own socket implementation to trasport signal data
     _signalOtherPeeer() {
+        console.log('Signal other peer');
+        const propseId = shortid.generate();
+        this.setRemotePeerId(propseId);
         SocketService.getInstance().send({
 			type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
 			peerData: {
 				signal: this._rawLocalDescription,
-				user: this._user
-				// x_peer_auth_token: StorageUtils.getInstance().getToken() // not needed here, socket auth already in place	
+                toUser: this._user,
+                fileModel: this._fileModel,
+                remotePeerId: this._id,
+                propseId
 			}
 		}, SOCKET_EVENTS.MESSAGE);
 	}
 	
 	// signal answer back
     _signalAnswerBack() {
+        console.log('Signal answer back'); 
         SocketService.getInstance().send({
 			type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER,
 			peerData: {
 				signal: this._rawLocalDescription,
-				user: this._user
+                user: this._user,
+                fileModel: this._fileModel.getTransportData(),
+                remotePeerId: this._id,
+                originalCallFromId: this._remotePeerId
 			}
 		}, SOCKET_EVENTS.MESSAGE);
 	}
 
 	// send ice coandidate to other
-	_sendIceCandidate(candidate) {
-		if (candidate) {
-			SocketService.getInstance().send({
-				type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
-				peerData: {
-					candidate,
-					user: this._user
-				}
-			}, SOCKET_EVENTS.MESSAGE);			
-		}
-	}
+	// _sendIceCandidate(candidate, remoteId) {
+    //     console.log('Signal candidate 222', console.log(remoteId));
+    //     return;            
+	// 	if (candidate) {
+	// 		SocketService.getInstance().send({
+	// 			type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+	// 			peerData: {
+	// 				candidate,
+	// 				user: this._user
+	// 			}
+	// 		}, SOCKET_EVENTS.MESSAGE);			
+	// 	}
+	// }
 
 	// send 
     send(data) {
@@ -232,7 +282,7 @@ class CustomPeer {
     // override
     onAnswerCreated(desc) {}
     // override
-	onIceCandidate(candifate) {}
+	onIceCandidate(candifate, remotePeerId) {}
 	// override
 	onClose(p) {}
 

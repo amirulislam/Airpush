@@ -5,6 +5,8 @@ import Utils from '../../utils';
 import { SOCKET_MESSAGE_TYPES } from '../../config';
 import UserActivityInfo from './beans/UserActivityInfo';
 import UserMessage from './beans/UserMessage';
+import AcceptFileMessageUi from './beans/AcceptFileMessageUi';
+import FileMessageOfferUi from './beans/FileMessageOfferUi';
 import _ from 'lodash';
 
 
@@ -38,7 +40,13 @@ class ChatMessenger extends Component {
             break;
             case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
                 return <UserMessage message={m} key={Utils.uid()} />
-            break;       
+            break;  
+            case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
+                return <AcceptFileMessageUi message={m} key={Utils.uid()} />
+            break;
+            case SOCKET_MESSAGE_TYPES.INTERNAL_MESSAGE_OFFER:
+                return <FileMessageOfferUi message={m} key={Utils.uid()} />
+            break;
         }
         return <noscript key={Utils.uid()} />;
     }
