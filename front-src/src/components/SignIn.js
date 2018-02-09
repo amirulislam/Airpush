@@ -66,6 +66,12 @@ class SignIn extends Component {
         });
     }
 
+    dummySignIn() {
+        this.props.signIn('', 'GOOGLE', '', () => {
+            
+        });        
+    }
+
     render() {
         return(
             <div className="sign-in-ui">
@@ -73,7 +79,7 @@ class SignIn extends Component {
                     <div id="g-signin2" className="g-signin2 login-space-bottom" data-onsuccess="onGoogleSignIn">
                     </div>
                     <a href="#" className="login-base-button facebook-login login-space-bottom">Sign in with Facebook</a>
-                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.signInLinkedin() }>Sign in with Twitter</a>
+                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.dummySignIn() }>Sign in with Twitter</a>
                 </Modal>
             </div>
         )

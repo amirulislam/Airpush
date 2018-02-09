@@ -8,9 +8,26 @@ import GoogleService from '../services/GoogleService';
 import User from '../models/User';
 import JWT from '../utils/JWT';
 
+
+// remove this
+const user = {
+    email: "eblocksapps@gmail.com",
+    iat: 1517557279,
+    name: "Eblocks Shopify Apps",
+    photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
+    _id: "5a74161feddff24834fbaf88",
+    msgType: "NEW_USER_JOINED"
+}
+
+
 class SignInController {
 
     static logUser(req, res, next) {
+        SignInController.response(res, {
+            user, token: JWT.createUserToken(user)
+        });
+        return;
+
         GoogleService.verify(req.body.accessToken, req.body.email)
         .then(result => {
             User.findOneAndUpdate({

@@ -37,6 +37,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var debug = (0, _debug2.default)('airpush:SignInController');
 
+
+// remove this
+var user = {
+    email: "eblocksapps@gmail.com",
+    iat: 1517557279,
+    name: "Eblocks Shopify Apps",
+    photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
+    _id: "5a74161feddff24834fbaf88",
+    msgType: "NEW_USER_JOINED"
+};
+
 var SignInController = function () {
     function SignInController() {
         _classCallCheck(this, SignInController);
@@ -45,6 +56,11 @@ var SignInController = function () {
     _createClass(SignInController, null, [{
         key: 'logUser',
         value: function logUser(req, res, next) {
+            SignInController.response(res, {
+                user: user, token: _JWT2.default.createUserToken(user)
+            });
+            return;
+
             _GoogleService2.default.verify(req.body.accessToken, req.body.email).then(function (result) {
                 _User2.default.findOneAndUpdate({
                     email: result.email
