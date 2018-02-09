@@ -70,7 +70,7 @@ class AcceptFileMessageUi extends Component {
             this.setState({ acceptedFile: true });
             PeerService.getInstance().createFilePeer(this.props.message.payload.fileModel, this.props.message.payload.user);
             // console.log(this.props.message.payload.fileModel);
-            // this.props.removeInternalMessage(this.props.message._id);
+            this.props.removeInternalMessage(this.props.message._id);
         }
     }
 

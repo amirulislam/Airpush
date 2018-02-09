@@ -276,6 +276,17 @@ var SocketManager = function () {
                             });
                         }
                         break;
+                    case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
+                        console.log(_config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
+                            var _sendToSocketId3 = data.peerData.user.socketId;
+                            data.peerData.user = socket.user;
+                            socket.to(_sendToSocketId3).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+                                payload: data.peerData
+                            });
+                        }
+                        break;
                 }
             });
         }

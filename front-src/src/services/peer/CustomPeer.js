@@ -4,6 +4,7 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, PEER_TYPES} from '../../config';
 import _ from 'lodash';
 import DetectRTC from 'detectrtc';
 import shortid from 'shortid';
+import FileTransferHelper from './transport/FileTransferHelper';
 
 class CustomPeer {
 	
@@ -22,6 +23,8 @@ class CustomPeer {
     _peerType = PEER_TYPES.FILE_TRANSPORT;
     _id = shortid.generate();
     _remotePeerId;
+    _remoteIsReady;
+    _transferStarted = false;
 
     constructor(data) {        
         if (!_.isNil(data.user)) {
@@ -39,6 +42,10 @@ class CustomPeer {
         if (!_.isNil(data.remotePeerId)) {
             this._remotePeerId = data.remotePeerId;
         }
+
+        if (!_.isNil(data.remoteIsReady)) {
+            this._remoteIsReady = data.remoteIsReady;
+        }        
         
         if (!_.isNil(data._id)) {
             this._id = data._id;
@@ -52,19 +59,7 @@ class CustomPeer {
 
         this._pc = new RTCPeerConnection(this._servers);
         this._pc.onicecandidate = event => {
-
-            if (event.candidate) {
-                SocketService.getInstance().send({
-                    type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
-                    peerData: {
-                        candidate: event.candidate,
-                        user: this._user,
-                        toPeerId: this._remotePeerId
-                    }
-                }, SOCKET_EVENTS.MESSAGE);			
-            }
-
-            this.onIceCandidate(event.candidate, this._remotePeerId);
+            this.onIceCandidate(event, this._remotePeerId);
         };
         this._pc.oniceconnectionstatechange = event => {
         };
@@ -98,10 +93,12 @@ class CustomPeer {
             return;
 		}
         this._readyState = this._dataChanel.readyState === 'open' ? true : false;
-        console.log('OrIGIN CHANEL STATE CHANGE ', this._dataChanel.readyState);
+        // console.log('OrIGIN CHANEL STATE CHANGE ', this._dataChanel.readyState);
         if (!this._readyState && this.onClose) {
 			this.onClose(this);
-		}
+		} else {
+            this._notifyOtherReadyState();
+        }
     }     
 
     _onDataChannelStateChange() { 
@@ -109,10 +106,13 @@ class CustomPeer {
             this._readyState = false;
             return;
 		}
-		this._readyState = this._dataChanel.readyState === 'open' ? true : false;
+        this._readyState = this._dataChanel.readyState === 'open' ? true : false;
+        // console.log('REMOTE CHANEL STATE CHANGE ', this._dataChanel.readyState);
         if (!this._readyState && this.onClose) {
 			this.onClose(this);
-		}
+		} else {
+            this._onPeersConnectionReady();
+        }
     } 
     
     _onReceiveMessageCallback(event) {
@@ -220,33 +220,18 @@ class CustomPeer {
 	}
 
 	// send ice coandidate to other
-	// _sendIceCandidate(candidate, remoteId) {
-    //     console.log('Signal candidate 222', console.log(remoteId));
-    //     return;            
-	// 	if (candidate) {
-	// 		SocketService.getInstance().send({
-	// 			type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
-	// 			peerData: {
-	// 				candidate,
-	// 				user: this._user
-	// 			}
-	// 		}, SOCKET_EVENTS.MESSAGE);			
-	// 	}
-	// }
-
-	// send 
-    send(data) {
-        if (this._dataChanel && this.readyState) {
-            this._dataChanel.send(data);
-        }
-    }
-
-	// send file
-    sendFile(binaryData) {
-        if (this._dataChanel && this.readyState) {
-			console.log('Peer send chunk ...');
-			this._dataChanel.send(binaryData);
-        }
+	_sendIceCandidate(candidate, remoteId) {
+        console.log('Signal candidate 222', console.log(candidate, remoteId));
+        return;            
+		if (candidate) {
+			SocketService.getInstance().send({
+				type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+				peerData: {
+					candidate,
+					user: this._user
+				}
+			}, SOCKET_EVENTS.MESSAGE);			
+		}
 	}
 	
     set readyState(val) {
@@ -260,6 +245,71 @@ class CustomPeer {
     get user() {
         return this._user;
     }
+
+    set remoteIsReady(val) {
+        this._remoteIsReady = val;
+        this._onPeersConnectionReady();
+    }
+
+	onIceCandidate(candidate, remotePeerId) {
+        if (event.candidate) {
+            SocketService.getInstance().send({
+                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+                peerData: {
+                    candidate: event.candidate,
+                    user: this._user,
+                    toPeerId: this._remotePeerId
+                }
+            }, SOCKET_EVENTS.MESSAGE);			
+        }        
+    }
+
+    // notify other about ready state
+    _notifyOtherReadyState() {
+        SocketService.getInstance().send({
+            type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+            peerData: {
+                user: this._user,
+                toPeerId: this._remotePeerId,
+                remoteIsReady: this._remoteIsReady
+            }
+        }, SOCKET_EVENTS.MESSAGE);
+    }
+
+    // are both peers ready
+    arePeersReady() {
+        return this._readyState === true && this._remoteIsReady === true;
+    }
+
+    // on both peers ready
+    _onPeersConnectionReady() {
+        if (this.arePeersReady() && !this._transferStarted) {
+            const ft = new FileTransferHelper(this._fileModel);
+            ft.initTransfer(this);
+        }
+    }
+
+	// send 
+    send(data) {
+        if (this._dataChanel && this.readyState) {
+            this._dataChanel.send(data);
+        }
+    }
+
+	// send file
+    sendFile(binaryData) {
+        if (this._dataChanel && this.arePeersReady()) {
+			console.log('Peer send chunk ...');
+            this._dataChanel.send(binaryData);
+        }
+	}    
+
+    // override
+    onOfferCreated(desc) {}
+    // override
+    onAnswerCreated(desc) {}
+	// override
+	onClose(p) {}    
 
     // close connection / free memory
     disconnect() {
@@ -276,15 +326,6 @@ class CustomPeer {
             this._pc = null;
         } catch (e) {};
 	}
-	
-    // override
-    onOfferCreated(desc) {}
-    // override
-    onAnswerCreated(desc) {}
-    // override
-	onIceCandidate(candifate, remotePeerId) {}
-	// override
-	onClose(p) {}
 
 	static isRtcSupported() {
         return DetectRTC.isWebRTCSupported;

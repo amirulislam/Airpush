@@ -236,7 +236,19 @@ class SocketManager {
                             }
                         );
                     }               
-                break;                                
+                break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
+                    console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                    if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
+                        const sendToSocketId = data.peerData.user.socketId;
+                        data.peerData.user = socket.user;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+                                payload: data.peerData
+                            }
+                        );
+                    }               
+                break;                                                
             }
         })
     }    

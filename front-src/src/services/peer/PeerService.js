@@ -95,6 +95,17 @@ class PeerService {
         existingPeerData.peer.addIceCandidate(data.payload.candidate);
     }    
 
+    setRemoteReady(data) {
+        if (_.isNil(safe(data, 'payload.toPeerId'))) {
+            return;
+        }
+        let existingPeerData = this._findPeerById(data.payload.toPeerId);
+        if (!existingPeerData) {
+            return;
+        }
+        existingPeerData.peer.remoteIsReady = true;
+    }
+
 
     _findPeerById(peerId) {
         let p = false;

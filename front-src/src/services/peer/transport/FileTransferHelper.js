@@ -1,11 +1,26 @@
-const CHUNK_SIZE = 16384;
+export const CHUNK_SIZE = 16384;
+// export const CHUNK_SIZE = 16;
 
 class FileTransferHelper {
+    _fileModel;
     _file;
+    _fileName = '';
+    _fileSize = 1;
     _peer;
 
-    constructor(file, peer) {
-        this._file = file;
+    constructor(fileModel) {
+        if (fileModel) {
+            this._file = fileModel.fileRef;
+            this._fileModel = fileModel;
+            this._fileName = fileModel.name;
+            this._fileSize = fileModel.size;
+        }
+    }
+
+    initTransfer(peer) {
+        if (!this._file) {
+            return;
+        }
         this._peer = peer;
         this.sliceFile(0);
     }
@@ -21,27 +36,14 @@ class FileTransferHelper {
                     }, 0);
                 }
                 let progress = offset + e.target.result.byteLength;
-                console.log('PROGRESS>>> ', progress);
+                console.log('PROGRESS>>> ', progress === this._fileSize);
+                if (progress === this._fileSize) {
+                    // send close signal
+                }
             };
         })(this._file);
         var slice = this._file.slice(offset, offset + CHUNK_SIZE);
-        reader.readAsArrayBuffer(slice);
-
-
-        // var sliceFile = function(offset) {
-        //   var reader = new window.FileReader();
-        //   reader.onload = (function() {
-        //     return function(e) {
-        //       sendChannel.send(e.target.result);
-        //       if (file.size > offset + e.target.result.byteLength) {
-        //         window.setTimeout(sliceFile, 0, offset + CHUNK_SIZE);
-        //       }
-        //       sendProgress.value = offset + e.target.result.byteLength;
-        //     };
-        //   })(file);
-        //   var slice = file.slice(offset, offset + CHUNK_SIZE);
-        //   reader.readAsArrayBuffer(slice);
-        // };        
+        reader.readAsArrayBuffer(slice);     
     }
 }
 

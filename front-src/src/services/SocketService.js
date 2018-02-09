@@ -167,7 +167,11 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
                     console.log('PEER_SIGNAL_ICE--->>>', data);
                     PeerService.getInstance().setIncomingIceCandidate(data);
-                    break;                                                                                     
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
+                    console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                    PeerService.getInstance().setRemoteReady(data);
+                    break;                                                                                                          
             }
         });
     }
