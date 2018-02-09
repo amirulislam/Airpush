@@ -29,3 +29,18 @@ export const SOCKET_MESSAGE_TYPES = {
     PEER_SIGNAL_ICE: 'PEER_SIGNAL_ICE',
     PEER_SIGNAL_IM_READY: 'PEER_SIGNAL_IM_READY'
 }
+
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production' ? true : false;
+
+// letsencrypt config
+const getLetsEncryptConfig = () => {
+    return IS_PRODUCTION ? {
+        email: 'crisu.ionel@gmail.com',
+        approvedDomains: ['airpush.io']
+    } : {
+        email: 'crisu.ionel@gmail.com',
+        approvedDomains: ['127.0.0.1']
+    };
+};
+export const LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();
+

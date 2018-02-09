@@ -18,7 +18,24 @@
 
         <meta name="google-signin-client_id" content="540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com">
 
+        <!--linkedin-->
+        <script type="text/javascript" src="//platform.linkedin.com/in.js">
+            api_key: 7887g4lh3vz8ua
+            authorize: true
+            onLoad: onLinkedInLoad
+        </script>
+        <script type="text/javascript">
+            
+            // Setup an event listener to make an API call once auth is complete
+            function onLinkedInLoad() {
+                window.linkedinJS_SDKLoaded = true;
+            }
+
+        </script>
+        <!--/linkedin-->
+
         <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://cdn.rawgit.com/creatorrr/web-streams-polyfill/master/dist/polyfill.min.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">

@@ -34,3 +34,17 @@ var SOCKET_MESSAGE_TYPES = exports.SOCKET_MESSAGE_TYPES = {
     PEER_SIGNAL_ICE: 'PEER_SIGNAL_ICE',
     PEER_SIGNAL_IM_READY: 'PEER_SIGNAL_IM_READY'
 };
+
+var IS_PRODUCTION = exports.IS_PRODUCTION = process.env.NODE_ENV === 'production' ? true : false;
+
+// letsencrypt config
+var getLetsEncryptConfig = function getLetsEncryptConfig() {
+    return IS_PRODUCTION ? {
+        email: 'crisu.ionel@gmail.com',
+        approvedDomains: ['airpush.io']
+    } : {
+        email: 'crisu.ionel@gmail.com',
+        approvedDomains: ['127.0.0.1']
+    };
+};
+var LETS_ENCRYPT_CONFIG = exports.LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();

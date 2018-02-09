@@ -25,6 +25,7 @@ class CustomPeer {
     _remotePeerId;
     _remoteIsReady;
     _transferStarted = false;
+    _fileTransfer;
 
     constructor(data) {        
         if (!_.isNil(data.user)) {
@@ -114,10 +115,6 @@ class CustomPeer {
             this._onPeersConnectionReady();
         }
     } 
-    
-    _onReceiveMessageCallback(event) {
-        console.log('ON RECEIVE BITES', event.data);
-    }
 
     _onDataChannelCallback(event) {
         console.log('Receive Channel Callback', event);
@@ -266,6 +263,7 @@ class CustomPeer {
 
     // notify other about ready state
     _notifyOtherReadyState() {
+        this._fileTransfer = new FileTransferHelper(this._fileModel, true);
         SocketService.getInstance().send({
             type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
             peerData: {
@@ -284,14 +282,22 @@ class CustomPeer {
     // on both peers ready
     _onPeersConnectionReady() {
         if (this.arePeersReady() && !this._transferStarted) {
-            const ft = new FileTransferHelper(this._fileModel);
-            ft.initTransfer(this);
+            this._fileTransfer = new FileTransferHelper(this._fileModel);
+            this._fileTransfer.initTransfer(this);
+        }
+    }
+
+    // on receive
+    _onReceiveMessageCallback(event) {
+        console.log('ON RECEIVE BITES', event.data);
+        if (this._fileTransfer) {
+            this._fileTransfer.read(event.data);
         }
     }
 
 	// send 
     send(data) {
-        if (this._dataChanel && this.readyState) {
+        if (this._dataChanel && this.arePeersReady()) {
             this._dataChanel.send(data);
         }
     }

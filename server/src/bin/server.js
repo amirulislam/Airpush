@@ -40,16 +40,16 @@ if (cluster.isWorker) {
 	var app = require('../app');
 
 
-	var http = require('http');
-	var server = http.createServer(app);
-	var io = require('socket.io').listen(server);
+	var httpServer = require('../app');
+	//var server = http.createServer(app);
+	var io = require('socket.io').listen(httpServer);
 	var redis = require('socket.io-redis');
 
 	io.adapter(redis({ host: 'localhost', port: 6379 }));
 
 	new SocketManager(io);
 
-	server.listen(3000);
+	// server.listen(3000);
 }
 
 

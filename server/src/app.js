@@ -7,6 +7,8 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 
+import Https from './middleware/letsencrypt';
+
 import apiV1 from './routes/api';
 
 const app = express();
@@ -31,6 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use('/app/worker', (req, res, next) => {
+	res.render('worker');
+	//res.render('app/worker/file-worker');
+});
 
 app.use('/app', (req, res, next) => {
 	res.render('app');
@@ -61,4 +68,4 @@ app.use(function(err, req, res, next) {
 	res.send(err);
 });
 
-module.exports = app;
+module.exports = Https(app);

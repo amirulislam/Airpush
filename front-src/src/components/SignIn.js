@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import Modal from './common/Modal';
 import { signIn } from '../actions';
 import StorageUtils from '../utils/Storage';
+import _ from 'lodash';
+import safe from 'undefsafe';
 
 class SignIn extends Component {
     constructor(props) {
         super(props);
+        this.getLinkedInUserdata = this.getLinkedInUserdata.bind(this);
     }
 
     componentDidMount() {
@@ -19,6 +22,35 @@ class SignIn extends Component {
             this.props.signIn(profile.getEmail(), 'GOOGLE', id_token, () => {
                 this.googleSignOut();
             });
+        }
+
+        window.linkedinOnUserAuthReceived = function(data) {
+            this.console.log('GET USER DATA', data);
+        };
+    }
+
+    getLinkedInUserdata() {
+        console.log('GET USER DATA');
+        IN.API.Raw("/people/~:(id,firstName,lastName,emailAddress,picture-url)?format=json")
+        .result(user => {
+            console.log(user);
+        })
+        .error(err => {
+            console.log(err);
+        });        
+    }
+
+    signInLinkedin() {
+        if (!window.linkedinJS_SDKLoaded) {
+            alert('Linkedin library failed to load');
+            return;
+        }
+
+        if (IN.ENV.auth.oauth_token && IN.ENV.auth.oauth_token !== '') {
+          this.getLinkedInUserdata();
+        } else {
+            console.log('AUTHORIZE ')
+            IN.User.authorize(linkedinOnUserAuthReceived);
         }
     }
 
@@ -41,7 +73,7 @@ class SignIn extends Component {
                     <div id="g-signin2" className="g-signin2 login-space-bottom" data-onsuccess="onGoogleSignIn">
                     </div>
                     <a href="#" className="login-base-button facebook-login login-space-bottom">Sign in with Facebook</a>
-                    <a href="#" className="login-base-button twitter-login">Sign in with Twitter</a>
+                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.signInLinkedin() }>Sign in with Twitter</a>
                 </Modal>
             </div>
         )

@@ -21,6 +21,10 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
+var _letsencrypt = require('./middleware/letsencrypt');
+
+var _letsencrypt2 = _interopRequireDefault(_letsencrypt);
+
 var _api = require('./routes/api');
 
 var _api2 = _interopRequireDefault(_api);
@@ -52,6 +56,11 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 app.set('views', _path2.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use('/app/worker', function (req, res, next) {
+	res.render('worker');
+	//res.render('app/worker/file-worker');
+});
+
 app.use('/app', function (req, res, next) {
 	res.render('app');
 });
@@ -80,4 +89,4 @@ app.use(function (err, req, res, next) {
 	res.send(err);
 });
 
-module.exports = app;
+module.exports = (0, _letsencrypt2.default)(app);

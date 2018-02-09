@@ -27,6 +27,7 @@
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.8",
     "socket.io": "^2.0.4",
+    "streamsaver": "^1.0.1",
     "undefsafe": "^2.0.1"
   },
   "devDependencies": {
