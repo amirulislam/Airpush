@@ -5,7 +5,7 @@ const map = new Map
 // Each event has a dataChannel that the data will be piped through
 self.onmessage = event => {
     // Create a uniq link for the download
-    let uniqLink = self.registration.scope + 'intercept-me-nr' + Math.random()
+    let uniqLink = self.registration.scope + '?t=test-me-nr' + Math.random()
 	let port = event.ports[0]
 
     let p = new Promise((resolve, reject) => {
