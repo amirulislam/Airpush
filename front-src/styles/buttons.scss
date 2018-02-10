@@ -14,6 +14,15 @@
     font-family: 'Open Sans',sans-serif;
     font-weight: 300;   
 }
+.login-base-button:visited {
+    color: #FFF;
+}
+.login-base-button:hover {
+    color: #FFF;
+}
+.login-base-button:active {
+    color: #FFF;
+}
 .login-space-bottom {
     margin-bottom: 15px;
 }
@@ -31,16 +40,16 @@
 }
 
 .twitter-login:link {
-    background: #4AB3F4;
+    background: #1178b3;
 }
 .twitter-login:visited {
-    background: #4AB3F4;
+    background: #1178b3;
 }
 .twitter-login:hover {
-    background: #58bbf9;
+    background: #1178b3;
 }
 .twitter-login:active {
-    background: #4AB3F4;
+    background: #1178b3;
 }
 /* google sign in button */
 #g-signin2 {

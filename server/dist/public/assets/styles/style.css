@@ -73,13 +73,14 @@
   left: 0px;
   top: 0px;
   z-index: 10000;
-  background: rgba(0, 0, 0, 0.8); }
+  /*background: rgba(0, 0, 0, .8);*/
+  background: #0f1b26; }
   .modal-overlay .generic-modal {
     width: 380px;
     background: #FFFFFF;
     position: relative;
     margin: auto;
-    margin-top: 10%;
+    margin-top: 1%;
     border-radius: 2px; }
     .modal-overlay .generic-modal .modal-header {
       padding: 5px;
@@ -119,6 +120,22 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover; }
+  .sign-in-ui .signin-logo-ui {
+    text-align: center;
+    padding: 40px 0px; }
+    .sign-in-ui .signin-logo-ui div {
+      color: #F2F2F2; }
+      .sign-in-ui .signin-logo-ui div span {
+        color: #fc363b;
+        margin-left: 2px; }
+
+.airpush-logo-inpage {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: -1px;
+  line-height: 62px;
+  text-size-adjust: 100%; }
 
 .login-base-button:link {
   padding: 9px 20px;
@@ -136,6 +153,15 @@
   font-family: 'Open Sans',sans-serif;
   font-weight: 300; }
 
+.login-base-button:visited {
+  color: #FFF; }
+
+.login-base-button:hover {
+  color: #FFF; }
+
+.login-base-button:active {
+  color: #FFF; }
+
 .login-space-bottom {
   margin-bottom: 15px; }
 
@@ -152,16 +178,16 @@
   background: #3B5998; }
 
 .twitter-login:link {
-  background: #4AB3F4; }
+  background: #1178b3; }
 
 .twitter-login:visited {
-  background: #4AB3F4; }
+  background: #1178b3; }
 
 .twitter-login:hover {
-  background: #58bbf9; }
+  background: #1178b3; }
 
 .twitter-login:active {
-  background: #4AB3F4; }
+  background: #1178b3; }
 
 /* google sign in button */
 #g-signin2 {

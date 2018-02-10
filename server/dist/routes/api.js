@@ -36,6 +36,7 @@ router.get('/', function (req, res, next) {
 router.use(_AuthorizationController2.default.validateSignature);
 
 router.post('/chat-room', _RoomsController2.default.createRoom);
+router.delete('/account', _SignInController2.default.removeAccount);
 
 router.use('*', function (req, res, next) {
   res.json({

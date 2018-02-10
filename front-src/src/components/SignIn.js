@@ -14,6 +14,7 @@ class SignIn extends Component {
 
     componentDidMount() {
         window.onGoogleSignIn = (googleUser) => {
+            console.log('ON G SIGN IN')
             if (StorageUtils.getUser()) {
                 return;
             }
@@ -76,11 +77,11 @@ class SignIn extends Component {
     render() {
         return(
             <div className="sign-in-ui">
-                <Modal { ...this.props } title="Sign in" wdt={350} onAccept={ this.onAccept }>
+                <Modal { ...this.props } renderSignInLogo={true} title="Sign in" wdt={350} onAccept={ this.onAccept }>
                     <div id="g-signin2" className="g-signin2 login-space-bottom" data-onsuccess="onGoogleSignIn">
                     </div>
                     <a href="#" className="login-base-button facebook-login login-space-bottom">Sign in with Facebook</a>
-                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.dummySignIn() }>Sign in with Twitter</a>
+                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.dummySignIn() }>Sign in with Linkedin</a>
                 </Modal>
             </div>
         )

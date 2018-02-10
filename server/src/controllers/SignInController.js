@@ -55,6 +55,22 @@ class SignInController {
             meta: {}
         }); 
     }
+
+    // remove account
+    static removeAccount(req, res, next) {
+        User.remove({
+            email: req.userData.email
+        })
+        .then(u => {
+            SignInController.response(res, {});
+        })
+        .catch(err => {
+			return res.status(500).json({
+				message: 'Could not remove the account',
+				status: 500
+			});	
+        });
+    }
 }
 
 export default SignInController;

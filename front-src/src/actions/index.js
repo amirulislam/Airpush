@@ -10,7 +10,7 @@ const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
 USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
-MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD } from './Types';
+MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -256,6 +256,32 @@ export const downloadMessageInformProgress = (messageId, progress) => {
 		type: MESSAGE_DOWNLOAD_PROGRESS,
 		payload: { progress, messageId }	
 	});
+}
+
+// remove account
+export const removeAccount = () => {
+	return (dispatch, getState) => {
+		axios.delete(`${API_ROOT}/account`)
+		.then(({ data }) => {
+			// dispatch({
+			// 	type: ACCOUNT_REMOVED,
+			// 	payload: false	
+			// })
+			StorageUtils.removeUser();
+			SocketService.getInstance().disconnect();
+			dispatch({
+				type: LOG_OUT,
+				payload: open
+			})
+			location.reload();
+		})
+		.catch(err => {
+			console.log(err);
+			if (safe(err, 'response.data.message') && _.isFunction(onError)) {
+				onError(err.response.data);
+			}
+		});
+	}
 }
 
 

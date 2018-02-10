@@ -86,6 +86,23 @@ var SignInController = function () {
                 meta: {}
             });
         }
+
+        // remove account
+
+    }, {
+        key: 'removeAccount',
+        value: function removeAccount(req, res, next) {
+            _User2.default.remove({
+                email: req.userData.email
+            }).then(function (u) {
+                SignInController.response(res, {});
+            }).catch(function (err) {
+                return res.status(500).json({
+                    message: 'Could not remove the account',
+                    status: 500
+                });
+            });
+        }
     }]);
 
     return SignInController;

@@ -19,9 +19,20 @@ class Modal extends PureComponent {
         }
     } 
 
+    _renderSigninLogo() {
+        if (this.props.renderSignInLogo) {
+            return(
+                <div className="signin-logo-ui">
+                    <div className="airpush-logo-inpage">airpush<span>.</span></div>
+                </div>
+            );
+        }
+    }
+
     render() {
         return(
             <div className="modal-overlay">
+                { this._renderSigninLogo() }
                 <div className="generic-modal" style={{ width: this.props.wdt }}>
 					<div className="modal-header">
 						<div className="title">{ this.props.title }</div>

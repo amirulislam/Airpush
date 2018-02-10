@@ -19,6 +19,7 @@ router.get('/', (req, res, next) => {
 router.use(AuthorizationController.validateSignature);
 
 router.post('/chat-room', RoomsController.createRoom);
+router.delete('/account', SignInController.removeAccount);
 
 
 router.use('*', (req, res, next) => {
