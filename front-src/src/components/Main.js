@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import SingIn from './SignIn';
 import { ROUTES } from '../config';
 import ChatRoom from './chat/ChatRoom';
+import MyAccount from './account/MyAccount';
 import Notifications from '../components/notifications/Notifications';
 import RootSection from './RootSection';
 
@@ -36,7 +37,7 @@ class Main extends Component {
                     <Route path={`${ROUTES.SIGN_IN}*`} component={ SingIn } />
                     <Route path={`${ROUTES.CHAT_ROOM}/:route_id`} component={ ChatRoom } />
                     <Route path={`${ROUTES.CHAT_ROOM}`} component={ ChatRoom } />
-                    <Route path={`${ROUTES.WELCOME}`} render={ () => { return <p>hello</p>} } />
+                    <Route path={`${ROUTES.MY_ACCOUNT}`} component={ MyAccount } />
                     <Route path={`${ROUTES.ROOT}`} component={ RootSection } />
                     <Route render={() => <p>Not found</p>} />
                 </Switch>

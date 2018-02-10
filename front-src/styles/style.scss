@@ -68,13 +68,13 @@ html, body, #airpush-ui {
                             width: 10px; height: 10px; border-radius: 5px;
                             background: #fc363b;
                             display: block;
-                        }                         
+                        } 
                     }
                     .menu-link:visited {
                         color: #FFFFFF;
                     }
                     .menu-link:hover {
-                        color: #606fc3;
+                        color: #c4c4c4;
                     }
                     .menu-link:active {
                         color: #FFFFFF;
@@ -116,6 +116,37 @@ html, body, #airpush-ui {
                         padding: 10px; 
                         overflow-y: auto; overflow-x: hidden;                   
                     }
+
+                    .inside-content-card {
+                        padding: 16px;
+                        background: #f7f7f7;
+                        border-radius: 2px;
+                        margin-bottom: 30px;
+                        .card-title {
+                            font-size: 17px;
+                            margin-bottom: 11px;
+                        }
+                        .card-title-underline {
+                            height: 1px; background: #CCC; margin-bottom: 20px;
+                        }
+                        .info-text {
+                            font-size: 15px;
+                            margin-top: 30px;
+                            line-height: 156%;                            
+                        }
+                    }
+
+                    .section-title {
+                        color: #000;
+                        font-size: 22px;
+                        font-weight: 500;                        
+                    }
+
+                    &.my-account {
+                        position: relative;
+                        padding: 20px;
+                        overflow-x: hidden; overflow-y: auto;
+                    }                     
                     
                     /* chat section */
                     &.chat-section {

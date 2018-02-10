@@ -84,7 +84,7 @@ export const roomJoined = roomId => {
 		type: JOINED_ROOM,
 		payload: roomId	
 	});
-	sendNotification('Room joined!');
+	sendNotification('Successfully joined the group');
 }
 
 // join room
@@ -111,7 +111,7 @@ export const roomCreated = roomId => {
 	});
 	roomCreatedFirstTime(true);
 	joinedRoomId(roomId);
-	sendNotification('Room joined!');
+	sendNotification('Successfully joined the group');
 }
 
 export const roomCreatedFirstTime = (val = true) => {
@@ -128,7 +128,7 @@ export const roomJoinedBySelf = roomId => {
 		payload: roomId	
 	});
 	joinedRoomId(roomId);
-	sendNotification('Room joined!');
+	sendNotification('Successfully joined the group!');
 }
 
 

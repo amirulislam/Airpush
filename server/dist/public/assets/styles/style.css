@@ -268,7 +268,7 @@ html, body, #airpush-ui {
           #airpush-ui .airpush-main .main-menu-ui .menu-list li .menu-link:visited {
             color: #FFFFFF; }
           #airpush-ui .airpush-main .main-menu-ui .menu-list li .menu-link:hover {
-            color: #606fc3; }
+            color: #c4c4c4; }
           #airpush-ui .airpush-main .main-menu-ui .menu-list li .menu-link:active {
             color: #FFFFFF; }
           #airpush-ui .airpush-main .main-menu-ui .menu-list li .menu-active-color {
@@ -302,6 +302,31 @@ html, body, #airpush-ui {
             padding: 10px;
             overflow-y: auto;
             overflow-x: hidden; }
+          #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui .inside-content-card {
+            padding: 16px;
+            background: #f7f7f7;
+            border-radius: 2px;
+            margin-bottom: 30px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui .inside-content-card .card-title {
+              font-size: 17px;
+              margin-bottom: 11px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui .inside-content-card .card-title-underline {
+              height: 1px;
+              background: #CCC;
+              margin-bottom: 20px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui .inside-content-card .info-text {
+              font-size: 15px;
+              margin-top: 30px;
+              line-height: 156%; }
+          #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui .section-title {
+            color: #000;
+            font-size: 22px;
+            font-weight: 500; }
+          #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.my-account {
+            position: relative;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto; }
           #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section {
             position: relative; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .joining-chatroom p {

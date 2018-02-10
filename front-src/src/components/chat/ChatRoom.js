@@ -22,14 +22,6 @@ class ChatRoom extends Component {
         roomId: false, joinedRoomId: false
     }
 
-    componentWillReceiveProps(nextProps) {
-        // const joinRoom = safe(this.props, 'location.state.joinRoom');
-        // console.log('JOIN ROOM 333>>>>> ', joinRoom)
-        // if (!_.isNil(joinRoom) && nextProps.roomId != this.props.roomId) {
-        //     delete this.props.location.state.joinRoom;
-        // }
-    }
-
     _renderChatRoomBackground() {
         return (this.props.roomId) ? ' chat-room-background' : '';
     }
@@ -46,9 +38,6 @@ class ChatRoom extends Component {
                 pathname: `${ROUTES.CHAT_ROOM}/${this.props.roomId}`
             }} />              
         }
-        // if (!_.isNil(safe(this.props, 'location.state.joinRoom'))) {
-        //     return <JoiningRoom roomToJoin={this.props.location.state.joinRoom} />
-        // } 
         if (this.props.roomId) {
             return <MainChatRoom />
         } else {

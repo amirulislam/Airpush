@@ -22,6 +22,12 @@ class ChatMessenger extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        try {
+            this.messangerUI.scrollTop = this.messangerUI.scrollHeight;
+        } catch (e) {}
+    }
+
     componentDidUpdate() {
         this.messangerUI.scrollTop = this.messangerUI.scrollHeight;
     }

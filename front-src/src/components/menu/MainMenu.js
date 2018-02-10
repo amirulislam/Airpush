@@ -73,6 +73,7 @@ class MainMenu extends Component {
                     </li>
                     <li>
                         <Link className={this.renderActiveClass(`${ROUTES.MY_ACCOUNT}`)} to={`${ROUTES.MY_ACCOUNT}`}>
+                            {this.renderDot(`${ROUTES.MY_ACCOUNT}`)}
                             <span className="menu-label">My account</span>
                         </Link>                                               
                     </li>                                                          
