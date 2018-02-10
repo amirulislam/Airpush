@@ -16,10 +16,6 @@ class FileMessageOfferUi extends Component {
         super(props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log('next props', nextProps);
-    }
-
     _isMyMessage() {
         return false;
         let isMyMessage = false;

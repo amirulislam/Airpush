@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import { downloadMessageInformProgress, alterMessageDispatch } from '../../../actions';
 
-export const CHUNK_SIZE = 16384;
-// export const CHUNK_SIZE = 60000;
+//export const CHUNK_SIZE = 16384;
+export const CHUNK_SIZE = 60000;
 
 class FileTransferHelper {
     _fileModel;
@@ -11,10 +12,12 @@ class FileTransferHelper {
     _fileStream;
     _peer;
     _receivedSize = 0;
-    _writer;
+    _receiveBuffer = [];
+    
 
-    constructor(fileModel, isReader = false) {
+    constructor(fileModel, peer, isReader = false) {
         if (fileModel) {
+            this._peer = peer;
             this._file = fileModel.fileRef;
             this._fileModel = fileModel;
             this._fileName = fileModel.name;
@@ -27,11 +30,10 @@ class FileTransferHelper {
     }
 
     // init transfer
-    initTransfer(peer) {
+    initTransfer() {
         if (!this._file) {
             return;
         }
-        this._peer = peer;
         this.sliceFile(0);
     }
 
@@ -46,9 +48,10 @@ class FileTransferHelper {
                     }, 0);
                 }
                 let progress = offset + e.target.result.byteLength;
-                let percent = Math.round((progress * 100) / this._fileSize);
+                //let percent = Math.round((progress * 100) / this._fileSize);
+                // downloadMessageInformProgress(this._peer.messageUiId, percent);
 
-                console.log('PROGRESS>>> ', percent);
+                // console.log('PROGRESS>>> ', percent);
                 if (progress >= this._fileSize) {
                     // send close signal
                     // this._peer.send(JSON.stringify({
@@ -63,21 +66,23 @@ class FileTransferHelper {
 
     // read data
     read(data) {
-        console.log('READ DATA >>>> ');
+        console.log('READ DATA >>>> ', this._peer.messageUiId);
         if (data && data.byteLength) {
+            this._receiveBuffer.push(data);
             this._receivedSize += data.byteLength;
+            const percent = Math.ceil((this._receivedSize * 100) / this._fileSize);
+            downloadMessageInformProgress(this._peer.messageUiId, percent);
         }
-        // if (!_.isString(data)) {
-        //     this._writer.write(data);
-        // }
         
         if (this._receivedSize === this._fileSize) {
             // end here
-            console.log('END ', this._receivedSize);
-            try {
-            } catch (err) {
-                console.log(err);
-            }
+            console.log('END NOW >>>> ');
+
+            alterMessageDispatch(this._peer.messageUiId, {
+                fileBlob: new window.Blob(this._receiveBuffer)
+            });
+            // const received = new window.Blob(this._receiveBuffer);
+            this._receiveBuffer = [];            
         }
         // if (_.isString(data)) {
         //     try {

@@ -9,7 +9,8 @@ TokenUtils.useToken(axios);
 const API_ROOT = '/api';
 import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM, 
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
-USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE } from './Types';
+USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
+MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 
@@ -232,6 +233,29 @@ export const getOthers = () => {
 	} else {
 		return [];
 	}
+}
+
+// alter message payload
+export const alterMessage = (messageId, data) => {
+	return {
+		type: ALTER_MESSAGE_PAYLOAD,
+		payload: { messageId, data }			
+	}
+}
+
+export const alterMessageDispatch = (messageId, data) => {
+	store.dispatch({
+		type: ALTER_MESSAGE_PAYLOAD,
+		payload: { messageId, data }
+	});
+}
+
+// inform ui message about download progress
+export const downloadMessageInformProgress = (messageId, progress) => {
+	store.dispatch({
+		type: MESSAGE_DOWNLOAD_PROGRESS,
+		payload: { progress, messageId }	
+	});
 }
 
 

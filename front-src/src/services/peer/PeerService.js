@@ -30,7 +30,7 @@ class PeerService {
     }
 
     // create a peer foreach
-    createFilePeer(fileModel, user) {
+    createFilePeer(fileModel, user, messageUiId) {
         if (!this._isWebRtcSupported) {
             return;
         }
@@ -41,6 +41,7 @@ class PeerService {
         this._peers.push(peer);
         console.log('LOCAL PEER ID', peer._id);
         peer.createChanel().createOffer();
+        peer.setMessageUi(messageUiId);
     }
 
     createFilePeerAndSetRemoteDescription(data) {

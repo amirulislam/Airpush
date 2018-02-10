@@ -26,6 +26,7 @@ class CustomPeer {
     _remoteIsReady;
     _transferStarted = false;
     _fileTransfer;
+    messageUiId;
 
     constructor(data) {        
         if (!_.isNil(data.user)) {
@@ -263,18 +264,15 @@ class CustomPeer {
 
     // notify other about ready state
     _notifyOtherReadyState() {
-        this._fileTransfer = new FileTransferHelper(this._fileModel, true);
-        setTimeout(() => {
-            SocketService.getInstance().send({
-                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
-                peerData: {
-                    user: this._user,
-                    toPeerId: this._remotePeerId,
-                    remoteIsReady: this._remoteIsReady
-                }
-            }, SOCKET_EVENTS.MESSAGE);            
-            console.log('on time');
-        }, 5000);
+        this._fileTransfer = new FileTransferHelper(this._fileModel, this, true);
+        SocketService.getInstance().send({
+            type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+            peerData: {
+                user: this._user,
+                toPeerId: this._remotePeerId,
+                remoteIsReady: this._remoteIsReady
+            }
+        }, SOCKET_EVENTS.MESSAGE);  
     }
 
     // are both peers ready
@@ -284,10 +282,9 @@ class CustomPeer {
 
     // on both peers ready
     _onPeersConnectionReady() {
-        console.log('PEERS CONNECTIONS READY >>>>>> ')
         if (this.arePeersReady() && !this._transferStarted) {
-            this._fileTransfer = new FileTransferHelper(this._fileModel);
-            this._fileTransfer.initTransfer(this);
+            this._fileTransfer = new FileTransferHelper(this._fileModel, this);
+            this._fileTransfer.initTransfer();
         }
     }
 
@@ -298,6 +295,15 @@ class CustomPeer {
         if (this._fileTransfer) {
             this._fileTransfer.read(event.data);
         }
+    }
+
+    // set message ui
+    setMessageUi(messageUiId) {
+        this.messageUiId = messageUiId;
+    }
+
+    setDownloadProgress(percent) {
+        this.onDownloadProgress(percent);
     }
 
 	// send 
@@ -319,6 +325,8 @@ class CustomPeer {
     onOfferCreated(desc) {}
     // override
     onAnswerCreated(desc) {}
+    // override
+    onDownloadProgress(percent) {}
 	// override
 	onClose(p) {}    
 
