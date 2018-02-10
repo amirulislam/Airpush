@@ -1,4 +1,3 @@
-import { createWriteStream, supported as SupportsStreamSave, version } from '../../files/FileStreamService';
 import _ from 'lodash';
 
 export const CHUNK_SIZE = 16384;
@@ -21,16 +20,14 @@ class FileTransferHelper {
             this._fileName = fileModel.name;
             this._fileSize = fileModel.size;
             if (isReader) {
-                this._fileStream = createWriteStream(fileModel.name, fileModel.size);
-                this._writer = this._fileStream.getWriter();
+                //this._fileStream = createWriteStream(fileModel.name, fileModel.size);
+                // this._writer = this._fileStream.getWriter();
             }
         }
     }
 
+    // init transfer
     initTransfer(peer) {
-        if (!SupportsStreamSave) {
-            return;
-        }
         if (!this._file) {
             return;
         }
@@ -64,6 +61,7 @@ class FileTransferHelper {
         reader.readAsArrayBuffer(slice);     
     }
 
+    // read data
     read(data) {
         console.log('READ DATA >>>> ');
         if (data && data.byteLength) {
@@ -72,12 +70,11 @@ class FileTransferHelper {
         // if (!_.isString(data)) {
         //     this._writer.write(data);
         // }
-        this._writer.write(data);
+        
         if (this._receivedSize === this._fileSize) {
             // end here
             console.log('END ', this._receivedSize);
             try {
-                this._writer.close();
             } catch (err) {
                 console.log(err);
             }

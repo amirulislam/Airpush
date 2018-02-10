@@ -67,6 +67,7 @@ class SignIn extends Component {
     }
 
     dummySignIn() {
+        return;
         this.props.signIn('', 'GOOGLE', '', () => {
             
         });        

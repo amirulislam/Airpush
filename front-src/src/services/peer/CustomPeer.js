@@ -284,6 +284,7 @@ class CustomPeer {
 
     // on both peers ready
     _onPeersConnectionReady() {
+        console.log('PEERS CONNECTIONS READY >>>>>> ')
         if (this.arePeersReady() && !this._transferStarted) {
             this._fileTransfer = new FileTransferHelper(this._fileModel);
             this._fileTransfer.initTransfer(this);

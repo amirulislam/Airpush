@@ -56,11 +56,6 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 app.set('views', _path2.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use('/app/worker', function (req, res, next) {
-	res.render('worker');
-	//res.render('app/worker/file-worker');
-});
-
 app.use('/app', function (req, res, next) {
 	res.render('app');
 });

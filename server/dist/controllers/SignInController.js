@@ -56,11 +56,6 @@ var SignInController = function () {
     _createClass(SignInController, null, [{
         key: 'logUser',
         value: function logUser(req, res, next) {
-            // SignInController.response(res, {
-            //     user, token: JWT.createUserToken(user)
-            // });
-            // return;
-
             _GoogleService2.default.verify(req.body.accessToken, req.body.email).then(function (result) {
                 _User2.default.findOneAndUpdate({
                     email: result.email
