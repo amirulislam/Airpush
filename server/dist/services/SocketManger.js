@@ -60,10 +60,7 @@ var SocketManager = function () {
                 return next();
             });
             this._io.on('connection', function (socket) {
-                console.log('ON CONNECTION ', socket.user);
-
-                // console.log('CLIENTS  ', this._io.sockets.clients());
-                // implement max user in ROOM
+                // console.log('ON CONNECTION ', socket.user);
                 _this.handleJoinRoomEvent(socket);
                 _this.handleLeaveRoom(socket);
                 _this.handleCreateRoom(socket);
@@ -76,9 +73,7 @@ var SocketManager = function () {
         key: 'handleJoinRoomEvent',
         value: function handleJoinRoomEvent(socket) {
             var joinedRoomId = socket.handshake.query.joinedRoomId;
-            console.log('joinedRoomId', joinedRoomId);
             if (joinedRoomId != 'false' && !_lodash2.default.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-                console.log('>>>>> CONNECTED & JOINED ROOM: ', joinedRoomId);
                 socket.join(joinedRoomId);
                 socket.room = {
                     isCreator: false,
@@ -100,7 +95,7 @@ var SocketManager = function () {
         value: function handleCreateRoom(socket) {
             socket.on(_config.SOCKET_EVENTS.CREATE_ROOM, function (data) {
                 var roomId = String(_shortid2.default.generate());
-                console.log('CREATE ROOM', data, 'room id', roomId);
+                // console.log('CREATE ROOM', data, 'room id', roomId);
 
                 socket.room = {
                     isCreator: true,
@@ -117,13 +112,10 @@ var SocketManager = function () {
         key: 'handleJoinRoom',
         value: function handleJoinRoom(socket) {
             socket.on(_config.SOCKET_EVENTS.JOIN_ROOM, function (data) {
-                console.log(_config.SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.room);
                 var roomToJoin = data.roomToJoin;
 
 
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId')) && roomToJoin != socket.room.roomId) {
-                    // send leave message
-                    // debug('USER LEAVE MESSSAGE');
                     socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
                         payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
@@ -132,7 +124,6 @@ var SocketManager = function () {
                 }
 
                 var isAlreadyConnectedToRoom = !_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId')) && roomToJoin == socket.room.roomId;
-                console.log('IS ALREADY CONNECTED TO THE SAME ROOM >>>>>', isAlreadyConnectedToRoom);
                 if (!isAlreadyConnectedToRoom && _lodash2.default.isString(roomToJoin) && String(roomToJoin).length < 20) {
                     socket.room = {
                         isCreator: false,
@@ -174,7 +165,6 @@ var SocketManager = function () {
                         // socket.leave(socket.room.roomId);
                     } catch (e) {};
                 }
-                console.log('SOcket server disconnect');
             });
         }
     }, {
@@ -182,7 +172,7 @@ var SocketManager = function () {
         value: function handleLeaveRoom(socket) {
             socket.on(_config.SOCKET_EVENTS.LEAVE_ROOM, function (data) {
                 // inform others
-                console.log(_config.SOCKET_EVENTS.LEAVE_ROOM, socket.user);
+                // console.log(SOCKET_EVENTS.LEAVE_ROOM, socket.user);
                 if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                     socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                         type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
@@ -201,7 +191,7 @@ var SocketManager = function () {
             var _this2 = this;
 
             socket.on(_config.SOCKET_EVENTS.MESSAGE, function (data) {
-                console.log('NEW MESSAGE RECEIVED', socket.room);
+                // console.log('NEW MESSAGE RECEIVED', socket.room);
                 if (_lodash2.default.isNil((0, _undefsafe2.default)(data, 'type'))) {
                     return;
                 }
@@ -211,9 +201,6 @@ var SocketManager = function () {
                         text = _HtmlValidator2.default.linkify(text);
                         text = _HtmlValidator2.default.validateMaxLength(text);
                         data.textMessage = text;
-                        console.log('ROOM DTA', socket.room, _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                        console.log('@@@@@', _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                        console.log('SEND TO ROOM>>>> ', socket.room.roomId);
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
                             _this2._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
@@ -243,7 +230,7 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                        console.log('RECEIVED PEER SIGNAL');
+                        // console.log('RECEIVED PEER SIGNAL');
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.toUser.socketId'))) {
                             var sendToSocketId = data.peerData.toUser.socketId;
                             data.peerData.user = socket.user;
@@ -255,7 +242,7 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                        console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
+                        // console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
                             var _sendToSocketId = data.peerData.user.socketId;
                             data.peerData.user = socket.user;
@@ -266,7 +253,7 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
-                        console.log('RECEIVED PEER_SIGNAL_ICE', data);
+                        // console.log('RECEIVED PEER_SIGNAL_ICE', data);
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
                             var _sendToSocketId2 = data.peerData.user.socketId;
                             data.peerData.user = socket.user;
@@ -277,7 +264,7 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                        console.log(_config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                        // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
                             var _sendToSocketId3 = data.peerData.user.socketId;
                             data.peerData.user = socket.user;

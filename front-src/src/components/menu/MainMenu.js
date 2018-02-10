@@ -72,20 +72,10 @@ class MainMenu extends Component {
                         </Link>                                               
                     </li>
                     <li>
-                        <Link className={this.renderActiveClass('/app/friends')} to="/app/friends">
-                            <span className="menu-label">Friends</span>
-                        </Link>                                               
-                    </li>                    
-                    <li>
-                        <Link className={this.renderActiveClass('/app/main')} to="/app/main">
-                            <span className="menu-label">Settings</span>
-                        </Link>                                               
-                    </li>
-                    <li>
-                        <Link className={this.renderActiveClass('/app/main')} to="/app/main">
+                        <Link className={this.renderActiveClass(`${ROUTES.MY_ACCOUNT}`)} to={`${ROUTES.MY_ACCOUNT}`}>
                             <span className="menu-label">My account</span>
                         </Link>                                               
-                    </li>                                        
+                    </li>                                                          
                 </ul>
             </div>
         );

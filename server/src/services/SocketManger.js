@@ -32,10 +32,7 @@ class SocketManager {
             return next();
         });          
         this._io.on('connection', (socket) => {
-            console.log('ON CONNECTION ', socket.user);
-
-            // console.log('CLIENTS  ', this._io.sockets.clients());
-            // implement max user in ROOM
+            // console.log('ON CONNECTION ', socket.user);
             this.handleJoinRoomEvent(socket);
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
@@ -47,9 +44,7 @@ class SocketManager {
 
     handleJoinRoomEvent(socket) {
         const joinedRoomId = socket.handshake.query.joinedRoomId;
-        console.log('joinedRoomId', joinedRoomId);
         if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-            console.log('>>>>> CONNECTED & JOINED ROOM: ', joinedRoomId);
             socket.join(joinedRoomId);
             socket.room = {
                 isCreator: false,
@@ -69,7 +64,7 @@ class SocketManager {
     handleCreateRoom(socket) {
         socket.on(SOCKET_EVENTS.CREATE_ROOM, data => {
             const roomId = String(shortId.generate());
-            console.log('CREATE ROOM', data, 'room id', roomId);
+            // console.log('CREATE ROOM', data, 'room id', roomId);
 
             socket.room = {
                 isCreator: true,
@@ -83,13 +78,9 @@ class SocketManager {
     // handle join room
     handleJoinRoom(socket) {
         socket.on(SOCKET_EVENTS.JOIN_ROOM, data => {
-            console.log(SOCKET_EVENTS.JOIN_ROOM, data, 'SOket', socket.room);
             const { roomToJoin } = data;
 
-
             if (!_.isNil(safe(socket, 'room.roomId')) && roomToJoin != socket.room.roomId) {
-                // send leave message
-                // debug('USER LEAVE MESSSAGE');
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
                     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.USER_LEAVED}, socket.user)
@@ -98,7 +89,6 @@ class SocketManager {
             }
             
             const isAlreadyConnectedToRoom = !_.isNil(safe(socket, 'room.roomId')) && roomToJoin == socket.room.roomId;
-            console.log('IS ALREADY CONNECTED TO THE SAME ROOM >>>>>', isAlreadyConnectedToRoom);
             if (!isAlreadyConnectedToRoom && _.isString(roomToJoin) && String(roomToJoin).length < 20) { 
                 socket.room = {
                     isCreator: false,
@@ -136,15 +126,14 @@ class SocketManager {
                 try {
                     // socket.leave(socket.room.roomId);
                 } catch (e) {};
-            }            
-            console.log('SOcket server disconnect');
+            }
         })
     }
 
     handleLeaveRoom(socket) {
         socket.on(SOCKET_EVENTS.LEAVE_ROOM, data => {
             // inform others
-            console.log(SOCKET_EVENTS.LEAVE_ROOM, socket.user);
+            // console.log(SOCKET_EVENTS.LEAVE_ROOM, socket.user);
             if (!_.isNil(safe(socket, 'room.roomId'))) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
@@ -158,7 +147,7 @@ class SocketManager {
     // handle messages
     handleMessages(socket) {
         socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            console.log('NEW MESSAGE RECEIVED', socket.room);
+            // console.log('NEW MESSAGE RECEIVED', socket.room);
             if (_.isNil(safe(data, 'type'))) {
                 return;
             }
@@ -168,9 +157,6 @@ class SocketManager {
                     text = HtmlValidator.linkify(text);
                     text = HtmlValidator.validateMaxLength(text);
                     data.textMessage = text;
-                    console.log('ROOM DTA', socket.room, SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                    console.log('@@@@@', SOCKET_MESSAGE_TYPES.TEXT_MESSAGE);
-                    console.log('SEND TO ROOM>>>> ', socket.room.roomId);
                     if (!_.isNil(safe(socket, 'room.roomId'))) {                      
                         this._io.in(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                             type: SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
@@ -201,7 +187,7 @@ class SocketManager {
                     }
                 break;                
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                    console.log('RECEIVED PEER SIGNAL');
+                    // console.log('RECEIVED PEER SIGNAL');
                     if (!_.isNil(safe(data, 'peerData.toUser.socketId'))) {
                         const sendToSocketId = data.peerData.toUser.socketId;
                         data.peerData.user = socket.user;
@@ -214,7 +200,7 @@ class SocketManager {
                     }
                 break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                    console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
+                    // console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
                     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
                         const sendToSocketId = data.peerData.user.socketId;
                         data.peerData.user = socket.user;
@@ -226,7 +212,7 @@ class SocketManager {
                     }               
                 break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
-                    console.log('RECEIVED PEER_SIGNAL_ICE', data);
+                    // console.log('RECEIVED PEER_SIGNAL_ICE', data);
                     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
                         const sendToSocketId = data.peerData.user.socketId;
                         data.peerData.user = socket.user;
@@ -238,7 +224,7 @@ class SocketManager {
                     }               
                 break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                    console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                    // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
                     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
                         const sendToSocketId = data.peerData.user.socketId;
                         data.peerData.user = socket.user;

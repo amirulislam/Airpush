@@ -36,6 +36,10 @@ class TopBar extends Component {
         }
     }
 
+    redirectToMyAccount() {
+
+    }
+
     renderUserAvatar() {
         if (this.props.authenticated) {
             return(
@@ -55,8 +59,7 @@ class TopBar extends Component {
                         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                         targetOrigin={{horizontal: 'right', vertical: 'top'}}
                         >
-                        <MenuItem primaryText="My account" leftIcon={<AccountIcon />} />
-                        <MenuItem primaryText="Settings" leftIcon={<SettingsIcon />} />
+                        <MenuItem onClick={ e => this.redirectToMyAccount() } primaryText="My account" leftIcon={<AccountIcon />} />
                         <Divider />
                         <MenuItem onClick={e => this.props.logOut()} primaryText="Log out" leftIcon={ <LogoutIcon /> } />
                     </IconMenu>                           

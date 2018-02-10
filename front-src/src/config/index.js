@@ -1,8 +1,9 @@
 export const ROUTES = {
     ROOT: '/app',
-    MAIN: '/app/main',
+    // MAIN: '/app/main',
     SIGN_IN: '/app/signin',
-    WELCOME: '/app/welcome',
+    // WELCOME: '/app/welcome',
+    MY_ACCOUNT: '/app/my-account',
     CHAT_ROOM: '/app/chat'
 }
 
