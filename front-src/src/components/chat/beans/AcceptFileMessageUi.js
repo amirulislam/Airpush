@@ -6,7 +6,7 @@ import safe from 'undefsafe';
 import filesize from 'filesize';
 import FlatButton from 'material-ui/FlatButton';
 import { removeInternalMessage } from '../../../actions';
-import PeerService from '../../../services/peer/PeerService';
+// import PeerService from '../../../services/peer/PeerService';
 import LinearProgress from 'material-ui/LinearProgress';
 import shortid from 'shortid';
 import { alterMessage } from '../../../actions';
@@ -69,7 +69,7 @@ class AcceptFileMessageUi extends Component {
             this.props.alterMessage(this.props.message.payload._id, {
                 acceptedFile: true
             });
-            PeerService.getInstance().createFilePeer(this.props.message.payload.fileModel, this.props.message.payload.user, this.props.message.payload._id);
+            // PeerService.getInstance().createFilePeer(this.props.message.payload.fileModel, this.props.message.payload.user, this.props.message.payload._id);
             // console.log(this.props.message.payload.fileModel);
             // this.props.removeInternalMessage(this.props.message._id);
         }

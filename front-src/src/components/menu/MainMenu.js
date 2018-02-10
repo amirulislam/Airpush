@@ -68,7 +68,7 @@ class MainMenu extends Component {
                     <li>
                         <Link className={this.renderActiveClass(`${ROUTES.CHAT_ROOM}`)} to={`${ROUTES.CHAT_ROOM}`}>
                             {this.renderDot(`${ROUTES.CHAT_ROOM}`)}
-                            <span className="menu-label">Chat room</span>
+                            <span className="menu-label">Chat group</span>
                         </Link>                                               
                     </li>
                     <li>

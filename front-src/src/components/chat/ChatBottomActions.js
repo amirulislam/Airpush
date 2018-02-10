@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import AttachementIcon from 'material-ui/svg-icons/editor/attach-file';
+import SendIcon from 'material-ui/svg-icons/content/send';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ShareScreenIcon from 'material-ui/svg-icons/communication/screen-share';
 import VideoCallIcon from 'material-ui/svg-icons/notification/ondemand-video';
@@ -24,8 +24,9 @@ class ChatBottomActions extends Component {
         this.state = { keyInputVal: '' };
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
-        this.onAttachedFileAction = this.onAttachedFileAction.bind(this);
-        this._handleFileInputChange = this._handleFileInputChange.bind(this);
+        // this.onAttachedFileAction = this.onAttachedFileAction.bind(this);
+        // this._handleFileInputChange = this._handleFileInputChange.bind(this);
+        this.onSendButtonClicked = this.onSendButtonClicked.bind(this);
     }
 
     onKeyUp(e) {
@@ -37,7 +38,7 @@ class ChatBottomActions extends Component {
 
     componentDidMount() {
         this._fileInput = document.getElementById('fileInput');
-        this._fileInput.addEventListener('change', this._handleFileInputChange, false);
+        // this._fileInput.addEventListener('change', this._handleFileInputChange, false);
     }
 
     _handleFileInputChange() {
@@ -65,17 +66,24 @@ class ChatBottomActions extends Component {
         this.setState({ keyInputVal: e.currentTarget.value });
     }
 
-    onAttachedFileAction() {
-        // PeerService.getInstance().createPeers();
-        // return;
-        if (this._fileInput.click) {
-            this._fileInput.click();
+    onSendButtonClicked() {
+        if (this.state.keyInputVal !== '') {
+            this.props.onEnter(this.state.keyInputVal);
+            this.setState({ keyInputVal: '' })
         }
-    }
+    }    
 
-    render() {
+    // onAttachedFileAction() {
+    //     PeerService.getInstance().createPeers();
+    //     return;
+    //     if (this._fileInput.click) {
+    //         this._fileInput.click();
+    //     }
+    // }
+
+    _renderAdditionalActions() {
         return(
-            <div className="bottom-chat-bar">
+            <div>
                 <input id="fileInput" type="file" id="fileInput" name="files" style={{visibility: 'hidden', position: 'absolute', left: -1000}} />
                 <div className="chat-main-control pull-left">
                     <IconMenu style={{ marginTop: '-6px' }} tooltip="Attach file"
@@ -90,11 +98,18 @@ class ChatBottomActions extends Component {
                         <MenuItem primaryText="Audio call" leftIcon={ <AudioCallIcon /> } />
                     </IconMenu>
                 </div>                
+            </div>                
+        )
+    }
+
+    render() {
+        return(
+            <div className="bottom-chat-bar">            
                 <input value={this.state.keyInputVal} className="chat-room-input pull-left" onChange={this.onInputChange} onKeyUp={ this.onKeyUp } type="text" />
                 <div className="chat-main-control pull-left">
-                    <IconButton tooltip="Attach file" style={{ marginTop: '-6px' }} tooltipPosition="top-center" 
-                        onClick={ this.onAttachedFileAction }>
-                            <AttachementIcon />
+                    <IconButton style={{ marginTop: '-6px' }} tooltipPosition="top-center" 
+                        onClick={ this.onSendButtonClicked }>
+                            <SendIcon />
                     </IconButton>                    
                 </div>
                 <div className="clearfix"></div>

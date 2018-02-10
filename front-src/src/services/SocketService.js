@@ -5,7 +5,6 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
  addUser, removeUser, dispatchInternalMessage } from '../actions';
 import Storage from '../utils/Storage';
-import PeerService from './peer/PeerService';
 import User from '../models/User';
 
 let instance;
@@ -19,7 +18,6 @@ class SocketService {
         if (instance) {
             throw new Error('Can not instantiate like this');
         }
-        // PeerService.getInstance();
     }
 
     connect() {
@@ -79,7 +77,7 @@ class SocketService {
     // on room created
     onRoomCreated() {
         this._socket.on(SOCKET_EVENTS.ROOM_CREATED, (data) => {
-            console.log('ROOM_CREATED', data);
+            // console.log('ROOM_CREATED', data);
             roomCreated(data.roomId);
         });
     }
@@ -87,7 +85,7 @@ class SocketService {
     // on room join by myself
     onRoomJoin() {
         this._socket.on(SOCKET_EVENTS.JOINED_ROOM, data => {
-            console.log(SOCKET_EVENTS.JOINED_ROOM, data);
+            //console.log(SOCKET_EVENTS.JOINED_ROOM, data);
             roomJoinedBySelf(data.roomId);
         });
     }
@@ -95,13 +93,12 @@ class SocketService {
     // on user left
     onUserLeft() {
         this._socket.on(SOCKET_EVENTS.USER_LEFT, data => {
-            console.log(SOCKET_EVENTS.USER_LEFT, data);
+            // console.log(SOCKET_EVENTS.USER_LEFT, data);
         });
     }
 
     // join a room
     joinRoom(roomToJoin) {
-        console.log('JOIN_ROOM_NOW!!!!>>>>>');
         if (!this._isConnected && this._joinTrials < this._maxJoinTrials) {
             this._joinTrials++;
             setTimeout(() => {
@@ -136,16 +133,13 @@ class SocketService {
     // on message received
     onDataReceive() {
         this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            console.log('Message received', data);
+            // console.log('Message received', data);
             switch(data.type) {
-                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
-                    console.log(SOCKET_MESSAGE_TYPES.NEW_USER_JOINED);                    
+                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:                
                     addUser(data.payload);
                     this.informNewUserAboutSelf(data.payload);
-                    //PeerService.getInstance().createPeer(new User(data.payload, ['email', 'role', 'type', 'iat']));
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
-                    // PeerService.getInstance().removePeer(new User(data.payload));
                     removeUser(data.payload);                    
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
@@ -157,21 +151,21 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
                     dispatchInternalMessage(data);
                     break;                    
-                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                    PeerService.getInstance().createFilePeerAndSetRemoteDescription(data);
-                    break;
-                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                    console.log('PEER_SIGNAL_ANSWER--->>>', data);
-                    PeerService.getInstance().setAnswerFromRemote(data);
-                    break;
-                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
-                    console.log('PEER_SIGNAL_ICE--->>>', data);
-                    PeerService.getInstance().setIncomingIceCandidate(data);
-                    break;
-                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                    console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
-                    PeerService.getInstance().setRemoteReady(data);
-                    break;                                                                                                          
+                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
+                //     PeerService.getInstance().createFilePeerAndSetRemoteDescription(data);
+                //     break;
+                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
+                //     console.log('PEER_SIGNAL_ANSWER--->>>', data);
+                //     PeerService.getInstance().setAnswerFromRemote(data);
+                //     break;
+                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
+                //     console.log('PEER_SIGNAL_ICE--->>>', data);
+                //     PeerService.getInstance().setIncomingIceCandidate(data);
+                //     break;
+                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
+                //     console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                //     PeerService.getInstance().setRemoteReady(data);
+                //     break;                                                                                                          
             }
         });
     }
