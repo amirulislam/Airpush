@@ -74,7 +74,8 @@
   top: 0px;
   z-index: 10000;
   /*background: rgba(0, 0, 0, .8);*/
-  background: #0f1b26; }
+  /*background: #0f1b26;*/
+  background: #32228f; }
   .modal-overlay .generic-modal {
     width: 380px;
     background: #FFFFFF;
@@ -529,5 +530,3 @@ html, body, #airpush-ui {
     margin-right: 12px; }
   .users-item p {
     margin-top: 6px; }
-
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdHlsZXMvc3R5bGUuY3NzIiwic291cmNlUm9vdCI6IiJ9*/
