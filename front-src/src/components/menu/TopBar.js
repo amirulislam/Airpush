@@ -28,7 +28,7 @@ class TopBar extends Component {
         if (!this.props.menuOpen) {
             return(
                 <div className="open-menu-button pull-left">
-                    <IconButton tooltip="Open menu" onClick={ e => this.props.toggleMenu(true) }>
+                    <IconButton onClick={ e => this.props.toggleMenu(true) }>
                         <ActionMenu />
                     </IconButton>
                 </div>

@@ -55,7 +55,7 @@ class MainMenu extends Component {
         return(
             <div className="main-menu-ui" style={this.computeMenuCSS()}>
                 <div className="close-menu-button">
-                    <IconButton iconStyle={{ color: '#FFFFFF' }} tooltip="Close menu" onClick={ e => this.props.toggleMenu(false) }>
+                    <IconButton iconStyle={{ color: '#FFFFFF' }} onClick={ e => this.props.toggleMenu(false) }>
                         <ActionMenu />
                     </IconButton>
                 </div>
