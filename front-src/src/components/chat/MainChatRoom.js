@@ -5,7 +5,7 @@ import _ from 'lodash';
 import safe from 'undefsafe';
 
 import ChatControllsLeft from './ChatControllsLeft';
-import UsersRightSide from './UsersRightSide';
+// import UsersRightSide from './UsersRightSide';
 import ChatBottomActions from './ChatBottomActions';
 import ChatMessenger from './ChatMessenger';
 import SocketService from '../../services/SocketService';
@@ -39,7 +39,6 @@ class MainChatRoom extends Component {
     render() {
         return [
             <ChatControllsLeft key="chat-controlls-left" />,
-            <UsersRightSide key="right-side-users-panel" />,
             <ChatMessenger key="msg-key" />,
             <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
         ];

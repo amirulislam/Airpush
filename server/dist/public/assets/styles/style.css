@@ -251,7 +251,7 @@ html, body, #airpush-ui {
       height: 100%; }
       #airpush-ui .airpush-main .main-menu-ui .close-menu-button {
         position: absolute;
-        top: 5px;
+        top: 0px;
         right: 5px; }
       #airpush-ui .airpush-main .main-menu-ui .admin-logo {
         text-align: center;
@@ -519,5 +519,15 @@ html, body, #airpush-ui {
   margin-top: 3px;
   color: #F2F2F2;
   margin-bottom: 15px; }
+
+.users-item {
+  padding: 5px 10px; }
+  .users-item .user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-right: 12px; }
+  .users-item p {
+    margin-top: 6px; }
 
 /*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdHlsZXMvc3R5bGUuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

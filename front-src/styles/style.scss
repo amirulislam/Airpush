@@ -29,7 +29,7 @@ html, body, #airpush-ui {
             width: 250px; height: 100%;
             .close-menu-button {
                 position: absolute;
-                top: 5px; right: 5px;
+                top: 0px; right: 5px;
             }
             .admin-logo {
                 text-align: center;
@@ -94,7 +94,10 @@ html, body, #airpush-ui {
             border-bottom-style: solid; border-width: 1px; border-color: #{$topbarBorderColor};
             .open-menu-button {
 
-            }     
+            }
+            .users-topbar {
+
+            } 
         }
 
         /* generic app section */
@@ -329,4 +332,14 @@ html, body, #airpush-ui {
         color: #F2F2F2;
         margin-bottom: 15px;                          
     }
+}
+
+.users-item {
+    padding: 5px 10px;
+    .user-img {
+        width: 40px; height: 40px; border-radius: 20px; margin-right: 12px; 
+    }
+    p {
+        margin-top: 6px;
+    }                  
 }

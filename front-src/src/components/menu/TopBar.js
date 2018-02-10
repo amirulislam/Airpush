@@ -4,6 +4,7 @@ import { MENU_WIDTH } from '../../config';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
 import ActionMenu from 'material-ui/svg-icons/navigation/menu';
+import AllUsers from 'material-ui/svg-icons/hardware/device-hub';
 import { toggleMenu, logOut } from '../../actions';
 import Avatar from 'material-ui/Avatar';
 import IconMenu from 'material-ui/IconMenu';
@@ -13,11 +14,13 @@ import Divider from 'material-ui/Divider';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import LogoutIcon from 'material-ui/svg-icons/content/remove-circle-outline';
+import shortid from 'shortid';
 
 class TopBar extends Component {
 
     static defaultProps = {
-        menuOpen: true
+        menuOpen: true,
+        users: []
     }
 
     renderPaddingCSS() {
@@ -68,10 +71,55 @@ class TopBar extends Component {
         }
     }
 
+    _renderDivider(c, total) {
+        if (c < total - 1) {
+            return <Divider />;
+        }
+    }
+
+    _interateUsers() {
+        let c = 0;
+        return this.props.users.map(u => {
+            
+            return [
+                <div className="users-item" key={shortid.generate()}>
+                    <img className="user-img pull-left" src={u.photo} />
+                    <p className="pull-left">{u.name}</p>
+                    <div className="clearfix"></div>
+                </div>,
+                <div key={shortid.generate()}>
+                    { this._renderDivider(c, this.props.users.length) }
+                </div>
+            ]
+            c++;
+        });
+    }
+    _renderExistingUsers() {
+        if (this.props.users.length === 0) {
+            return;
+        }
+        return(
+            <div className="users-topbar pull-left">
+                <IconMenu
+                    iconButtonElement={
+                        <FlatButton style={{marginTop: '8px'}}>
+                            <AllUsers style={{marginTop: '4px'}} />
+                        </FlatButton>                            
+                    }
+                    anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                    >
+                    { this._interateUsers() }
+                </IconMenu>                           
+            </div>           
+        )
+    }
+
     render() {
         return(
             <div className="top-bar-main" style={this.renderPaddingCSS()}>
                 { this.renderOpenMenuButton() }
+                { this._renderExistingUsers() }
                 { this.renderUserAvatar() }
                 <div className="clearfix"></div>
             </div>
@@ -79,10 +127,11 @@ class TopBar extends Component {
     }
 }
 
-const mapStateToProps = ({ menuOpen, authenticated }, ownProps) => {
+const mapStateToProps = ({ menuOpen, authenticated, users }, ownProps) => {
     return {
         menuOpen,
-        authenticated
+        authenticated,
+        users
     }
 }
 
@@ -91,7 +140,8 @@ TopBar.propTypes = {
     authenticated: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.object
-    ])    
+    ]),
+    users: PropTypes.array
 }
 
 export default connect(mapStateToProps, { toggleMenu, logOut })(TopBar);
