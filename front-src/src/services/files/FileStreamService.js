@@ -40,6 +40,7 @@
 		setupChannel = () => new Promise((resolve, reject) => {
 			channel.port1.onmessage = evt => {
 				if(evt.data.download) {
+					console.log('CLICK HANDLER HERE')
 					resolve()
 					if(!secure) popup.close() // don't need the popup any longer
 					let link = document.createElement('a')

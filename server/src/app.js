@@ -68,4 +68,8 @@ app.use(function(err, req, res, next) {
 	res.send(err);
 });
 
-module.exports = Https(app);
+let webApp = app;
+if (process.env.NODE_ENV === 'production') {
+	webApp = Https(app);
+}
+module.exports = webApp;

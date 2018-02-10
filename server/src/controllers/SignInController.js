@@ -23,10 +23,10 @@ const user = {
 class SignInController {
 
     static logUser(req, res, next) {
-        SignInController.response(res, {
-            user, token: JWT.createUserToken(user)
-        });
-        return;
+        // SignInController.response(res, {
+        //     user, token: JWT.createUserToken(user)
+        // });
+        // return;
 
         GoogleService.verify(req.body.accessToken, req.body.email)
         .then(result => {

@@ -44,19 +44,47 @@ if (cluster.isMaster) {
 }
 
 if (cluster.isWorker) {
-	var express = require('express');
-	var app = require('../app');
+	if (process.env.NODE_ENV === 'production') {
 
-	var httpServer = require('../app');
-	//var server = http.createServer(app);
-	var io = require('socket.io').listen(httpServer);
-	var redis = require('socket.io-redis');
+		// var httpServer = require('../app');
+		// var server = http.createServer(app);
+		// var io = require('socket.io').listen(httpServer);
+		// var redis = require('socket.io-redis');
+		// io.adapter(redis({ host: 'localhost', port: 6379 }));
+		// new SocketManager(io);
 
-	io.adapter(redis({ host: 'localhost', port: 6379 }));
 
-	new _SocketManger2.default(io);
+		var app = require('../app');
+		//var server = http.createServer(app);
+		var io = require('socket.io').listen(app);
+		var redis = require('socket.io-redis');
+		io.adapter(redis({ host: 'localhost', port: 6379 }));
+		new _SocketManger2.default(io);
 
-	// server.listen(3000);
+		// var httpServer = require('../app');
+		// var server = require('http').createServer(app);
+		// var io = require('socket.io').listen(server);
+		// var redis = require('socket.io-redis');
+
+		// io.adapter(redis({ host: 'localhost', port: 6379 }));
+
+		// new SocketManager(io);
+
+		// server.listen(80);
+	} else {
+		var app = require('../app');
+
+		// var httpServer = require('../app');
+		var server = require('http').createServer(app);
+		var io = require('socket.io').listen(server);
+		var redis = require('socket.io-redis');
+
+		io.adapter(redis({ host: 'localhost', port: 6379 }));
+
+		new _SocketManger2.default(io);
+
+		server.listen(80);
+	}
 }
 
 ///// END 

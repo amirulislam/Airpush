@@ -5,13 +5,13 @@ const map = new Map
 // Each event has a dataChannel that the data will be piped through
 self.onmessage = event => {
     // Create a uniq link for the download
-    let uniqLink = self.registration.scope + 'intercept-me-nr' + Math.random()
+    let uniqLink = self.registration.scope + 'chat/chat/HkQ8NLjUz'// + Math.random()
 	let port = event.ports[0]
 
     let p = new Promise((resolve, reject) => {
         let stream = createStream(resolve, reject, port)
 		map.set(uniqLink, [stream, event.data])
-		port.postMessage({download: uniqLink})
+		port.postMessage({download: uniqLink, stream: stream})
 
 		// Mistage adding this and have streamsaver.js rely on it
 		// depricated as from 0.2.1

@@ -89,4 +89,8 @@ app.use(function (err, req, res, next) {
 	res.send(err);
 });
 
-module.exports = (0, _letsencrypt2.default)(app);
+var webApp = app;
+if (process.env.NODE_ENV === 'production') {
+	webApp = (0, _letsencrypt2.default)(app);
+}
+module.exports = webApp;

@@ -264,14 +264,17 @@ class CustomPeer {
     // notify other about ready state
     _notifyOtherReadyState() {
         this._fileTransfer = new FileTransferHelper(this._fileModel, true);
-        SocketService.getInstance().send({
-            type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
-            peerData: {
-                user: this._user,
-                toPeerId: this._remotePeerId,
-                remoteIsReady: this._remoteIsReady
-            }
-        }, SOCKET_EVENTS.MESSAGE);
+        setTimeout(() => {
+            SocketService.getInstance().send({
+                type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+                peerData: {
+                    user: this._user,
+                    toPeerId: this._remotePeerId,
+                    remoteIsReady: this._remoteIsReady
+                }
+            }, SOCKET_EVENTS.MESSAGE);            
+            console.log('on time');
+        }, 5000);
     }
 
     // are both peers ready
@@ -290,6 +293,7 @@ class CustomPeer {
     // on receive
     _onReceiveMessageCallback(event) {
         console.log('ON RECEIVE BITES', event.data);
+        
         if (this._fileTransfer) {
             this._fileTransfer.read(event.data);
         }
