@@ -27,6 +27,10 @@ var _LinkedinService = require('../services/LinkedinService');
 
 var _LinkedinService2 = _interopRequireDefault(_LinkedinService);
 
+var _FacebookService = require('../services/FacebookService');
+
+var _FacebookService2 = _interopRequireDefault(_FacebookService);
+
 var _User = require('../models/User');
 
 var _User2 = _interopRequireDefault(_User);
@@ -75,8 +79,16 @@ var SignInController = function () {
                     });
                     break;
                 case 'LINKEDIN':
-                    debug('LINKEDIN SING', req.body);
                     SignInController.linkedinSignIn(req.body.accessToken, req.body.email).then(function (user) {
+                        return SignInController.signTokenAndRespond(user, res);
+                    }).catch(function (err) {
+                        return SignInController.errorResponse(res, '');
+                    });
+                    break;
+                case 'FACEBOOK':
+                    // debug('FACEBOOK BODY', req.body);
+                    // res.status(200).send('OK');
+                    SignInController.facebookSignIn(req.body.accessToken, req.body.userID).then(function (user) {
                         return SignInController.signTokenAndRespond(user, res);
                     }).catch(function (err) {
                         return SignInController.errorResponse(res, '');
@@ -86,6 +98,28 @@ var SignInController = function () {
                     SignInController.errorResponse(res, 'Not authorizied to see this', 403);
             }
         }
+    }, {
+        key: 'facebookSignIn',
+        value: function facebookSignIn(accessToken, userId) {
+            return _FacebookService2.default.verify(accessToken).then(function (fbResult) {
+                if (userId === fbResult.id && !_lodash2.default.isNil(fbResult.email)) {
+                    var photoUrl = '';
+                    if (facebookResult.picture && facebookResult.picture.data) {
+                        photoUrl = facebookResult.picture.data.url;
+                    }
+                    var _user = {
+                        name: fbResult.first_name + ' ' + fbResult.last_name,
+                        email: fbResult.email,
+                        photo: photoUrl
+                    };
+                    return SignInController.slackNotify(_user.email, _user).then(function () {
+                        return SignInController.updateOrCreateUser(_user);
+                    });
+                } else {
+                    return Promise.reject({});
+                }
+            });
+        }
 
         // linkedin sign in
 
@@ -94,13 +128,13 @@ var SignInController = function () {
         value: function linkedinSignIn(accessToken, email) {
             return _LinkedinService2.default.getUser(accessToken).then(function (linkedinUser) {
                 if (!_lodash2.default.isNil(linkedinUser)) {
-                    var _user = {
-                        name: linkedinUser.firstName + linkedinUser.lastName,
+                    var _user2 = {
+                        name: linkedinUser.firstName + ' ' + linkedinUser.lastName,
                         email: linkedinUser.emailAddress,
                         photo: linkedinUser.pictureUrl
                     };
-                    return SignInController.slackNotify(_user.email, _user).then(function () {
-                        return SignInController.updateOrCreateUser(_user);
+                    return SignInController.slackNotify(_user2.email, _user2).then(function () {
+                        return SignInController.updateOrCreateUser(_user2);
                     });
                 } else {
                     Promise.reject({});

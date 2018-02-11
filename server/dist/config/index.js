@@ -66,10 +66,10 @@ var getUserRole = exports.getUserRole = function getUserRole(email) {
     }
     var role = USER_ROLES.PLATFORM_USER;
     for (var i = 0; i < OPPS_USERS.length; i++) {
-        if (OPPS_USERS[i] === 'email') {
+        if (OPPS_USERS[i] === email) {
             role = USER_ROLES.DEV_OPS;
             break;
         }
     }
-    return;
+    return role;
 };

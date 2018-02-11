@@ -20,12 +20,12 @@ import { store } from '../index';
 // retrive apps data
 export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
 	console.log('sign in');
+	let postData = { email, strategy, accessToken };
+	if (strategy === 'FACEBOOK') {
+		postData.userID = email;
+	}
 	return (dispatch, getState) => {   
-		axios.post(`${API_ROOT}/signin`, {
-			email: email,
-            strategy: strategy,
-            accessToken: accessToken
-		})
+		axios.post(`${API_ROOT}/signin`, postData)
 		.then(({ data }) => {
 			StorageUtils.setUser(Object.assign({
                 token: data.data.token

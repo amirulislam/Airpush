@@ -6,6 +6,7 @@ import _ from 'lodash';
 import safe from 'undefsafe';
 import GoogleService from '../services/GoogleService';
 import LinkedInService from '../services/LinkedinService';
+import FacebookService from '../services/FacebookService';
 import User from '../models/User';
 import JWT from '../utils/JWT';
 import SlackService from '../services/SlackService';
@@ -32,14 +33,43 @@ class SignInController {
                 .catch(err => SignInController.errorResponse(res, ''))
                 break;
             case 'LINKEDIN':
-                debug('LINKEDIN SING', req.body);
                 SignInController.linkedinSignIn(req.body.accessToken, req.body.email)
                 .then(user => SignInController.signTokenAndRespond(user, res))
                 .catch(err => SignInController.errorResponse(res, ''))
-                break;                
+                break; 
+            case 'FACEBOOK':
+                // debug('FACEBOOK BODY', req.body);
+                // res.status(200).send('OK');
+                SignInController.facebookSignIn(req.body.accessToken, req.body.userID)
+                .then(user => SignInController.signTokenAndRespond(user, res))
+                .catch(err => SignInController.errorResponse(res, ''))
+                break;                                
             default:
                 SignInController.errorResponse(res, 'Not authorizied to see this', 403);
         }
+    }
+
+    static facebookSignIn(accessToken, userId) {
+        return FacebookService.verify(accessToken)
+        .then(fbResult => {
+            if (userId === fbResult.id && !_.isNil(fbResult.email)) {
+                let photoUrl = '';
+                if (facebookResult.picture && facebookResult.picture.data) {
+                    photoUrl = facebookResult.picture.data.url;
+                }                
+                const user  = {
+                    name: fbResult.first_name + ' ' + fbResult.last_name,
+                    email: fbResult.email,
+                    photo: photoUrl
+                }
+                return SignInController.slackNotify(user.email, user)
+                .then(() => {
+                    return SignInController.updateOrCreateUser(user);
+                }); 
+            } else {
+                return Promise.reject({});
+            }
+        })      
     }
 
     // linkedin sign in
@@ -48,7 +78,7 @@ class SignInController {
         .then(linkedinUser => {
             if (!_.isNil(linkedinUser)) {
                 const user  = {
-                    name: linkedinUser.firstName + linkedinUser.lastName,
+                    name: linkedinUser.firstName + ' ' + linkedinUser.lastName,
                     email: linkedinUser.emailAddress,
                     photo: linkedinUser.pictureUrl
                 }

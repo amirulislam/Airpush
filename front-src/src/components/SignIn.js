@@ -73,6 +73,32 @@ class SignIn extends Component {
         }
     }
 
+    // sign in with facebook 
+    signInWithFacebook() {
+        if (!FB) {
+            return;
+        }
+        // try {
+        //     FB.logout();
+        // } catch (e) {};
+
+        FB.login(response => {
+            if (response.authResponse) {
+                this.props.signIn(response.authResponse.userID, 'FACEBOOK', response.authResponse.accessToken, () => {
+                    try {
+                        FB.logout(response.authResponse.accessToken);
+                    } catch (err) { console.log(err);};
+                });
+                // console.log('Welcome!  Fetching your information.... ');
+                // FB.api('/me', function(response) {
+                //     console.log('Good to see you, ' + response.name + '.');
+                // });
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        });
+    }
+
     dummySignIn() {
         return;
         this.props.signIn('', 'GOOGLE', '', () => {
@@ -86,7 +112,7 @@ class SignIn extends Component {
                 <Modal { ...this.props } renderSignInLogo={true} title="Sign in" wdt={350}>
                     <div id="g-signin2" className="g-signin2 login-space-bottom" data-onsuccess="onGoogleSignIn">
                     </div>
-                    <a href="#" className="login-base-button facebook-login login-space-bottom">Sign in with Facebook</a>
+                    <a href="#" className="login-base-button facebook-login login-space-bottom" onClick={ e => this.signInWithFacebook() }>Sign in with Facebook</a>
                     <a href="#" className="login-base-button twitter-login" onClick={ e => this.signInLinkedin() }>Sign in with Linkedin</a>
                 </Modal>
             </div>
