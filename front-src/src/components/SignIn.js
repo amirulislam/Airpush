@@ -84,17 +84,13 @@ class SignIn extends Component {
 
         FB.login(response => {
             if (response.authResponse) {
-                FB.api('/me?fields=id,first_name,last_name,picture,email', me => {
-                    console.log('Good to see you, ', me);
-                });
-                return;             
                 this.props.signIn(response.authResponse.userID, 'FACEBOOK', response.authResponse.accessToken, () => {
                     try {
                         FB.logout(response.authResponse.accessToken);
                     } catch (err) { console.log(err);};
                 });
 
-
+                
                 // console.log('Welcome!  Fetching your information.... ');
                 // FB.api('/me', function(response) {
                 //     console.log('Good to see you, ' + response.name + '.');
