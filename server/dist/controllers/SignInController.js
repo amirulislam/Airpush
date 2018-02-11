@@ -104,8 +104,8 @@ var SignInController = function () {
             return _FacebookService2.default.verify(accessToken).then(function (fbResult) {
                 if (userId === fbResult.id && !_lodash2.default.isNil(fbResult.email)) {
                     var photoUrl = '';
-                    if (facebookResult.picture && facebookResult.picture.data) {
-                        photoUrl = facebookResult.picture.data.url;
+                    if (fbResult.picture && fbResult.picture.data) {
+                        photoUrl = fbResult.picture.data.url;
                     }
                     var _user = {
                         name: fbResult.first_name + ' ' + fbResult.last_name,

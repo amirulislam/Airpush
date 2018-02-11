@@ -54,8 +54,8 @@ class SignInController {
         .then(fbResult => {
             if (userId === fbResult.id && !_.isNil(fbResult.email)) {
                 let photoUrl = '';
-                if (facebookResult.picture && facebookResult.picture.data) {
-                    photoUrl = facebookResult.picture.data.url;
+                if (fbResult.picture && fbResult.picture.data) {
+                    photoUrl = fbResult.picture.data.url;
                 }                
                 const user  = {
                     name: fbResult.first_name + ' ' + fbResult.last_name,
