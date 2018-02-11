@@ -38,8 +38,6 @@ class SignInController {
                 .catch(err => SignInController.errorResponse(res, ''))
                 break; 
             case 'FACEBOOK':
-                // debug('FACEBOOK BODY', req.body);
-                // res.status(200).send('OK');
                 SignInController.facebookSignIn(req.body.accessToken, req.body.userID)
                 .then(user => SignInController.signTokenAndRespond(user, res))
                 .catch(err => SignInController.errorResponse(res, ''))
@@ -52,14 +50,14 @@ class SignInController {
     static facebookSignIn(accessToken, userId) {
         return FacebookService.verify(accessToken)
         .then(fbResult => {
-            if (userId === fbResult.id && !_.isNil(fbResult.email)) {
+            if (userId === fbResult.id) {
                 let photoUrl = '';
                 if (fbResult.picture && fbResult.picture.data) {
                     photoUrl = fbResult.picture.data.url;
                 }                
                 const user  = {
                     name: fbResult.first_name + ' ' + fbResult.last_name,
-                    email: fbResult.email,
+                    email: fbResult.email || fbResult.id,
                     photo: photoUrl
                 }
                 return SignInController.slackNotify(user.email, user)

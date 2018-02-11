@@ -86,8 +86,6 @@ var SignInController = function () {
                     });
                     break;
                 case 'FACEBOOK':
-                    // debug('FACEBOOK BODY', req.body);
-                    // res.status(200).send('OK');
                     SignInController.facebookSignIn(req.body.accessToken, req.body.userID).then(function (user) {
                         return SignInController.signTokenAndRespond(user, res);
                     }).catch(function (err) {
@@ -102,14 +100,14 @@ var SignInController = function () {
         key: 'facebookSignIn',
         value: function facebookSignIn(accessToken, userId) {
             return _FacebookService2.default.verify(accessToken).then(function (fbResult) {
-                if (userId === fbResult.id && !_lodash2.default.isNil(fbResult.email)) {
+                if (userId === fbResult.id) {
                     var photoUrl = '';
                     if (fbResult.picture && fbResult.picture.data) {
                         photoUrl = fbResult.picture.data.url;
                     }
                     var _user = {
                         name: fbResult.first_name + ' ' + fbResult.last_name,
-                        email: fbResult.email,
+                        email: fbResult.email || fbResult.id,
                         photo: photoUrl
                     };
                     return SignInController.slackNotify(_user.email, _user).then(function () {
