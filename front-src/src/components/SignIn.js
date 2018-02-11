@@ -78,10 +78,6 @@ class SignIn extends Component {
         if (!FB) {
             return;
         }
-        // try {
-        //     FB.logout();
-        // } catch (e) {};
-
         FB.login(response => {
             if (response.authResponse) {
                 this.props.signIn(response.authResponse.userID, 'FACEBOOK', response.authResponse.accessToken, () => {
@@ -89,12 +85,6 @@ class SignIn extends Component {
                         FB.logout(response.authResponse.accessToken);
                     } catch (err) { console.log(err);};
                 });
-
-                
-                // console.log('Welcome!  Fetching your information.... ');
-                // FB.api('/me', function(response) {
-                //     console.log('Good to see you, ' + response.name + '.');
-                // });
             } else {
                 console.log('User cancelled login or did not fully authorize.');
             }
