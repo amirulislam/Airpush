@@ -84,7 +84,7 @@ class SignIn extends Component {
 
         FB.login(response => {
             if (response.authResponse) {
-                FB.api('/me', me => {
+                FB.api('/me?fields=id,first_name,last_name,picture,email', me => {
                     console.log('Good to see you, ', me);
                 });
                 return;             
