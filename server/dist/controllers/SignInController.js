@@ -31,6 +31,10 @@ var _JWT = require('../utils/JWT');
 
 var _JWT2 = _interopRequireDefault(_JWT);
 
+var _SlackService = require('../services/SlackService');
+
+var _SlackService2 = _interopRequireDefault(_SlackService);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -75,7 +79,7 @@ var SignInController = function () {
         key: 'googleSignIn',
         value: function googleSignIn(accessToken, email) {
             return _GoogleService2.default.verify(accessToken, email).then(function (result) {
-                return SignInController.slackNotify(email).then(function () {
+                return SignInController.slackNotify(email, result).then(function () {
                     return SignInController.updateOrCreateUser(result);
                 });
             });
@@ -85,10 +89,11 @@ var SignInController = function () {
 
     }, {
         key: 'slackNotify',
-        value: function slackNotify(email) {
+        value: function slackNotify(email, candidate) {
             return _User2.default.findOne({ email: email }).then(function (user) {
                 if (_lodash2.default.isNil(user)) {
                     debug('SLACK NOTYFY !!!!');
+                    _SlackService2.default.notifyNewUser(candidate);
                 }
                 return;
             });

@@ -1162,7 +1162,7 @@ express@~4.15.2:
     utils-merge "1.0.0"
     vary "~1.1.1"
 
-extend@~3.0.0, extend@~3.0.1:
+extend@^3.0.0, extend@~3.0.0, extend@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
@@ -1810,6 +1810,10 @@ lodash@^4.14.0, lodash@^4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
+lodash@^4.15.0:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
+
 loose-envify@^1.0.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
@@ -2366,6 +2370,15 @@ request@^2.74.0:
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
 
+requestretry@^1.2.2:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/requestretry/-/requestretry-1.13.0.tgz#213ec1006eeb750e8b8ce54176283d15a8d55d94"
+  dependencies:
+    extend "^3.0.0"
+    lodash "^4.15.0"
+    request "^2.74.0"
+    when "^3.7.7"
+
 require_optional@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require_optional/-/require_optional-1.0.1.tgz#4cf35a4247f64ca3df8c2ef208cc494b1ca8fc2e"
@@ -2460,6 +2473,12 @@ shortid@^2.2.8:
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+slack-node@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/slack-node/-/slack-node-0.1.8.tgz#cda98de8681485b301dc6742ddc3897117fad349"
+  dependencies:
+    requestretry "^1.2.2"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -2733,6 +2752,10 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+when@^3.7.7:
+  version "3.7.8"
+  resolved "https://registry.yarnpkg.com/when/-/when-3.7.8.tgz#c7130b6a7ea04693e842cdc9e7a1f2aa39a39f82"
 
 wide-align@^1.1.0:
   version "1.1.2"

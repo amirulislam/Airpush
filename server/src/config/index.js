@@ -46,4 +46,9 @@ export const LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();
 
 export const GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com';
 
+export const SLACK_NOTIFY = {
+    webhook: 'https://hooks.slack.com/services/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',
+    chanel: '#airpush'
+}
+
 

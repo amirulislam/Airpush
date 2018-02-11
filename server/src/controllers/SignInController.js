@@ -7,7 +7,7 @@ import safe from 'undefsafe';
 import GoogleService from '../services/GoogleService';
 import User from '../models/User';
 import JWT from '../utils/JWT';
-
+import SlackService from '../services/SlackService';
 
 // remove this
 const user = {
@@ -38,7 +38,7 @@ class SignInController {
     static googleSignIn(accessToken, email) {
         return GoogleService.verify(accessToken, email)
         .then(result => {
-            return SignInController.slackNotify(email)
+            return SignInController.slackNotify(email, result)
             .then(() => {
                 return SignInController.updateOrCreateUser(result);
             });
@@ -46,11 +46,12 @@ class SignInController {
     }
 
     // get user by email
-    static slackNotify(email) {
+    static slackNotify(email, candidate) {
         return User.findOne({email})
         .then(user => {
             if (_.isNil(user)) {
                 debug('SLACK NOTYFY !!!!')
+                SlackService.notifyNewUser(candidate);
             }
             return;
         })
