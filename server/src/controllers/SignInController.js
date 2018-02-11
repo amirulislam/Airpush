@@ -5,9 +5,11 @@ const debug = debugPck('airpush:SignInController');
 import _ from 'lodash';
 import safe from 'undefsafe';
 import GoogleService from '../services/GoogleService';
+import LinkedInService from '../services/LinkedinService';
 import User from '../models/User';
 import JWT from '../utils/JWT';
 import SlackService from '../services/SlackService';
+import { getUserRole } from '../config';
 
 // remove this
 const user = {
@@ -29,9 +31,35 @@ class SignInController {
                 .then(user => SignInController.signTokenAndRespond(user, res))
                 .catch(err => SignInController.errorResponse(res, ''))
                 break;
+            case 'LINKEDIN':
+                debug('LINKEDIN SING', req.body);
+                SignInController.linkedinSignIn(req.body.accessToken, req.body.email)
+                .then(user => SignInController.signTokenAndRespond(user, res))
+                .catch(err => SignInController.errorResponse(res, ''))
+                break;                
             default:
                 SignInController.errorResponse(res, 'Not authorizied to see this', 403);
         }
+    }
+
+    // linkedin sign in
+    static linkedinSignIn(accessToken, email) {
+        return LinkedInService.getUser(accessToken)
+        .then(linkedinUser => {
+            if (!_.isNil(linkedinUser)) {
+                const user  = {
+                    name: linkedinUser.firstName + linkedinUser.lastName,
+                    email: linkedinUser.emailAddress,
+                    photo: linkedinUser.pictureUrl
+                }
+                return SignInController.slackNotify(user.email, user)
+                .then(() => {
+                    return SignInController.updateOrCreateUser(user);
+                });                
+            } else {
+                Promise.reject({});
+            }
+        })
     }
 
     // google sign in
@@ -59,6 +87,9 @@ class SignInController {
 
     // update or create user
     static updateOrCreateUser(user) {
+        if (_.isObject(user)) {
+            user.role = getUserRole(user.email);
+        }
         return User.findOneAndUpdate({
             email: user.email
         }, user, {

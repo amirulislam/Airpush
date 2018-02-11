@@ -23,6 +23,10 @@ var _GoogleService = require('../services/GoogleService');
 
 var _GoogleService2 = _interopRequireDefault(_GoogleService);
 
+var _LinkedinService = require('../services/LinkedinService');
+
+var _LinkedinService2 = _interopRequireDefault(_LinkedinService);
+
 var _User = require('../models/User');
 
 var _User2 = _interopRequireDefault(_User);
@@ -34,6 +38,8 @@ var _JWT2 = _interopRequireDefault(_JWT);
 var _SlackService = require('../services/SlackService');
 
 var _SlackService2 = _interopRequireDefault(_SlackService);
+
+var _config = require('../config');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -68,9 +74,38 @@ var SignInController = function () {
                         return SignInController.errorResponse(res, '');
                     });
                     break;
+                case 'LINKEDIN':
+                    debug('LINKEDIN SING', req.body);
+                    SignInController.linkedinSignIn(req.body.accessToken, req.body.email).then(function (user) {
+                        return SignInController.signTokenAndRespond(user, res);
+                    }).catch(function (err) {
+                        return SignInController.errorResponse(res, '');
+                    });
+                    break;
                 default:
                     SignInController.errorResponse(res, 'Not authorizied to see this', 403);
             }
+        }
+
+        // linkedin sign in
+
+    }, {
+        key: 'linkedinSignIn',
+        value: function linkedinSignIn(accessToken, email) {
+            return _LinkedinService2.default.getUser(accessToken).then(function (linkedinUser) {
+                if (!_lodash2.default.isNil(linkedinUser)) {
+                    var _user = {
+                        name: linkedinUser.firstName + linkedinUser.lastName,
+                        email: linkedinUser.emailAddress,
+                        photo: linkedinUser.pictureUrl
+                    };
+                    return SignInController.slackNotify(_user.email, _user).then(function () {
+                        return SignInController.updateOrCreateUser(_user);
+                    });
+                } else {
+                    Promise.reject({});
+                }
+            });
         }
 
         // google sign in
@@ -104,6 +139,9 @@ var SignInController = function () {
     }, {
         key: 'updateOrCreateUser',
         value: function updateOrCreateUser(user) {
+            if (_lodash2.default.isObject(user)) {
+                user.role = (0, _config.getUserRole)(user.email);
+            }
             return _User2.default.findOneAndUpdate({
                 email: user.email
             }, user, {

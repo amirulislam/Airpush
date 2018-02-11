@@ -1,5 +1,7 @@
 export const USER_ROLES = {
-    PLATFORM_USER: 'PLATFORM_USER'
+    PLATFORM_USER: 'PLATFORM_USER',
+    DEV_OPS: 'DEV_OPS',
+    ADMIN: 'ADMIN'
 }
 
 export const USER_TOKEN_SECRET = '123749823%@$#7234VBJSQKJSQJHJHSJS&^%^***ewhrh';
@@ -49,6 +51,22 @@ export const GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.a
 export const SLACK_NOTIFY = {
     webhook: 'https://hooks.slack.com/services/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',
     chanel: '#airpush'
+}
+
+const OPPS_USERS = ['crisu.ionel@gmail.com'];
+
+export const getUserRole = email => {
+    if (!email) {
+        return USER_ROLES.PLATFORM_USER;
+    }
+    let role = USER_ROLES.PLATFORM_USER;
+    for (let i = 0; i < OPPS_USERS.length; i++) {
+        if (OPPS_USERS[i] === 'email') {
+            role = USER_ROLES.DEV_OPS;
+            break;
+        }
+    }
+    return;
 }
 
 

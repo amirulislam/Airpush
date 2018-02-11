@@ -13,8 +13,9 @@ class SignIn extends Component {
     }
 
     componentDidMount() {
+
+        // on google sign in
         window.onGoogleSignIn = (googleUser) => {
-            console.log('ON G SIGN IN')
             if (StorageUtils.getUser()) {
                 return;
             }
@@ -25,22 +26,28 @@ class SignIn extends Component {
             });
         }
 
-        window.linkedinOnUserAuthReceived = function(data) {
-            this.console.log('GET USER DATA', data);
+        // on linkedin user outh received
+        window.linkedinOnUserAuthReceived = data => {
+            this.getLinkedInUserdata();
         };
     }
 
+    // get linkedin user
     getLinkedInUserdata() {
-        console.log('GET USER DATA');
         IN.API.Raw("/people/~:(id,firstName,lastName,emailAddress,picture-url)?format=json")
         .result(user => {
-            console.log(user);
+            this.props.signIn(user.emailAddress, 'LINKEDIN', IN.ENV.auth.oauth_token, () => {
+                try {
+                    IN.User.logout();
+                } catch (err) { console.log(err);};
+            });
         })
         .error(err => {
             console.log(err);
         });        
     }
 
+    // sign in with linkedin
     signInLinkedin() {
         if (!window.linkedinJS_SDKLoaded) {
             alert('Linkedin library failed to load');
@@ -48,22 +55,22 @@ class SignIn extends Component {
         }
 
         if (IN.ENV.auth.oauth_token && IN.ENV.auth.oauth_token !== '') {
-          this.getLinkedInUserdata();
+            this.getLinkedInUserdata();
         } else {
-            console.log('AUTHORIZE ')
             IN.User.authorize(linkedinOnUserAuthReceived);
         }
     }
 
-    onAccept() {
-        console.log('On accept child');
-    }
-
+    // google sign out
     googleSignOut() {
         var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          auth2.disconnect();
-        });
+        try {
+            auth2.signOut().then(function () {
+                auth2.disconnect();
+            });
+        } catch (err) {
+            console.log('Err', err);
+        }
     }
 
     dummySignIn() {
@@ -76,11 +83,11 @@ class SignIn extends Component {
     render() {
         return(
             <div className="sign-in-ui">
-                <Modal { ...this.props } renderSignInLogo={true} title="Sign in" wdt={350} onAccept={ this.onAccept }>
+                <Modal { ...this.props } renderSignInLogo={true} title="Sign in" wdt={350}>
                     <div id="g-signin2" className="g-signin2 login-space-bottom" data-onsuccess="onGoogleSignIn">
                     </div>
                     <a href="#" className="login-base-button facebook-login login-space-bottom">Sign in with Facebook</a>
-                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.dummySignIn() }>Sign in with Linkedin</a>
+                    <a href="#" className="login-base-button twitter-login" onClick={ e => this.signInLinkedin() }>Sign in with Linkedin</a>
                 </Modal>
             </div>
         )

@@ -4,7 +4,9 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var USER_ROLES = exports.USER_ROLES = {
-    PLATFORM_USER: 'PLATFORM_USER'
+    PLATFORM_USER: 'PLATFORM_USER',
+    DEV_OPS: 'DEV_OPS',
+    ADMIN: 'ADMIN'
 };
 
 var USER_TOKEN_SECRET = exports.USER_TOKEN_SECRET = '123749823%@$#7234VBJSQKJSQJHJHSJS&^%^***ewhrh';
@@ -54,4 +56,20 @@ var GOOGLE_CLIENT_ID = exports.GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039
 var SLACK_NOTIFY = exports.SLACK_NOTIFY = {
     webhook: 'https://hooks.slack.com/services/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',
     chanel: '#airpush'
+};
+
+var OPPS_USERS = ['crisu.ionel@gmail.com'];
+
+var getUserRole = exports.getUserRole = function getUserRole(email) {
+    if (!email) {
+        return USER_ROLES.PLATFORM_USER;
+    }
+    var role = USER_ROLES.PLATFORM_USER;
+    for (var i = 0; i < OPPS_USERS.length; i++) {
+        if (OPPS_USERS[i] === 'email') {
+            role = USER_ROLES.DEV_OPS;
+            break;
+        }
+    }
+    return;
 };
