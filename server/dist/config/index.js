@@ -48,3 +48,5 @@ var getLetsEncryptConfig = function getLetsEncryptConfig() {
     };
 };
 var LETS_ENCRYPT_CONFIG = exports.LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();
+
+var GOOGLE_CLIENT_ID = exports.GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com';

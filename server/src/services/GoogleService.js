@@ -4,14 +4,14 @@
 import _ from 'lodash';
 import safe from 'undefsafe';
 const { OAuth2Client } = require('google-auth-library');
-const CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com	';
+import { GOOGLE_CLIENT_ID } from '../config';
 
 class GoogleService {
 
 	// retrive user
 	static verify(authToken, email) {
         const oAuth2Client = new OAuth2Client(
-            CLIENT_ID
+            GOOGLE_CLIENT_ID
         );
         return oAuth2Client.verifyIdToken({idToken: authToken})
         .then(LoginTicket => {
@@ -20,7 +20,8 @@ class GoogleService {
                 return {
                     email: LoginTicket.payload.email,
                     name: LoginTicket.payload.name,
-                    photo: LoginTicket.payload.picture
+                    photo: LoginTicket.payload.picture,
+                    strategy: 'GOOGLE'
                 }
             } else {
                 return Promise.reject("Invalid token");

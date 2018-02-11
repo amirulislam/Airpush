@@ -23,37 +23,54 @@ const user = {
 class SignInController {
 
     static logUser(req, res, next) {
-        GoogleService.verify(req.body.accessToken, req.body.email)
+        switch(req.body.strategy) {
+            case 'GOOGLE':
+                SignInController.googleSignIn(req.body.accessToken, req.body.email)
+                .then(user => SignInController.signTokenAndRespond(user, res))
+                .catch(err => SignInController.errorResponse(res, ''))
+                break;
+            default:
+                SignInController.errorResponse(res, 'Not authorizied to see this', 403);
+        }
+    }
+
+    // google sign in
+    static googleSignIn(accessToken, email) {
+        return GoogleService.verify(accessToken, email)
         .then(result => {
-            User.findOneAndUpdate({
-                email: result.email
-            }, result, {
-                new: true, upsert: true
-            })
-            .then(user => {
-                if (!_.isNil(user)) {
-                    SignInController.response(res, {
-                        user, token: JWT.createUserToken(user)
-                    });
-                }
-            })
+            return SignInController.slackNotify(email)
+            .then(() => {
+                return SignInController.updateOrCreateUser(result);
+            });
+        })        
+    }
+
+    // get user by email
+    static slackNotify(email) {
+        return User.findOne({email})
+        .then(user => {
+            if (_.isNil(user)) {
+                debug('SLACK NOTYFY !!!!')
+            }
+            return;
         })
-        .catch(e => {
-			return res.status(403).json({
-				message: 'Not authorizied to see this',
-				status: 403
-			});	
+    }
+
+    // update or create user
+    static updateOrCreateUser(user) {
+        return User.findOneAndUpdate({
+            email: user.email
+        }, user, {
+            new: true, upsert: true
         });
     }
 
-    static response(res, data) {
-        res.status(200).json({
-            data,
-            links: {
-                _self: '/api/signin'
-            },
-            meta: {}
-        }); 
+    static signTokenAndRespond(user, res) {
+        if (!_.isNil(user)) {
+            SignInController.response(res, {
+                user, token: JWT.createUserToken(user)
+            });
+        }
     }
 
     // remove account
@@ -70,6 +87,24 @@ class SignInController {
 				status: 500
 			});	
         });
+    }    
+
+    // general 200 response
+    static response(res, data) {
+        res.status(200).json({
+            data,
+            links: {
+                _self: '/api/signin'
+            },
+            meta: {}
+        }); 
+    }
+    
+    static errorResponse(res, errMsg = '', code = 500) {
+        return res.status(code).json({
+            message: errMsg,
+            status: code
+        });        
     }
 }
 

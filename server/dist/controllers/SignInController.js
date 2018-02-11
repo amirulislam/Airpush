@@ -56,35 +56,63 @@ var SignInController = function () {
     _createClass(SignInController, null, [{
         key: 'logUser',
         value: function logUser(req, res, next) {
-            _GoogleService2.default.verify(req.body.accessToken, req.body.email).then(function (result) {
-                _User2.default.findOneAndUpdate({
-                    email: result.email
-                }, result, {
-                    new: true, upsert: true
-                }).then(function (user) {
-                    if (!_lodash2.default.isNil(user)) {
-                        SignInController.response(res, {
-                            user: user, token: _JWT2.default.createUserToken(user)
-                        });
-                    }
-                });
-            }).catch(function (e) {
-                return res.status(403).json({
-                    message: 'Not authorizied to see this',
-                    status: 403
+            switch (req.body.strategy) {
+                case 'GOOGLE':
+                    SignInController.googleSignIn(req.body.accessToken, req.body.email).then(function (user) {
+                        return SignInController.signTokenAndRespond(user, res);
+                    }).catch(function (err) {
+                        return SignInController.errorResponse(res, '');
+                    });
+                    break;
+                default:
+                    SignInController.errorResponse(res, 'Not authorizied to see this', 403);
+            }
+        }
+
+        // google sign in
+
+    }, {
+        key: 'googleSignIn',
+        value: function googleSignIn(accessToken, email) {
+            return _GoogleService2.default.verify(accessToken, email).then(function (result) {
+                return SignInController.slackNotify(email).then(function () {
+                    return SignInController.updateOrCreateUser(result);
                 });
             });
         }
+
+        // get user by email
+
     }, {
-        key: 'response',
-        value: function response(res, data) {
-            res.status(200).json({
-                data: data,
-                links: {
-                    _self: '/api/signin'
-                },
-                meta: {}
+        key: 'slackNotify',
+        value: function slackNotify(email) {
+            return _User2.default.findOne({ email: email }).then(function (user) {
+                if (_lodash2.default.isNil(user)) {
+                    debug('SLACK NOTYFY !!!!');
+                }
+                return;
             });
+        }
+
+        // update or create user
+
+    }, {
+        key: 'updateOrCreateUser',
+        value: function updateOrCreateUser(user) {
+            return _User2.default.findOneAndUpdate({
+                email: user.email
+            }, user, {
+                new: true, upsert: true
+            });
+        }
+    }, {
+        key: 'signTokenAndRespond',
+        value: function signTokenAndRespond(user, res) {
+            if (!_lodash2.default.isNil(user)) {
+                SignInController.response(res, {
+                    user: user, token: _JWT2.default.createUserToken(user)
+                });
+            }
         }
 
         // remove account
@@ -101,6 +129,31 @@ var SignInController = function () {
                     message: 'Could not remove the account',
                     status: 500
                 });
+            });
+        }
+
+        // general 200 response
+
+    }, {
+        key: 'response',
+        value: function response(res, data) {
+            res.status(200).json({
+                data: data,
+                links: {
+                    _self: '/api/signin'
+                },
+                meta: {}
+            });
+        }
+    }, {
+        key: 'errorResponse',
+        value: function errorResponse(res) {
+            var errMsg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+            var code = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+
+            return res.status(code).json({
+                message: errMsg,
+                status: code
             });
         }
     }]);

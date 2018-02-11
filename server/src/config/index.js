@@ -44,3 +44,6 @@ const getLetsEncryptConfig = () => {
 };
 export const LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();
 
+export const GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com';
+
+

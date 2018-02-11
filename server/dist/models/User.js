@@ -19,7 +19,8 @@ var UserSchema = new Schema({
 	email: { type: String, required: true, index: { unique: true } },
 	name: { type: String, required: false, default: '' },
 	photo: { type: String, required: false, default: '' },
-	role: { type: String, default: _config.USER_ROLES.PLATFORM_USER }
+	role: { type: String, default: _config.USER_ROLES.PLATFORM_USER },
+	strategy: { type: String, default: '' }
 });
 
 exports.default = _mongoose2.default.model('User', UserSchema);

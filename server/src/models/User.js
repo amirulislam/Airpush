@@ -10,7 +10,8 @@ const UserSchema = new Schema({
 	email: { type: String, required: true, index: { unique: true } },
 	name: { type: String, required: false, default: '' },
 	photo: { type: String, required: false, default: '' },
-	role: { type: String, default: USER_ROLES.PLATFORM_USER }
+	role: { type: String, default: USER_ROLES.PLATFORM_USER },
+	strategy: { type: String, default: '' }
 });
 
 export default mongoose.model('User', UserSchema);
