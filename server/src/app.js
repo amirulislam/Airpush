@@ -6,6 +6,7 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import compression from 'compression';
 
 import Https from './middleware/letsencrypt';
 
@@ -44,6 +45,7 @@ app.use('/', (req, res, next) => {
 	res.render('index');
 });
 
+app.use(compression());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -21,6 +21,10 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
+var _compression = require('compression');
+
+var _compression2 = _interopRequireDefault(_compression);
+
 var _letsencrypt = require('./middleware/letsencrypt');
 
 var _letsencrypt2 = _interopRequireDefault(_letsencrypt);
@@ -65,6 +69,8 @@ app.use('/api', _api2.default);
 app.use('/', function (req, res, next) {
 	res.render('index');
 });
+
+app.use((0, _compression2.default)());
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
