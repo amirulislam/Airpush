@@ -57,7 +57,7 @@ class SignInController {
                 }                
                 const user  = {
                     name: fbResult.first_name + ' ' + fbResult.last_name,
-                    email: fbResult.email || fbResult.id,
+                    email: fbResult.email || String(fbResult.id),
                     photo: photoUrl
                 }
                 return SignInController.slackNotify(user.email, user)
