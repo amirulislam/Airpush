@@ -133,9 +133,9 @@ class SocketService {
     // on message received
     onDataReceive() {
         this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            // console.log('Message received', data);
+            console.log('Message received', data);
             switch(data.type) {
-                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:                
+                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:               
                     addUser(data.payload);
                     this.informNewUserAboutSelf(data.payload);
                     break;

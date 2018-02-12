@@ -151,6 +151,7 @@ class SignInController {
 
     // general 200 response
     static response(res, data) {
+        res.set('x-no-compression', 'true');
         res.status(200).json({
             data,
             links: {

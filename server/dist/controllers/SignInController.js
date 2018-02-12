@@ -212,6 +212,7 @@ var SignInController = function () {
     }, {
         key: 'response',
         value: function response(res, data) {
+            res.set('x-no-compression', 'true');
             res.status(200).json({
                 data: data,
                 links: {

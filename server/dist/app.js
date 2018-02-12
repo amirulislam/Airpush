@@ -40,6 +40,16 @@ var _debug2 = _interopRequireDefault(_debug);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
+var shouldCompress = function shouldCompress(req, res) {
+	if (req.headers['x-no-compression']) {
+		// don't compress responses with this request header
+		return false;
+	}
+
+	// fallback to standard filter function
+	return _compression2.default.filter(req, res);
+};
+app.use((0, _compression2.default)({ filter: shouldCompress }));
 
 var debug = (0, _debug2.default)('airpush:app');
 
@@ -60,17 +70,15 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 app.set('views', _path2.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use('/api', _api2.default);
+
 app.use('/app', function (req, res, next) {
 	res.render('app');
 });
 
-app.use('/api', _api2.default);
-
 app.use('/', function (req, res, next) {
 	res.render('index');
 });
-
-app.use((0, _compression2.default)());
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
