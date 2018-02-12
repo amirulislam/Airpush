@@ -210,30 +210,30 @@ var SocketManager = function () {
                             console.log('ERROR >>>> NO ROOM >>>>');
                         }
                         break;
-                    case _config.SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
-                        // console.log(SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE, data);
-                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                            data.user = socket.user;
-                            socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                                type: data.type,
-                                payload: data
-                            });
-                        }
-                        break;
-                    case _config.SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
-                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.sender')) && !_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.sendTo'))) {
-                            data.peerData.sender.socketId = socket.user.socketId;
-                            socket.to(data.peerData.sendTo).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                                type: _config.SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
-                                payload: data.peerData.sender
-                            });
-                        }
-                        break;
+                    // case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
+                    //     // console.log(SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE, data);
+                    //     if (!_.isNil(safe(socket, 'room.roomId'))) {      
+                    //         data.user = socket.user;
+                    //         socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
+                    //             type: data.type,
+                    //             payload: data
+                    //         });
+                    //     }
+                    // break;                
+                    // case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
+                    //     if (!_.isNil(safe(data, 'peerData.sender')) && !_.isNil(safe(data, 'peerData.sendTo'))) {
+                    //         data.peerData.sender.socketId = socket.user.socketId;
+                    //         socket.to(data.peerData.sendTo).emit(SOCKET_EVENTS.MESSAGE, {
+                    //                 type: SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
+                    //                 payload: data.peerData.sender
+                    //             }
+                    //         );
+                    //     }
+                    // break;                
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                        // console.log('RECEIVED PEER SIGNAL');
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.toUser.socketId'))) {
                             var sendToSocketId = data.peerData.toUser.socketId;
-                            data.peerData.user = socket.user;
+                            data.peerData.fromUser = socket.user;
                             delete data.peerData.toUser;
                             socket.to(sendToSocketId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
@@ -242,10 +242,10 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                        // console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
-                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
-                            var _sendToSocketId = data.peerData.user.socketId;
-                            data.peerData.user = socket.user;
+                        console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.fromUser.socketId'))) {
+                            var _sendToSocketId = data.peerData.fromUser.socketId;
+                            data.peerData.fromUser = socket.user;
                             socket.to(_sendToSocketId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER,
                                 payload: data.peerData
@@ -263,17 +263,18 @@ var SocketManager = function () {
                             });
                         }
                         break;
-                    case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                        // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
-                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.user.socketId'))) {
-                            var _sendToSocketId3 = data.peerData.user.socketId;
-                            data.peerData.user = socket.user;
-                            socket.to(_sendToSocketId3).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                                type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
-                                payload: data.peerData
-                            });
-                        }
-                        break;
+                    // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
+                    //     // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
+                    //     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
+                    //         const sendToSocketId = data.peerData.user.socketId;
+                    //         data.peerData.user = socket.user;
+                    //         socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                    //                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
+                    //                 payload: data.peerData
+                    //             }
+                    //         );
+                    //     }               
+                    // break;                                                
                 }
             });
         }

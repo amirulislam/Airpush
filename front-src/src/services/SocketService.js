@@ -6,6 +6,7 @@ import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
  addUser, removeUser, dispatchInternalMessage } from '../actions';
 import Storage from '../utils/Storage';
 import User from '../models/User';
+import PeerService from './peer-advanced/PeerService';
 
 let instance;
 class SocketService {
@@ -135,9 +136,10 @@ class SocketService {
         this._socket.on(SOCKET_EVENTS.MESSAGE, data => {
             console.log('Message received', data);
             switch(data.type) {
-                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:               
+                case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
                     addUser(data.payload);
                     this.informNewUserAboutSelf(data.payload);
+                    PeerService.getInstance().createPeer(data.payload);
                     break;
                 case SOCKET_MESSAGE_TYPES.USER_LEAVED:
                     removeUser(data.payload);                    
@@ -148,20 +150,19 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
                     dispatchInternalMessage(data);
                     break;
-                case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
-                    dispatchInternalMessage(data);
-                    break;                    
-                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
-                //     PeerService.getInstance().createFilePeerAndSetRemoteDescription(data);
-                //     break;
-                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                //     console.log('PEER_SIGNAL_ANSWER--->>>', data);
-                //     PeerService.getInstance().setAnswerFromRemote(data);
-                //     break;
-                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
-                //     console.log('PEER_SIGNAL_ICE--->>>', data);
-                //     PeerService.getInstance().setIncomingIceCandidate(data);
-                //     break;
+                // case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
+                //     dispatchInternalMessage(data);
+                //     break;                    
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:                    
+                    PeerService.getInstance().createPeerAndSetOffer(data.payload.fromUser, data.payload.signal);
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
+                    PeerService.getInstance().setAnswerFromRemote(data.payload.fromUser, data.payload.signal);
+                    break;
+                case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
+                    // console.log('PEER_SIGNAL_ICE--->>>', data);
+                    PeerService.getInstance().setIncomingIceCandidate(data.payload.user, data.payload.candidate);
+                    break;
                 // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
                 //     console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
                 //     PeerService.getInstance().setRemoteReady(data);

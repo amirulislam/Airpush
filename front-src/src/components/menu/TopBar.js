@@ -24,19 +24,20 @@ class TopBar extends Component {
     }
 
     renderPaddingCSS() {
-        return (this.props.menuOpen) ? {paddingLeft: MENU_WIDTH} : {paddingLeft: '0px'};
+        return {paddingLeft: '0px'};
+        // return (this.props.menuOpen) ? {paddingLeft: MENU_WIDTH} : {paddingLeft: '0px'};
     }
 
     renderOpenMenuButton() {
-        if (!this.props.menuOpen) {
-            return(
-                <div className="open-menu-button pull-left">
-                    <IconButton onClick={ e => this.props.toggleMenu(true) }>
-                        <ActionMenu />
-                    </IconButton>
-                </div>
-            );
-        }
+        // if (!this.props.menuOpen) {
+        //     return(
+        //         <div className="open-menu-button pull-left">
+        //             <IconButton onClick={ e => this.props.toggleMenu(true) }>
+        //                 <ActionMenu />
+        //             </IconButton>
+        //         </div>
+        //     );
+        // }
     }
 
     redirectToMyAccount() {
@@ -71,29 +72,29 @@ class TopBar extends Component {
         }
     }
 
-    _renderDivider(c, total) {
-        if (c < total - 1) {
-            return <Divider />;
-        }
-    }
+    // _renderDivider(c, total) {
+    //     if (c < total - 1) {
+    //         return <Divider />;
+    //     }
+    // }
 
-    _interateUsers() {
-        let c = 0;
-        return this.props.users.map(u => {
+    // _interateUsers() {
+    //     let c = 0;
+    //     return this.props.users.map(u => {
             
-            return [
-                <div className="users-item" key={shortid.generate()}>
-                    <img className="user-img pull-left" src={u.photo} />
-                    <p className="pull-left">{u.name}</p>
-                    <div className="clearfix"></div>
-                </div>,
-                <div key={shortid.generate()}>
-                    { this._renderDivider(c, this.props.users.length) }
-                </div>
-            ]
-            c++;
-        });
-    }
+    //         return [
+    //             <div className="users-item" key={shortid.generate()}>
+    //                 <img className="user-img pull-left" src={u.photo} />
+    //                 <p className="pull-left">{u.name}</p>
+    //                 <div className="clearfix"></div>
+    //             </div>,
+    //             <div key={shortid.generate()}>
+    //                 { this._renderDivider(c, this.props.users.length) }
+    //             </div>
+    //         ]
+    //         c++;
+    //     });
+    // }
     _renderExistingUsers() {
         if (this.props.users.length === 0) {
             return;
@@ -115,11 +116,18 @@ class TopBar extends Component {
         )
     }
 
+    _renderLogo() {
+        return(
+            <div className="topbar-logo pull-left">
+                airpush<span>.</span>
+            </div>            
+        )        
+    }
+
     render() {
         return(
             <div className="top-bar-main" style={this.renderPaddingCSS()}>
-                { this.renderOpenMenuButton() }
-                { this._renderExistingUsers() }
+                { this._renderLogo() }
                 { this.renderUserAvatar() }
                 <div className="clearfix"></div>
             </div>

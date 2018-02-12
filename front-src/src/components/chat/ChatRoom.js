@@ -10,6 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import CreateRoom from './CreateRoom';
 import JoiningRoom from './JoiningRoom';
 import MainChatRoom from './MainChatRoom';
+import ChatMainView from './main-view/ChatMainView';
 
 class ChatRoom extends Component {
 
@@ -39,7 +40,12 @@ class ChatRoom extends Component {
             }} />              
         }
         if (this.props.roomId) {
-            return <MainChatRoom />
+            return(
+                <div className="main-view">
+                    <ChatMainView />
+                    <MainChatRoom />
+                </div>
+            )
         } else {
             return <CreateRoom />;
         }        

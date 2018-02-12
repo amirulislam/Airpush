@@ -21,7 +21,8 @@ class AppSectionUI extends Component {
     }
 
     renderPaddingCSS() {
-        return (this.props.menuOpen) ? {paddingLeft: MENU_WIDTH} : {paddingLeft: '0px'};
+        // return (this.props.menuOpen) ? {paddingLeft: MENU_WIDTH} : {paddingLeft: '0px'};
+        return;
     }
 
     render() {

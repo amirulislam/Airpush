@@ -5,6 +5,8 @@ $chatBottomBarBackground: '#eeeeee';
 $chatBottomBarBorderColor: '#dbdbdb';
 $chatBottomBarHeight: 65;
 
+$chatMessengerWidth: 400;
+
 @import 'utils.scss';
 @import 'modal.scss';
 @import 'buttons.scss';
@@ -98,6 +100,20 @@ html, body, #airpush-ui {
             .users-topbar {
 
             } 
+            .topbar-logo {
+                font-family: 'Lato', sans-serif;
+                font-weight: 700;
+                font-size: 32px;
+                letter-spacing: -1px;
+                line-height: 62px;
+                text-size-adjust: 100%;
+                margin-top: -8px;
+                padding-left: 10px;
+                span {
+                    color: #fc363b;
+                    margin-left: 2px;                
+                }             
+            }
         }
 
         /* generic app section */
@@ -182,6 +198,39 @@ html, body, #airpush-ui {
                                 }
                             }
                         }
+                        .messenger-ui {
+
+                        }
+                        .main-view {
+                            height: 100%; overflow: hidden; position: relative;
+                            .chat-group-full-ui {
+                                position: relative; height: 100%;
+                                width: calc(100% - #{($chatMessengerWidth) + 'px'});
+                                height: 100%; overflow: hidden;
+                                background: -moz-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* ff3.6+ */
+                                background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(50,28,145,1)), color-stop(100%, rgba(112,87,216,1))); /* safari4+,chrome */
+                                background: -webkit-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* safari5.1+,chrome10+ */
+                                background: -o-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* opera 11.10+ */
+                                background: -ms-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* ie10+ */
+                                background: linear-gradient(335deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* w3c */
+                                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#321c91', endColorstr='#7057d8',GradientType=0 ); /* ie6-9 */
+
+                                .chat-main-bottom-controlls {
+                                    position: absolute; bottom: 10px; left: 0px; width: 100%;
+                                    z-index: 200;
+                                    text-align: center;
+                                    .controlls-ui {
+                                        display: inline-block; background: #1b212e;
+                                        padding: 0px; border-radius: 3px;
+                                    }
+                                }
+                            }
+                            .chat-group-main-messenger {
+                                width: calc(#{($chatMessengerWidth) + 'px'});
+                                height: 100%; position: relative;
+                                background-image: url("/assets/img/seigaiha.png");
+                            }                            
+                        }
                         .chat-messenger {
                             position: relative;
                             height: calc(100% - #{($chatBottomBarHeight) + 'px'});
@@ -211,7 +260,7 @@ html, body, #airpush-ui {
                                     .user-message-content {
                                         padding: 10px 16px; border-radius: 4px;
                                         background: #FFFFFF;
-                                        max-width: 50%;
+                                        max-width: 100%;
                                         position: relative;
                                         .message-arrow {
                                             width: 26px; position: absolute; top: 0px;
@@ -306,7 +355,7 @@ html, body, #airpush-ui {
                         }
                     }
                     &.chat-room-background {
-                        background-image: url("/assets/img/seigaiha.png");
+                        /*background-image: url("/assets/img/seigaiha.png");*/
                         background-repeat: repeat; 
                     }                
                 }                

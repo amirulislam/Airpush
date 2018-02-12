@@ -20,19 +20,50 @@ class PeerService {
         }
     }
 
-    // create a peer foreach
-    createFilePeer(fileModel, user, messageUiId) {
+    createPeer(user) {
+        if (!PeerService.isRtcSupported()) {
+            return;
+        } 
+        let peer = new SimplePeer({ user: new User(user)});
+        this._peers.push(peer);
+        peer.createOffer();
+    }
+
+    // create peer
+    createPeerAndSetOffer(fromUser, signal) {
         if (!PeerService.isRtcSupported()) {
             return;
         }
-        let peer = new CustomPeer({ user, fileModel, peerType: PEER_TYPES.FILE_TRANSPORT });
-        peer.onClose = p => {
-            console.log('Peer connection CLOSED')
-        }
+        let peer = new SimplePeer({ user: new User(fromUser)});
         this._peers.push(peer);
-        console.log('LOCAL PEER ID', peer._id);
-        peer.createChanel().createOffer();
-        peer.setMessageUi(messageUiId);
+        peer.setRemoteDescription(signal);
+        peer.createAnswer();
+    }
+    
+    setAnswerFromRemote(fromUser, signal) {
+        let peer = this._getPeer(fromUser);
+        if (peer) {
+            peer.setLocalAndRemoteSignal(signal);      
+        }
+    }
+
+    // set incoming ice candidate
+    setIncomingIceCandidate(user, iceCandidate) {
+        let peer = this._getPeer(user);
+        if (peer) {
+            peer.addIceCandidate(iceCandidate);      
+        }        
+    }
+
+    _getPeer(u) {
+        let peer = false;
+        for (let i = 0; i < this._peers.length; i++) {
+            if (this._peers[i]._user._id === u._id) {
+                peer = this._peers[i];
+                break;
+            }
+        }
+        return peer;
     }
 
     // check if web rtc is supported

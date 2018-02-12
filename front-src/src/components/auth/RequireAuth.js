@@ -34,7 +34,6 @@ export default (WrappedComponent) => {
             }     
             return(
                 <div className="airpush-main">
-                    <MainMenu />
                     <TopBar />
                     <AppSectionUI>
                         <WrappedComponent />

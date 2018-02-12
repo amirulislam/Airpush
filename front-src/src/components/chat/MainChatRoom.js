@@ -37,11 +37,18 @@ class MainChatRoom extends Component {
     }
 
     render() {
-        return [
-            <ChatControllsLeft key="chat-controlls-left" />,
-            <ChatMessenger key="msg-key" />,
-            <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
-        ];
+        return(
+            <div className="chat-group-main-messenger pull-right">
+                <ChatControllsLeft />
+                <ChatMessenger />
+                <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
+            </div>            
+        )
+        // return [
+        //     <ChatControllsLeft key="chat-controlls-left" />,
+        //     <ChatMessenger key="msg-key" />,
+        //     <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
+        // ];
     }
 }
 
