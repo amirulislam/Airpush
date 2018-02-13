@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import safe from 'undefsafe';
+import debug from '../../utils/debug';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
@@ -32,7 +33,7 @@ class SimplePeer {
             this.onIceCandidate(event);
         };
         this._pc.oniceconnectionstatechange = event => {
-            console.log('ICE oniceconnectionstatechange ', this._pc.iceConnectionState);
+            debug(['ICE oniceconnectionstatechange ', this._pc.iceConnectionState]);
         };
         this._pc.ondatachannel = this._onDataChannelCallback.bind(this);       
     }
@@ -41,7 +42,7 @@ class SimplePeer {
     createOffer() {
         this._pc.createOffer(this._offerOptions)
         .then(desc => {
-            console.log('OFFER CREATED', desc);
+            debug(['OFFER CREATED', desc]);
             this._localDescription = desc;
             // this.setLocalDescription(desc);
             SocketService.getInstance().send({
@@ -88,7 +89,7 @@ class SimplePeer {
     // }    
 
     onIceCandidate(event) {
-        console.log('ON ICE CANDIDATE EVENT', event);
+        debug(['ON ICE CANDIDATE EVENT', event]);
         if (event.candidate) {
             SocketService.getInstance().send({
                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
@@ -101,7 +102,7 @@ class SimplePeer {
     }
 
     _onDataChannelCallback(event) {
-        console.log('Receive Channel Callback', event);
+        debug(['Receive Channel Callback', event]);
         this._dataChanel = event.channel;
         // this._dataChanel.binaryType = 'arraybuffer';
         // this._dataChanel.onmessage = this._onReceiveMessageCallback.bind(this);
@@ -141,7 +142,7 @@ class SimplePeer {
         if (candidate && this._pc) {
             this._pc.addIceCandidate(candidate)
             .then(() => {
-                console.log('Ice candidate added');
+                debug(['Ice candidate added']);
             })
             .catch(err => {
                 console.log('Ice candidate added error', err);
@@ -149,6 +150,14 @@ class SimplePeer {
         }
     }    
 
+    // close peer and channels (if any)
+    closePeer() {
+        try {
+            this._pc.close();
+        } catch (err) {
+            console.log('close');
+        }
+    }
     
 }
 

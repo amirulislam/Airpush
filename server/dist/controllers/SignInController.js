@@ -51,16 +51,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var debug = (0, _debug2.default)('airpush:SignInController');
 
-
 // remove this
-var user = {
-    email: "eblocksapps@gmail.com",
-    iat: 1517557279,
-    name: "Eblocks Shopify Apps",
-    photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
-    _id: "5a74161feddff24834fbaf88",
-    msgType: "NEW_USER_JOINED"
-};
+// const user = {
+//     email: "eblocksapps@gmail.com",
+//     iat: 1517557279,
+//     name: "Eblocks Shopify Apps",
+//     photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
+//     _id: "5a74161feddff24834fbaf88",
+//     msgType: "NEW_USER_JOINED"
+// }
+
 
 var SignInController = function () {
     function SignInController() {
@@ -105,13 +105,13 @@ var SignInController = function () {
                     if (fbResult.picture && fbResult.picture.data) {
                         photoUrl = fbResult.picture.data.url;
                     }
-                    var _user = {
+                    var user = {
                         name: fbResult.first_name + ' ' + fbResult.last_name,
                         email: fbResult.email || String(fbResult.id),
                         photo: photoUrl
                     };
-                    return SignInController.slackNotify(_user.email, _user).then(function () {
-                        return SignInController.updateOrCreateUser(_user);
+                    return SignInController.slackNotify(user.email, user).then(function () {
+                        return SignInController.updateOrCreateUser(user);
                     });
                 } else {
                     return Promise.reject({});
@@ -126,13 +126,13 @@ var SignInController = function () {
         value: function linkedinSignIn(accessToken, email) {
             return _LinkedinService2.default.getUser(accessToken).then(function (linkedinUser) {
                 if (!_lodash2.default.isNil(linkedinUser)) {
-                    var _user2 = {
+                    var user = {
                         name: linkedinUser.firstName + ' ' + linkedinUser.lastName,
                         email: linkedinUser.emailAddress,
                         photo: linkedinUser.pictureUrl
                     };
-                    return SignInController.slackNotify(_user2.email, _user2).then(function () {
-                        return SignInController.updateOrCreateUser(_user2);
+                    return SignInController.slackNotify(user.email, user).then(function () {
+                        return SignInController.updateOrCreateUser(user);
                     });
                 } else {
                     Promise.reject({});

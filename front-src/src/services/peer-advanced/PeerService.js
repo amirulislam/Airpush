@@ -1,5 +1,6 @@
 import User from '../../models/User';
 import _ from 'lodash';
+import debug from '../../utils/debug';
 import safe from 'undefsafe';
 import DetectRTC from 'detectrtc';
 import { getAllUsers } from '../../actions';
@@ -10,7 +11,7 @@ let instance;
 
 class PeerService {
 
-    _peer;
+    // _peer;
     _isWebRtcSupported = false;
     _peers = [];
 
@@ -55,6 +56,41 @@ class PeerService {
         }        
     }
 
+    // user left the room 
+    removePeer(user) {
+        let peer = this._getPeer(user);
+        if (peer) {
+            debug(['User left and found']);
+            this._disconnectAndRemovePeer(peer);
+        }          
+    }
+
+    _disconnectAndRemovePeer(peer) {
+        debug(['Disconnect and remove peer 1', this._peers.length]);
+        for (let i = 0; i < this._peers.length; i++) {
+            if (peer._id === this._peers[i]._id) {
+                debug(['Found it']);
+                peer.closePeer();
+                this._peers.splice(i, 1);
+                break;
+            }
+        }
+        debug(['Disconnect and remove peer 2', this._peers.length]);
+    }
+
+    // remove all peers
+    disconnectAndRemoveAllPeers() {
+        console.log('DIsconnect and remove all peers');
+        for (let i = 0; i < this._peers.length; i++) {
+            const peer = this._peers[i];
+            peer.closePeer();
+        }
+        this._peers = [];
+        debug(['All peers have been removed', this._peers.length]);
+        // tbd - remove local stream
+    }
+
+    // find a peer
     _getPeer(u) {
         let peer = false;
         for (let i = 0; i < this._peers.length; i++) {

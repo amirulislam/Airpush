@@ -13,8 +13,9 @@ USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSA
 MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
-
 import { store } from '../index';
+
+import PeerService from '../services/peer-advanced/PeerService';
 
 
 // retrive apps data
@@ -95,7 +96,6 @@ export const joinRoomNow = (roomToJoin) => {
 			// disconnect from room 
 			roomLeaved();
 		}
-		console.log('JOIN ROOM NOW', roomToJoin, getState());
 		SocketService.getInstance().joinRoom(roomToJoin);
 		dispatch({
 			type: 'AAAA',
@@ -136,6 +136,7 @@ export const roomJoinedBySelf = roomId => {
 export const roomLeaved = roomId => {
 	return (dispatch, getState) => {
 		sendNotification('You have left the group!');
+		PeerService.getInstance().disconnectAndRemoveAllPeers();
 		joinedRoomId(false);
 		dispatch({
 			type: LEAVED_ROOM,

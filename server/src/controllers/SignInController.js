@@ -13,14 +13,14 @@ import SlackService from '../services/SlackService';
 import { getUserRole } from '../config';
 
 // remove this
-const user = {
-    email: "eblocksapps@gmail.com",
-    iat: 1517557279,
-    name: "Eblocks Shopify Apps",
-    photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
-    _id: "5a74161feddff24834fbaf88",
-    msgType: "NEW_USER_JOINED"
-}
+// const user = {
+//     email: "eblocksapps@gmail.com",
+//     iat: 1517557279,
+//     name: "Eblocks Shopify Apps",
+//     photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
+//     _id: "5a74161feddff24834fbaf88",
+//     msgType: "NEW_USER_JOINED"
+// }
 
 
 class SignInController {

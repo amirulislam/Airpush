@@ -207,21 +207,16 @@ html, body, #airpush-ui {
                                 position: relative; height: 100%;
                                 width: calc(100% - #{($chatMessengerWidth) + 'px'});
                                 height: 100%; overflow: hidden;
-                                background: -moz-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* ff3.6+ */
-                                background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(50,28,145,1)), color-stop(100%, rgba(112,87,216,1))); /* safari4+,chrome */
-                                background: -webkit-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* safari5.1+,chrome10+ */
-                                background: -o-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* opera 11.10+ */
-                                background: -ms-linear-gradient(115deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* ie10+ */
-                                background: linear-gradient(335deg, rgba(112,87,216,1) 0%, rgba(50,28,145,1) 100%); /* w3c */
-                                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#321c91', endColorstr='#7057d8',GradientType=0 ); /* ie6-9 */
+                                background: #f7f7f7;                           
 
                                 .chat-main-bottom-controlls {
-                                    position: absolute; bottom: 10px; left: 0px; width: 100%;
+                                    position: absolute; bottom: 15px; left: 0px; width: 100%;
                                     z-index: 200;
                                     text-align: center;
                                     .controlls-ui {
-                                        display: inline-block; background: #1b212e;
+                                        display: inline-block;
                                         padding: 0px; border-radius: 3px;
+                                        background: rgba(50, 28, 145, 0.8)
                                     }
                                 }
                             }
@@ -229,6 +224,9 @@ html, body, #airpush-ui {
                                 width: calc(#{($chatMessengerWidth) + 'px'});
                                 height: 100%; position: relative;
                                 background-image: url("/assets/img/seigaiha.png");
+                                border-left-style: solid;
+                                border-width: 1px;
+                                border-color: #dbdbdb;                                
                             }                            
                         }
                         .chat-messenger {
