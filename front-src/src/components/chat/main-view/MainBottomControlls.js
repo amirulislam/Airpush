@@ -11,6 +11,10 @@ import ShareScreenStop from 'material-ui/svg-icons/communication/stop-screen-sha
 import Link from 'material-ui/svg-icons/content/link';
 import LeaveRoom from 'material-ui/svg-icons/communication/call-end';
 
+import BaseAlert from '../../modals/BaseAlert';
+import InviteModal from '../../modals/InviteModal';
+import { leaveRoom } from '../../../actions';
+
 
 const styles = {
     smallIcon: {
@@ -31,6 +35,14 @@ const styles = {
 };
 
 class MainBottomControlls extends Component {
+
+    _leaveRoomEvent() {
+        if (this.alert) {
+            this.alert.open([
+                <p key="conf">Are you sure you want to leave this chat room?</p>
+            ]);
+        }
+    }
 
     _renderVideoButton() {
         return(
@@ -73,7 +85,7 @@ class MainBottomControlls extends Component {
 
     _renderLeaveRoom() {
         return(
-            <IconButton tooltip="Leave chat group" tooltipPosition="top-right"
+            <IconButton onClick={e => this._leaveRoomEvent()} tooltip="Leave chat group" tooltipPosition="top-right"
                 iconStyle={styles.smallIconRed}
                 style={styles.small} >
                 <LeaveRoom />
@@ -90,10 +102,11 @@ class MainBottomControlls extends Component {
                     { this._renderShareScreen() }
                     { this._renderRoomLink() }
                     { this._renderLeaveRoom() }
+                    <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />
                 </div>
             </div>            
         )
     }
 }
 
-export default MainBottomControlls;
+export default connect(null, { leaveRoom })(MainBottomControlls);

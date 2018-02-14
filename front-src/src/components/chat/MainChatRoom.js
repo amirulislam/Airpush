@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import safe from 'undefsafe';
 
-import ChatControllsLeft from './ChatControllsLeft';
+// import ChatControllsLeft from './ChatControllsLeft';
 // import UsersRightSide from './UsersRightSide';
 import ChatBottomActions from './ChatBottomActions';
 import ChatMessenger from './ChatMessenger';
@@ -39,7 +39,6 @@ class MainChatRoom extends Component {
     render() {
         return(
             <div className="chat-group-main-messenger pull-right">
-                <ChatControllsLeft />
                 <ChatMessenger />
                 <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
             </div>            

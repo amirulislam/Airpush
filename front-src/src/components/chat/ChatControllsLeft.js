@@ -87,7 +87,7 @@ class ChatControllsLeft extends Component {
                 }} iconStyle={{ backgroundColor: '#CCCCCC' }}>
                     <ContentPowerOff />
                 </FloatingActionButton>
-                <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />              
+                <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />
                 <InviteModal onCancel={() => {this.inviteOnClose()}} hideCancelButton={true} maxWidth={500} ref={ r => this.invite = r } />
             </div>
         )
