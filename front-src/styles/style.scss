@@ -209,6 +209,10 @@ html, body, #airpush-ui {
                                 height: 100%; overflow: hidden;
                                 background: #f7f7f7;
                                 
+                                .open-close-menu {
+                                    position: absolute; right: 0px; top: 0px; z-index: 150;
+                                }
+
                                 .chat-media-sources {
                                     width: 100%; height: 100%; position: relative; background: #000;
                                     .minimized-media-sources {

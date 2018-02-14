@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { MENU_WIDTH } from '../../config';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
-import ActionMenu from 'material-ui/svg-icons/navigation/menu';
+//import ActionMenu from 'material-ui/svg-icons/navigation/menu';
 import AllUsers from 'material-ui/svg-icons/hardware/device-hub';
 import { toggleMenu, logOut } from '../../actions';
 import Avatar from 'material-ui/Avatar';

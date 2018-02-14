@@ -41,3 +41,5 @@ export const PEER_TYPES = {
     FILE_TRANSPORT: 'FILE_TRANSPORT'
 }
 
+export const MESSENGER_WDTH = 350;
+

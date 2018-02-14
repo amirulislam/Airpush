@@ -11,12 +11,13 @@ import ChatMessenger from './ChatMessenger';
 import SocketService from '../../services/SocketService';
 import User from '../../models/User';
 import TextMessage from '../../models/TextMessage';
-import { SOCKET_EVENTS } from '../../config';
+import { SOCKET_EVENTS, MESSENGER_WDTH } from '../../config';
 
 class MainChatRoom extends Component {
 
     static defaultProps = {
-        authenticated: false
+        authenticated: false,
+        chatOpenState: true
     }
 
     constructor(props) {
@@ -36,9 +37,21 @@ class MainChatRoom extends Component {
         SocketService.getInstance().send(messageModel, SOCKET_EVENTS.MESSAGE);
     }
 
+    _renderSizeCSS() {
+        if (this.props.chatOpenState) {
+            return {
+                width: `${MESSENGER_WDTH}px`
+            }
+        } else {
+            return {
+                width: `0px`
+            }            
+        }
+    }
+
     render() {
         return(
-            <div className="chat-group-main-messenger pull-right">
+            <div style={this._renderSizeCSS()} className="chat-group-main-messenger pull-right">
                 <ChatMessenger />
                 <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
             </div>            
@@ -51,9 +64,9 @@ class MainChatRoom extends Component {
     }
 }
 
-const mapStateToProps = ({ authenticated }, ownProps) => {
+const mapStateToProps = ({ authenticated, chatOpenState }, ownProps) => {
     return {
-        authenticated
+        authenticated, chatOpenState
     }
 }
 
@@ -61,7 +74,8 @@ MainChatRoom.propTypes = {
     authenticated: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.object
-    ])
+    ]),
+    chatOpenState: PropTypes.bool
 }
  
 

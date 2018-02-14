@@ -5,11 +5,16 @@ import MainBottomControlls from './MainBottomControlls';
 import MediaSource from './MediaSource';
 import Utils from '../../../utils';
 import ReactResizeDetector from 'react-resize-detector';
+import ActionMenu from 'material-ui/svg-icons/navigation/menu';
+import IconButton from 'material-ui/IconButton';
+import { changeOpenChatState } from '../../../actions';
+import { MESSENGER_WDTH } from '../../../config';
 
 class ChatMainView extends Component {
     
     static defaultProps = {
-        mediaSources: []
+        mediaSources: [],
+        chatOpenState: true
     }
 
     _componentHeight = 0;
@@ -58,9 +63,41 @@ class ChatMainView extends Component {
         })        
     }
 
+    _openCloseChatState() {
+        console.log('SSSSSS', this.props.chatOpenState);
+        this.props.changeOpenChatState();
+        // changeOpenChatState
+    }
+
+    _tooltip() {
+        return this.props.chatOpenState ?  'Hide messenger' : 'Show messenger';
+    }
+
+    _renderOpenMenuButton() {
+        return(
+            <div className="open-close-menu">
+                <IconButton onClick={ e => this._openCloseChatState() } iconStyle={{ color: '#F2F2F2' }} tooltip={this._tooltip()} tooltipPosition="bottom-left">
+                    <ActionMenu />
+                </IconButton>
+            </div>
+        );
+    }    
+
+    _renderSizeCSS() {
+        if (this.props.chatOpenState) {
+            return {
+                width: `${window.innerWidth - MESSENGER_WDTH}px`
+            }
+        } else {
+            return {
+                width: `${window.innerWidth}px`
+            }            
+        }
+    }    
+
     render() {
         return(
-            <div className="chat-group-full-ui pull-left">
+            <div style={this._renderSizeCSS()} className="chat-group-full-ui pull-left">
                 <div className="chat-media-sources">
                     <div className="minimized-media-sources">
                         { this._renderMinimizied() }
@@ -69,14 +106,15 @@ class ChatMainView extends Component {
                     <ReactResizeDetector handleWidth handleHeight onResize={this._onResize} />
                 </div>
                 <MainBottomControlls />
+                { this._renderOpenMenuButton() }
             </div>            
         )
     }
 }
 
-const mapStateToProps = ({ mediaSources }, ownProps) => {
+const mapStateToProps = ({ mediaSources, chatOpenState }, ownProps) => {
     return {
-        mediaSources
+        mediaSources, chatOpenState
     }
 }
 
@@ -85,7 +123,8 @@ ChatMainView.propTypes = {
         PropTypes.bool,
         PropTypes.string
     ]),
-    mediaSources: PropTypes.array
+    mediaSources: PropTypes.array,
+    chatOpenState: PropTypes.bool
 }
 
-export default connect(mapStateToProps, null)(ChatMainView);
+export default connect(mapStateToProps, { changeOpenChatState })(ChatMainView);

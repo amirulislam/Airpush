@@ -96,7 +96,6 @@ class MainBottomControlls extends Component {
 
     handleCopy() {
         this.setState({copied: true});
-        console.log('Copied', this.state.value);
         if (this.invite) { this.invite.close() };
     }    
 

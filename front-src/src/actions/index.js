@@ -11,7 +11,7 @@ import { AUTHENTICATED, MENU_OPEN, LOG_OUT, CREATE_CHAT_ROOM,
 JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN, 
 USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
 MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED, MEDIA_SOURCE_ADDED, 
-REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE } from './Types';
+REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE, MESSENGER_RIGHT_CHANGE_STATE } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 import { store } from '../index';
@@ -314,6 +314,15 @@ export const maximizeMediaSource = peerId => {
 		dispatch({
 			type: MAXIMIZE_MEDIA_SOURCE,
 			payload: peerId
+		});	
+	}
+}
+
+export const changeOpenChatState = () => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: MESSENGER_RIGHT_CHANGE_STATE,
+			payload: null
 		});	
 	}
 }
