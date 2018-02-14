@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime } from '../../../actions';
+import { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime, openFullScreen } from '../../../actions';
 
 import IconButton from 'material-ui/IconButton';
 import MicOn from 'material-ui/svg-icons/av/mic';
@@ -12,6 +12,8 @@ import ShareScreenOn from 'material-ui/svg-icons/communication/screen-share';
 import ShareScreenStop from 'material-ui/svg-icons/communication/stop-screen-share';
 import Link from 'material-ui/svg-icons/content/link';
 import LeaveRoom from 'material-ui/svg-icons/communication/call-end';
+import LaunchFullScreen from 'material-ui/svg-icons/action/open-in-new';
+import ExitFullScreen from 'material-ui/svg-icons/action/flip-to-back';
 
 import BaseAlert from '../../modals/BaseAlert';
 import InviteModal from '../../modals/InviteModal';
@@ -41,12 +43,13 @@ class MainBottomControlls extends Component {
     
     constructor(props) {
         super(props);
-        this.state = { value: '', copied: false }
+        this.state = { value: '', copied: false, alreadyShowedLink: false }
     }
 
     static defaultProps = {
         roomId: '',
-        roomJustCreated: false
+        roomJustCreated: false,
+        fullScreen: false
     }
 
     componentDidMount() {
@@ -55,7 +58,7 @@ class MainBottomControlls extends Component {
 
     componentWillReceiveProps(newProps) {
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
-        if (newProps.roomJustCreated) {
+        if (newProps.roomJustCreated && !this.state.alreadyShowedLink) {
             setTimeout(() => {
                 this.inviteOthers();
             }, 1000);
@@ -67,6 +70,7 @@ class MainBottomControlls extends Component {
     
     inviteOthers() {
         if (this.invite) {
+            this.setState({ alreadyShowedLink: true });
             this.invite.open([
                 <p key="invite-txt">Invite others to this chat group. Copy the link below &amp; send it to your friends.</p>,
                 <div key="share-link" className="share-link">
@@ -123,6 +127,29 @@ class MainBottomControlls extends Component {
         )
     }
 
+    _toggleFullScreen() {
+        this.props.openFullScreen(!this.props.fullScreen);
+    }
+    _renderFullScreen() {
+        if (!this.props.fullScreen) {
+            return(
+                <IconButton onClick={ e => this._toggleFullScreen()} tooltip="Go full screen" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <LaunchFullScreen />
+                </IconButton>          
+            )
+        } else {
+            return(
+                <IconButton onClick={ e => this._toggleFullScreen()} tooltip="Exit full screen" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <ExitFullScreen />
+                </IconButton>          
+            )            
+        }
+    }    
+
     _renderShareScreen() {
         return(
             <IconButton tooltip="Screen share" tooltipPosition="top-right"  onClick={ e => this.inviteOthers() }
@@ -158,6 +185,7 @@ class MainBottomControlls extends Component {
                 <div className="controlls-ui">
                     { this._renderVideoButton() }
                     { this._renderMicButton() }
+                    { this._renderFullScreen() }
                     { this._renderShareScreen() }
                     { this._renderRoomLink() }
                     { this._renderLeaveRoom() }
@@ -169,9 +197,9 @@ class MainBottomControlls extends Component {
     }
 }
 
-const mapStateToProps = ({ roomId, roomJustCreated }, ownProps) => {
+const mapStateToProps = ({ roomId, roomJustCreated, fullScreen }, ownProps) => {
     return {
-        roomId, roomJustCreated
+        roomId, roomJustCreated, fullScreen
     }
 }
 
@@ -180,7 +208,8 @@ MainBottomControlls.propTypes = {
         PropTypes.bool,
         PropTypes.string
     ]),
-    roomJustCreated: PropTypes.bool
+    roomJustCreated: PropTypes.bool,
+    fullScreen: PropTypes.bool
 }
 
-export default connect(mapStateToProps, { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime })(MainBottomControlls);
+export default connect(mapStateToProps, { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime, openFullScreen })(MainBottomControlls);

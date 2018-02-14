@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import safe from 'undefsafe';
-import { maximizeMediaSource } from '../../../actions';
+import { maximizeMediaSource, openFullScreen } from '../../../actions';
+import Fullscreen from "react-full-screen";
 
 class MediaSource extends Component {
 
     static defaultProps = {
-        source: {}
+        source: {},
+        fullScreen: false
     }
 
     constructor(props) {
@@ -47,7 +49,6 @@ class MediaSource extends Component {
     }
 
     _renderVideo() {
-        console.log('IS ME', this.isMe())
         if (this.isMe()) {
             return <video ref={r => { this.videRef = r }} muted autoPlay></video>
         } else {
@@ -62,19 +63,48 @@ class MediaSource extends Component {
         this.props.maximizeMediaSource(this.props.source.peerId);
     }
 
-    render() {
+    _renderFullScrrenNode() {
         const userName = !_.isNil(safe(this.props, 'source.user.name')) ? this.props.source.user.name : '';
-        return(
-            <div onClick={this._handleClick} className={this._renderMediaSourceClass()} style={this._getSizeStyle()}>
-                { this._renderVideo() }
-                <p className="media-source-user">{ userName }</p>
-            </div>            
-        )
+        if (this._isOpened()) {
+            return(
+                <Fullscreen
+                enabled={this.props.fullScreen}
+                onChange={isFull => this.props.openFullScreen(isFull)}
+                >                
+                    <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
+                        { this._renderVideo() }
+                        <p className="media-source-user">{ userName }</p>
+                    </div>
+                </Fullscreen>                
+            )
+        } else {
+            return(
+                <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
+                    { this._renderVideo() }
+                    <p className="media-source-user">{ userName }</p>
+                </div>
+            )
+        }
+    }
+
+    render() {
+        return this._renderFullScrrenNode();
+    }
+}
+
+const mapStateToProps = ({ fullScreen }, ownProps) => {
+    return {
+        fullScreen
     }
 }
 
 MediaSource.propTypes = {
-    source: PropTypes.object
+    source: PropTypes.object,
+    fullScreen: PropTypes.bool
 }
 
-export default connect(null, { maximizeMediaSource })(MediaSource);
+MediaSource.propTypes = {
+    fullScreen: PropTypes.bool
+}
+
+export default connect(mapStateToProps, { maximizeMediaSource, openFullScreen })(MediaSource);

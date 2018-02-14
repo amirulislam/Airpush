@@ -10,6 +10,7 @@ import Messages from './Messages';
 import JoinedRoomId from './JoinedRoomId';
 import MediaSources from './MediaSources';
 import ChatOpenState from './ChatOpenState';
+import FullScreen from './FullScreen';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
@@ -21,7 +22,8 @@ const rootReducers = combineReducers({
     messages: Messages,
     joinedRoomId: JoinedRoomId,
     mediaSources: MediaSources,
-    chatOpenState : ChatOpenState
+    chatOpenState : ChatOpenState,
+    fullScreen: FullScreen
 });
 
 export default rootReducers;
