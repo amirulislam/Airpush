@@ -152,7 +152,7 @@ class MainBottomControlls extends Component {
 
     _renderShareScreen() {
         return(
-            <IconButton tooltip="Screen share" tooltipPosition="top-right"  onClick={ e => this.inviteOthers() }
+            <IconButton tooltip="Screen share" tooltipPosition="top-right" 
                 iconStyle={styles.smallIcon}
                 style={styles.small} >
                 <ShareScreenOn />
@@ -161,7 +161,7 @@ class MainBottomControlls extends Component {
     }
     _renderRoomLink() {
         return(
-            <IconButton tooltip="Chat group link" tooltipPosition="top-right"
+            <IconButton tooltip="Chat group link" tooltipPosition="top-right" onClick={ e => this.inviteOthers() }
                 iconStyle={styles.smallIcon}
                 style={styles.small} >
                 <Link />
