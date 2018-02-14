@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime } from '../../../actions';
 
 import IconButton from 'material-ui/IconButton';
 import MicOn from 'material-ui/svg-icons/av/mic';
@@ -13,7 +15,8 @@ import LeaveRoom from 'material-ui/svg-icons/communication/call-end';
 
 import BaseAlert from '../../modals/BaseAlert';
 import InviteModal from '../../modals/InviteModal';
-import { leaveRoom } from '../../../actions';
+import RaisedButton from 'material-ui/RaisedButton';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 
 const styles = {
@@ -35,6 +38,53 @@ const styles = {
 };
 
 class MainBottomControlls extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = { value: '', copied: false }
+    }
+
+    static defaultProps = {
+        roomId: '',
+        roomJustCreated: false
+    }
+
+    componentDidMount() {
+        this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
+    }
+
+    componentWillReceiveProps(newProps) {
+        this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
+        if (newProps.roomJustCreated) {
+            setTimeout(() => {
+                this.inviteOthers();
+            }, 1000);
+            if (roomCreatedFirstTime) {
+                roomCreatedFirstTime(false);
+            }
+        }
+    }
+    
+    inviteOthers() {
+        if (this.invite) {
+            this.invite.open([
+                <p key="invite-txt">Invite others to this chat group. Copy the link below &amp; send it to your friends.</p>,
+                <div key="share-link" className="share-link">
+                    <div className="room-share-url noselect pull-left">
+                        {`${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}`}
+                    </div>
+                    <div className="pull-left">
+                        <CopyToClipboard text={this.state.value}
+                            onCopy={() => { this.handleCopy() }}>
+                            <RaisedButton label="Copy Link" primary={true} />
+                        </CopyToClipboard>
+                    </div>
+
+                    <div className="clearfix"></div>
+                </div>
+            ]);
+        }        
+    }    
 
     _leaveRoomEvent() {
         if (this.alert) {
@@ -42,6 +92,16 @@ class MainBottomControlls extends Component {
                 <p key="conf">Are you sure you want to leave this chat room?</p>
             ]);
         }
+    }
+
+    handleCopy() {
+        this.setState({copied: true});
+        console.log('Copied', this.state.value);
+        if (this.invite) { this.invite.close() };
+    }    
+
+    inviteOnClose() {
+        this.props.sendNotificationFromComponent('Link copied!', 2000);
     }
 
     _renderVideoButton() {
@@ -66,7 +126,7 @@ class MainBottomControlls extends Component {
 
     _renderShareScreen() {
         return(
-            <IconButton tooltip="Screen share" tooltipPosition="top-right"
+            <IconButton tooltip="Screen share" tooltipPosition="top-right"  onClick={ e => this.inviteOthers() }
                 iconStyle={styles.smallIcon}
                 style={styles.small} >
                 <ShareScreenOn />
@@ -103,10 +163,25 @@ class MainBottomControlls extends Component {
                     { this._renderRoomLink() }
                     { this._renderLeaveRoom() }
                     <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />
+                    <InviteModal onCancel={() => {this.inviteOnClose()}} hideCancelButton={true} maxWidth={500} ref={ r => this.invite = r } />
                 </div>
             </div>            
         )
     }
 }
 
-export default connect(null, { leaveRoom })(MainBottomControlls);
+const mapStateToProps = ({ roomId, roomJustCreated }, ownProps) => {
+    return {
+        roomId, roomJustCreated
+    }
+}
+
+MainBottomControlls.propTypes = {
+    roomId: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.string
+    ]),
+    roomJustCreated: PropTypes.bool
+}
+
+export default connect(mapStateToProps, { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime })(MainBottomControlls);
