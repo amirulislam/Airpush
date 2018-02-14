@@ -191,7 +191,7 @@ var SocketManager = function () {
             var _this2 = this;
 
             socket.on(_config.SOCKET_EVENTS.MESSAGE, function (data) {
-                // console.log('NEW MESSAGE RECEIVED', socket.room);
+                // console.log('NEW MESSAGE RECEIVED', data);
                 if (_lodash2.default.isNil((0, _undefsafe2.default)(data, 'type'))) {
                     return;
                 }
@@ -242,7 +242,6 @@ var SocketManager = function () {
                         }
                         break;
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                        console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.fromUser.socketId'))) {
                             var _sendToSocketId = data.peerData.fromUser.socketId;
                             data.peerData.fromUser = socket.user;
@@ -259,6 +258,18 @@ var SocketManager = function () {
                             data.peerData.user = socket.user;
                             socket.to(_sendToSocketId2).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
+                                payload: data.peerData
+                            });
+                        }
+                        break;
+                    case _config.SOCKET_MESSAGE_TYPES.SOCKET_STATE:
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.toUser.socketId'))) {
+                            // console.log('RECEIVED SOCKET_STATE', data);
+                            var _sendToSocketId3 = data.peerData.toUser.socketId;
+                            data.peerData.fromUser = socket.user;
+                            delete data.peerData.toUser;
+                            socket.to(_sendToSocketId3).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.SOCKET_STATE,
                                 payload: data.peerData
                             });
                         }

@@ -20,6 +20,7 @@
     "react-dom": "^16.0.0",
     "react-i18nify": "^1.8.7",
     "react-redux": "5.0.6",
+    "react-resize-detector": "^1.1.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.0.0",
     "redux": "^3.0.4",

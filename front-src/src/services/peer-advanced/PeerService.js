@@ -6,6 +6,8 @@ import DetectRTC from 'detectrtc';
 import { getAllUsers } from '../../actions';
 import { PEER_TYPES } from '../../config';
 import SimplePeer from './SimplePeer';
+import MediaManager from '../media/MediaManager';
+import { removeSingleMediaSource } from '../../actions';
 
 let instance;
 
@@ -27,7 +29,14 @@ class PeerService {
         } 
         let peer = new SimplePeer({ user: new User(user)});
         this._peers.push(peer);
-        peer.createOffer();
+        MediaManager.getInstance().getUserMedia()
+        .then(stream => {
+            stream.getTracks().forEach(track => {
+                    peer.pc.addTrack(track, stream);
+                }
+            );            
+            peer.createOffer();
+        }).catch(err => {});
     }
 
     // create peer
@@ -37,8 +46,15 @@ class PeerService {
         }
         let peer = new SimplePeer({ user: new User(fromUser)});
         this._peers.push(peer);
-        peer.setRemoteDescription(signal);
-        peer.createAnswer();
+        MediaManager.getInstance().getUserMedia()
+        .then(stream => {
+            stream.getTracks().forEach(track => {
+                    peer.pc.addTrack(track, stream);
+                }
+            );
+            peer.setRemoteDescription(signal);
+            peer.createAnswer();            
+        }).catch(err => {});
     }
     
     setAnswerFromRemote(fromUser, signal) {
@@ -56,11 +72,18 @@ class PeerService {
         }        
     }
 
+    setIncomingState(fromUser, state) {
+        let peer = this._getPeer(fromUser);
+        if (peer) {
+            peer.setRemoteReadyState(state);      
+        }  
+    }    
+
     // user left the room 
     removePeer(user) {
         let peer = this._getPeer(user);
         if (peer) {
-            debug(['User left and found']);
+            removeSingleMediaSource(peer._id);
             this._disconnectAndRemovePeer(peer);
         }          
     }
@@ -87,8 +110,8 @@ class PeerService {
         }
         this._peers = [];
         debug(['All peers have been removed', this._peers.length]);
-        // tbd - remove local stream
-    }
+        // tbd - remove local stream ALL STREAMS
+    } 
 
     // find a peer
     _getPeer(u) {
@@ -113,6 +136,45 @@ class PeerService {
         }
         return instance;
     }
+
+    static checkTURNServer(turnConfig, timeout){ 
+
+        return new Promise(function(resolve, reject){
+      
+          setTimeout(function(){
+              if(promiseResolved) return;
+              resolve(false);
+              promiseResolved = true;
+          }, timeout || 5000);
+      
+          var promiseResolved = false
+            , myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection   //compatibility for firefox and chrome
+            , pc = new myPeerConnection({iceServers:[turnConfig]})
+            , noop = function(){};
+          pc.createDataChannel("");    //create a bogus data channel
+          pc.createOffer(function(sdp){
+            if(sdp.sdp.indexOf('typ relay') > -1){ // sometimes sdp contains the ice candidates...
+              promiseResolved = true;
+              resolve(true);
+            }
+            pc.setLocalDescription(sdp, noop, noop);
+          }, noop);    // create offer and set local description
+          pc.onicecandidate = function(ice){  //listen for candidate events
+            console.log('ICE >', ice.candidate)
+            if(promiseResolved || !ice || !ice.candidate || !ice.candidate.candidate || !(ice.candidate.candidate.indexOf('typ relay')>-1))  return;
+            promiseResolved = true;
+            resolve(true);
+          };
+        });   
+      }
 }
+
+// PeerService.checkTURNServer({
+//     url: 'turn:138.68.165.213:3478?transport=tcp',
+//     username: 'airpush',
+//     credential: '3TptFG7cAfz5TaXsda'
+// }).then(function(bool){
+//     console.log('is TURN server active? ', bool? 'yes':'no');
+// }).catch(console.error.bind(console));
 
 export default PeerService;

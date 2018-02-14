@@ -8,6 +8,7 @@ import RoomCreated from './RoomCreated';
 import Users from './Users';
 import Messages from './Messages';
 import JoinedRoomId from './JoinedRoomId';
+import MediaSources from './MediaSources';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
@@ -17,7 +18,8 @@ const rootReducers = combineReducers({
     roomJustCreated: RoomCreated,
     users: Users,
     messages: Messages,
-    joinedRoomId: JoinedRoomId
+    joinedRoomId: JoinedRoomId,
+    mediaSources: MediaSources
 });
 
 export default rootReducers;

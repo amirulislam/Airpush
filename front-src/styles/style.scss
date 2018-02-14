@@ -207,7 +207,14 @@ html, body, #airpush-ui {
                                 position: relative; height: 100%;
                                 width: calc(100% - #{($chatMessengerWidth) + 'px'});
                                 height: 100%; overflow: hidden;
-                                background: #f7f7f7;                           
+                                background: #f7f7f7;
+                                
+                                .chat-media-sources {
+                                    width: 100%; height: 100%; position: relative; background: #000;
+                                    .minimized-media-sources {
+                                        position: absolute; left: 20px; top: 20px; z-index: 100;
+                                    }
+                                }
 
                                 .chat-main-bottom-controlls {
                                     position: absolute; bottom: 15px; left: 0px; width: 100%;
@@ -389,4 +396,46 @@ html, body, #airpush-ui {
     p {
         margin-top: 6px;
     }                  
+}
+
+.media-source {
+    background: #000; color: #F2F2F2;
+    position: relative;
+    margin-bottom: 10px;
+    max-width: 300px;
+    cursor: pointer;
+    overflow: hidden;
+    border-style: solid; border-width: 2px; border-color: #321c91;
+    video {
+        width: 100%; height: 100%; left: 0; top: 0;
+        position: absolute;
+    }
+    .media-source-user {
+        color: #adacac;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        margin: 0;
+        background: rgba(0,0,0,.8);
+        padding: 2px 2px;
+        font-size: 10px;
+    }
+}
+.media-source-full {
+    background: #000; color: #F2F2F2;
+    position: absolute; z-index: 98; width: 100%; height: 100%; left: 0; top: 0;
+    overflow: hidden;
+    video {
+        width: 100%; height: 100%; left: 0; top: 0;
+        position: absolute;
+    }
+    .media-source-user {
+        color: #adacac;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        margin: 0;
+        background: rgba(0,0,0,.8);
+        padding: 5px 10px;
+    }        
 }

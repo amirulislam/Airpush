@@ -147,7 +147,7 @@ class SocketManager {
     // handle messages
     handleMessages(socket) {
         socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            // console.log('NEW MESSAGE RECEIVED', socket.room);
+            // console.log('NEW MESSAGE RECEIVED', data);
             if (_.isNil(safe(data, 'type'))) {
                 return;
             }
@@ -199,7 +199,6 @@ class SocketManager {
                     }
                 break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ANSWER:
-                    console.log('RECEIVED PEER_SIGNAL_ANSWER', data);
                     if (!_.isNil(safe(data, 'peerData.fromUser.socketId'))) {
                         const sendToSocketId = data.peerData.fromUser.socketId;
                         data.peerData.fromUser = socket.user;
@@ -222,6 +221,19 @@ class SocketManager {
                         );
                     }               
                 break;
+                case SOCKET_MESSAGE_TYPES.SOCKET_STATE:
+                    if (!_.isNil(safe(data, 'peerData.toUser.socketId'))) {
+                        // console.log('RECEIVED SOCKET_STATE', data);
+                        const sendToSocketId = data.peerData.toUser.socketId;
+                        data.peerData.fromUser = socket.user;
+                        delete data.peerData.toUser;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.SOCKET_STATE,
+                                payload: data.peerData
+                            }
+                        );
+                    }
+                break;                
                 // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
                 //     // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
                 //     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {

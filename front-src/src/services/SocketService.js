@@ -4,10 +4,11 @@ import debug from '../utils/debug';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
- addUser, removeUser, dispatchInternalMessage } from '../actions';
+ addUser, removeUser, dispatchInternalMessage, addMediaSource, removeAllMediaSources } from '../actions';
 import Storage from '../utils/Storage';
 import User from '../models/User';
 import PeerService from './peer-advanced/PeerService';
+import MediaManager from './media/MediaManager';
 
 let instance;
 class SocketService {
@@ -31,8 +32,8 @@ class SocketService {
         this._socket = io(uri, {
             transports: ['websocket'],
             query: {
-                x__authorization: StorageUtils.getToken(),
-                joinedRoomId: StorageUtils.getJoinedRoom()
+                x__authorization: StorageUtils.getToken()
+                // joinedRoomId: StorageUtils.getJoinedRoom()
             }
         });
 
@@ -50,6 +51,7 @@ class SocketService {
         this._socket.on(SOCKET_EVENTS.CONNECT, () => {
             console.log('Connected!');
             this._isConnected = true;
+            this._acuireMediaAndJoinRoom();
         });
     }
 
@@ -66,6 +68,8 @@ class SocketService {
         this._socket.on(SOCKET_EVENTS.DISCONNECT, () => {
             this._isConnected = false;
             sendNotification('Disconnected');
+            removeAllMediaSources();
+            PeerService.getInstance().disconnectAndRemoveAllPeers();
         });
     }
 
@@ -74,13 +78,15 @@ class SocketService {
         if (!this._isConnected) {
             return;
         }
-        this._socket.emit(SOCKET_EVENTS.CREATE_ROOM, { });
+        this._acuireMediaAndCreateRoom();
+        // this._socket.emit(SOCKET_EVENTS.CREATE_ROOM, { });
     }
     // on room created
     onRoomCreated() {
         this._socket.on(SOCKET_EVENTS.ROOM_CREATED, (data) => {
             // console.log('ROOM_CREATED', data);
             roomCreated(data.roomId);
+            this._addSelfMediaSource();
         });
     }
 
@@ -89,6 +95,7 @@ class SocketService {
         this._socket.on(SOCKET_EVENTS.JOINED_ROOM, data => {
             //console.log(SOCKET_EVENTS.JOINED_ROOM, data);
             roomJoinedBySelf(data.roomId);
+            this._addSelfMediaSource();         
         });
     }
 
@@ -165,12 +172,52 @@ class SocketService {
                     // console.log('PEER_SIGNAL_ICE--->>>', data);
                     PeerService.getInstance().setIncomingIceCandidate(data.payload.user, data.payload.candidate);
                     break;
+                case SOCKET_MESSAGE_TYPES.SOCKET_STATE:
+                    PeerService.getInstance().setIncomingState(data.payload.fromUser, data.payload.state);
+                    break;                    
+                    
                 // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
                 //     console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
                 //     PeerService.getInstance().setRemoteReady(data);
                 //     break;                                                                                                          
             }
         });
+    }
+
+    _acuireMediaAndJoinRoom() {
+        const joinedRoomId = StorageUtils.getJoinedRoom();
+        if (joinedRoomId) {
+            MediaManager.getInstance().getUserMedia()
+            .then(stream => {
+                this.joinRoom(joinedRoomId);  
+            })
+            .catch(this._mediaRefuseError)
+        }        
+    }
+
+    _acuireMediaAndCreateRoom() {
+        MediaManager.getInstance().getUserMedia()
+        .then(stream => {
+            this._socket.emit(SOCKET_EVENTS.CREATE_ROOM, { });
+        })
+        .catch(this._mediaRefuseError);      
+    }    
+
+    _mediaRefuseError() {
+        alert('In order to join the call you need to allow access to media');
+        alert('Accept & Refresh the page');        
+    }
+    
+    _addSelfMediaSource() {
+        MediaManager.getInstance().getUserMedia()
+        .then(stream => {
+            addMediaSource({
+                stream,
+                peerId: 'me',
+                isOpen: true,
+                user: new User(StorageUtils.getUser())
+            });
+        }).catch(err => {}) 
     }
 
     onError() {

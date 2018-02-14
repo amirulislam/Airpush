@@ -5,16 +5,18 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
+import { addMediaSource } from '../../actions';
+
+const _servers = {
+    iceServers: [
+        {urls: ['stun:stun.l.google.com:19302']},
+        {urls: 'turn:138.68.165.213:3478?transport=udp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'},
+        {urls: 'turn:138.68.165.213:3478?transport=tcp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'}
+    ]
+};    
 
 class SimplePeer {
     
-    _servers = {
-    	iceServers: [
-            {urls: ['stun:stun.l.google.com:19302']},
-            {urls: 'turn:138.68.165.213:3478?transport=udp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'},
-            {urls: 'turn:138.68.165.213:3478?transport=tcp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'}
-        ]
-    };    
     _id = shortid.generate();
     _user;
     _dataChanel;
@@ -22,19 +24,46 @@ class SimplePeer {
         offerToReceiveAudio: 1,
         offerToReceiveVideo: 1,
         voiceActivityDetection: false
-    };    
+    };
+    _readyState;
+    _readyRemoteState;
+    _remoteStream;
 
     constructor(data) {
         if (data.user) {
             this._user = data.user;
         }
-        this._pc = new RTCPeerConnection(this._servers);
+        this._pc = new RTCPeerConnection(_servers);
         this._pc.onicecandidate = event => {
             this.onIceCandidate(event);
         };
         this._pc.oniceconnectionstatechange = event => {
             debug(['ICE oniceconnectionstatechange ', this._pc.iceConnectionState]);
+            if (this._pc.iceConnectionState === 'connected') {
+                this._readyState = true;
+            }
+            
+            if (this._readyState) {
+                this._sendReadyState();
+            }
+            this.onStateChange();
         };
+
+        // once remote stream arrives, show it in the remote video element
+        this._pc.ontrack = evt => {
+            if (evt && evt.streams && evt.streams[0]) {
+                if (this._remoteStream !== evt.streams[0]) {
+                    this._remoteStream = evt.streams[0];
+                    addMediaSource({
+                        stream: this._remoteStream,
+                        peerId: this._id,
+                        isOpen: false,
+                        user: this._user
+                    });
+                }
+            }
+        };
+
         this._pc.ondatachannel = this._onDataChannelCallback.bind(this);       
     }
 
@@ -111,15 +140,15 @@ class SimplePeer {
     }   
     
     _onDataChannelStateChange() { 
-        if (!this._dataChanel) {
-            this._readyState = false;
-            return;
-        }
-        if (this._dataChanel.readyState === 'open') {
-            this._readyState = true;    
-        } else {
-            this._readyState = false;
-        }
+        // if (!this._dataChanel) {
+        //     this._readyState = false;
+        //     return;
+        // }
+        // if (this._dataChanel.readyState === 'open') {
+        //     this._readyState = true;    
+        // } else {
+        //     this._readyState = false;
+        // }
     } 
     
     setLocalDescription(desc) {
@@ -148,10 +177,42 @@ class SimplePeer {
                 console.log('Ice candidate added error', err);
             })
         }
-    }    
+    }
+
+    onStateChange() {
+        if (this._readyState && this._readyRemoteState) {
+            console.log('BOTH PEERS ARE READY',);
+            this.onBothPeersReadyEvent(this);
+        }
+    }
+
+    // override
+    onBothPeersReadyEvent(peer) {}
+
+    setRemoteReadyState(state) {
+        this._readyRemoteState = state;
+        this.onStateChange();
+    }
+
+    _sendReadyState() {
+        SocketService.getInstance().send({
+            type: SOCKET_MESSAGE_TYPES.SOCKET_STATE,
+            peerData: {
+                state: this._readyState,
+                toUser: this._user
+            }
+        }, SOCKET_EVENTS.MESSAGE);
+    }
+
+    get pc() {
+        return this._pc;
+    }
 
     // close peer and channels (if any)
     closePeer() {
+        try {
+            this._remoteStream = null;
+        } catch (err) {}
         try {
             this._pc.close();
         } catch (err) {
