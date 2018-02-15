@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import debug from '../../utils/debug';
 import safe from 'undefsafe';
+import { VIDEO_RESOLUTION } from '../../config';
 
 let instance;
 
@@ -21,12 +22,7 @@ class MediaManager {
         return new Promise((resolve, reject) => {
             navigator.mediaDevices.getUserMedia({
                 audio: true,
-                video: {
-                    // width: { ideal: 640, max: 640 },
-                    // height: { ideal: 480, max: 480 }                    
-                    width: { ideal: 400, max: 400 },
-                    height: { ideal: 300, max: 300 }
-                }
+                video: VIDEO_RESOLUTION.medium
             })
             .then(stream => {
                 this._localStream = stream;

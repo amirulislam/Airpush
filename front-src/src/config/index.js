@@ -41,4 +41,24 @@ export const PEER_TYPES = {
     FILE_TRANSPORT: 'FILE_TRANSPORT'
 }
 
+export const VIDEO_RESOLUTION = {
+    small: {
+        width: { ideal: 400, max: 400 },
+        height: { ideal: 300, max: 300 }        
+    },
+    medium: {
+        width: { ideal: 640, max: 640 },
+        height: { ideal: 480, max: 480 }       
+    }
+}
+
+// {urls: ['stun:stun.l.google.com:19302']},
+// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
+export const ICE_SERVERS = [
+    {
+        url: 'turn:159.65.21.88:443',
+        username: 'airpush',
+        credential: 'YGHhshdg@@#^@23274'
+    }    
+]
 

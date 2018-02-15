@@ -32,7 +32,6 @@ class ChatMainView extends Component {
     }
 
     _onResize(w, h) {
-        console.log('resize')
         this._componentHeight = h;
     }
 
@@ -44,7 +43,6 @@ class ChatMainView extends Component {
                 h = 300;
             }
         }
-        console.log('HEIGHT', h);
         let w = (100 * h) / 75;
         return { w, h };
     }

@@ -1,18 +1,17 @@
 import _ from 'lodash';
 import safe from 'undefsafe';
 import debug from '../../utils/debug';
-import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, ICE_SERVERS } from '../../config';
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
 import { addMediaSource } from '../../actions';
 
+// {urls: ['stun:stun.l.google.com:19302']},
+// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
+
 const _servers = {
-    iceServers: [
-        {urls: ['stun:stun.l.google.com:19302']},
-        {urls: 'turn:138.68.165.213:3478?transport=udp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'},
-        {urls: 'turn:138.68.165.213:3478?transport=tcp', credential: '3TptFG7cAfz5TaXsda', username: 'airpush'}
-    ]
+    iceServers: ICE_SERVERS
 };    
 
 class SimplePeer {
@@ -118,7 +117,7 @@ class SimplePeer {
     // }    
 
     onIceCandidate(event) {
-        debug(['ON ICE CANDIDATE EVENT', event]);
+        debug(['ON ICE CANDIDATE EVENT', event.candidate]);
         if (event.candidate) {
             SocketService.getInstance().send({
                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
@@ -218,6 +217,14 @@ class SimplePeer {
         } catch (err) {
             console.log('close');
         }
+    }
+
+    static isRelay(ice) {
+        if(!ice || !ice.candidate || !ice.candidate.candidate || !(ice.candidate.candidate.indexOf('typ relay')>-1)) {
+            return true;
+        } else {
+            return false;
+        } 
     }
     
 }

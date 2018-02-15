@@ -160,7 +160,7 @@ class PeerService {
             pc.setLocalDescription(sdp, noop, noop);
           }, noop);    // create offer and set local description
           pc.onicecandidate = function(ice){  //listen for candidate events
-            console.log('ICE >', ice.candidate)
+            console.log('ICE >', ice.candidate)        
             if(promiseResolved || !ice || !ice.candidate || !ice.candidate.candidate || !(ice.candidate.candidate.indexOf('typ relay')>-1))  return;
             promiseResolved = true;
             resolve(true);
@@ -169,12 +169,12 @@ class PeerService {
       }
 }
 
+export default PeerService;
+
 // PeerService.checkTURNServer({
-//     url: 'turn:138.68.165.213:3478?transport=tcp',
+//     url: 'turn:159.65.21.88:443',
 //     username: 'airpush',
-//     credential: '3TptFG7cAfz5TaXsda'
+//     credential: 'YGHhsasjdh8&&**74'
 // }).then(function(bool){
 //     console.log('is TURN server active? ', bool? 'yes':'no');
 // }).catch(console.error.bind(console));
-
-export default PeerService;
