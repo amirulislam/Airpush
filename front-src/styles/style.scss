@@ -5,7 +5,7 @@ $chatBottomBarBackground: '#eeeeee';
 $chatBottomBarBorderColor: '#dbdbdb';
 $chatBottomBarHeight: 65;
 
-$chatMessengerWidth: 400;
+$chatMessengerWidth: 350;
 
 @import 'utils.scss';
 @import 'modal.scss';
@@ -204,8 +204,13 @@ html, body, #airpush-ui {
                         .main-view {
                             height: 100%; overflow: hidden; position: relative;
                             .chat-group-full-ui {
+                                &.sidebar-open {
+                                    width: calc(100% - #{($chatMessengerWidth) + 'px'});
+                                }
+                                &.sidebar-close {
+                                    width: 100%;
+                                }
                                 position: relative; height: 100%;
-                                width: calc(100% - #{($chatMessengerWidth) + 'px'});
                                 height: 100%; overflow: hidden;
                                 background: #f7f7f7;
                                 
@@ -232,7 +237,12 @@ html, body, #airpush-ui {
                                 }
                             }
                             .chat-group-main-messenger {
-                                width: calc(#{($chatMessengerWidth) + 'px'});
+                                &.open {
+                                    width: calc(#{($chatMessengerWidth) + 'px'});
+                                }
+                                &.close {
+                                    width: 0px;
+                                }
                                 height: 100%; position: relative;
                                 background-image: url("/assets/img/seigaiha.png");
                                 border-left-style: solid;

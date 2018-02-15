@@ -413,10 +413,13 @@ html, body, #airpush-ui {
               #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui {
                 position: relative;
                 height: 100%;
-                width: calc(100% - 400px);
                 height: 100%;
                 overflow: hidden;
                 background: #f7f7f7; }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui.sidebar-open {
+                  width: calc(100% - 350px); }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui.sidebar-close {
+                  width: 100%; }
                 #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .open-close-menu {
                   position: absolute;
                   right: 0px;
@@ -445,13 +448,16 @@ html, body, #airpush-ui {
                     border-radius: 3px;
                     background: rgba(50, 28, 145, 0.8); }
               #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-main-messenger {
-                width: calc(400px);
                 height: 100%;
                 position: relative;
                 background-image: url("/assets/img/seigaiha.png");
                 border-left-style: solid;
                 border-width: 1px;
                 border-color: #dbdbdb; }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-main-messenger.open {
+                  width: calc(350px); }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-main-messenger.close {
+                  width: 0px; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger {
               position: relative;
               height: calc(100% - 65px);
@@ -639,3 +645,5 @@ html, body, #airpush-ui {
     margin: 0;
     background: rgba(0, 0, 0, 0.8);
     padding: 5px 10px; }
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdHlsZXMvc3R5bGUuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

@@ -11,7 +11,6 @@ import ChatMessenger from './ChatMessenger';
 import SocketService from '../../services/SocketService';
 import User from '../../models/User';
 import TextMessage from '../../models/TextMessage';
-import { SOCKET_EVENTS, MESSENGER_WDTH } from '../../config';
 
 class MainChatRoom extends Component {
 
@@ -39,19 +38,15 @@ class MainChatRoom extends Component {
 
     _renderSizeCSS() {
         if (this.props.chatOpenState) {
-            return {
-                width: `${MESSENGER_WDTH}px`
-            }
+            return 'chat-group-main-messenger open pull-right';
         } else {
-            return {
-                width: `0px`
-            }            
+            return 'chat-group-main-messenger close pull-right';
         }
     }
 
     render() {
         return(
-            <div style={this._renderSizeCSS()} className="chat-group-main-messenger pull-right">
+            <div className={ this._renderSizeCSS() }>
                 <ChatMessenger />
                 <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
             </div>            

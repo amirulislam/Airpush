@@ -8,7 +8,6 @@ import ReactResizeDetector from 'react-resize-detector';
 import ActionMenu from 'material-ui/svg-icons/navigation/menu';
 import IconButton from 'material-ui/IconButton';
 import { changeOpenChatState } from '../../../actions';
-import { MESSENGER_WDTH } from '../../../config';
 
 class ChatMainView extends Component {
     
@@ -22,10 +21,6 @@ class ChatMainView extends Component {
     constructor(props) {
         super(props);
         this._onResize = this._onResize.bind(this);
-    }
-
-    componentWillReceiveProps(newProps) {
-        console.log('AICI>>>> PROPS', newProps);
     }
 
     _renderMediaSourceFull() {
@@ -64,7 +59,6 @@ class ChatMainView extends Component {
     }
 
     _openCloseChatState() {
-        console.log('SSSSSS', this.props.chatOpenState);
         this.props.changeOpenChatState();
         // changeOpenChatState
     }
@@ -85,19 +79,15 @@ class ChatMainView extends Component {
 
     _renderSizeCSS() {
         if (this.props.chatOpenState) {
-            return {
-                width: `${window.innerWidth - MESSENGER_WDTH}px`
-            }
+            return 'chat-group-full-ui sidebar-open pull-left';
         } else {
-            return {
-                width: `${window.innerWidth}px`
-            }            
+            return 'chat-group-full-ui sidebar-close pull-left';
         }
     }    
 
     render() {
         return(
-            <div style={this._renderSizeCSS()} className="chat-group-full-ui pull-left">
+            <div className={this._renderSizeCSS()}>
                 <div className="chat-media-sources">
                     <div className="minimized-media-sources">
                         { this._renderMinimizied() }
