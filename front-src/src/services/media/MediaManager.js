@@ -34,6 +34,30 @@ class MediaManager {
         });
     }
 
+    toggleVideo(videoEnabled) {
+        this._localStream.getTracks().forEach(track => {
+            if (track && track.kind && track.kind === 'video' && track.enabled != videoEnabled) {
+                track.enabled = videoEnabled;
+            }
+        });
+    }
+
+    toggleAudio(audioEnabled) {
+        this._localStream.getTracks().forEach(track => {
+            if (track && track.kind && track.kind === 'audio' && track.enabled != audioEnabled) {
+                track.enabled = audioEnabled;
+            }
+        });
+    }    
+
+    get localStream() {
+        return this._localStream;
+    }
+
+    hasLocalStream() {
+        return this._localStream ? true : false;
+    }
+
     static getInstance() {
         if (!instance) {
             instance = new MediaManager();

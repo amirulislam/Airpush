@@ -183,6 +183,20 @@ var SocketManager = function () {
             });
         }
 
+        // retrive existing clients number
+
+    }, {
+        key: 'getExistingClientsNumber',
+        value: function getExistingClientsNumber(roomId) {
+            var clientsNo = 0;
+            this._io.in(roomId).clients(function (err, clients) {
+                if (!err && _lodash2.default.isArray(clients)) {
+                    clientsNo = clients.length;
+                }
+            });
+            return clientsNo;
+        }
+
         // handle messages
 
     }, {
@@ -192,6 +206,11 @@ var SocketManager = function () {
 
             socket.on(_config.SOCKET_EVENTS.MESSAGE, function (data) {
                 // console.log('NEW MESSAGE RECEIVED', data);
+                console.log('ROOOMSSSSS>>>>\n\n\n\n ');
+                // console.log('ROOOMSSSSS>>>> ', this._io.sockets)
+                _this2._io.in(socket.room.roomId).clients(function (err, clients) {
+                    console.log('CLIENTS>>>>>>>>', clients);
+                });
                 if (_lodash2.default.isNil((0, _undefsafe2.default)(data, 'type'))) {
                     return;
                 }

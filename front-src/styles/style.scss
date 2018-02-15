@@ -420,9 +420,13 @@ html, body, #airpush-ui {
     cursor: pointer;
     overflow: hidden;
     border-style: solid; border-width: 2px; border-color: #321c91;
+    .no-video {
+        position: absolute; z-index: 1;
+    }    
     video {
         width: 100%; height: 100%; left: 0; top: 0;
         position: absolute;
+        z-index: 2;
     }
     .media-source-user {
         color: #adacac;
@@ -433,15 +437,24 @@ html, body, #airpush-ui {
         background: rgba(0,0,0,.8);
         padding: 2px 2px;
         font-size: 10px;
+        z-index: 3;
     }
 }
 .media-source-full {
     background: #000; color: #F2F2F2;
     position: absolute; z-index: 98; width: 100%; height: 100%; left: 0; top: 0;
     overflow: hidden;
+    .no-video {
+        position: absolute; z-index: 1; width: 100%; left: 0px; text-align: center; top: 45%;
+        background: #4fa3f7;
+        .icon {
+            display: inline-block;
+        }
+    }
     video {
         width: 100%; height: 100%; left: 0; top: 0;
         position: absolute;
+        z-index: 2;
     }
     .media-source-user {
         color: #adacac;
@@ -451,5 +464,6 @@ html, body, #airpush-ui {
         margin: 0;
         background: rgba(0,0,0,.8);
         padding: 5px 10px;
+        z-index: 3;
     }        
 }

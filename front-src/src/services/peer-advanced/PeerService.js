@@ -174,7 +174,7 @@ export default PeerService;
 // PeerService.checkTURNServer({
 //     url: 'turn:159.65.21.88:443',
 //     username: 'airpush',
-//     credential: 'YGHhsasjdh8&&**74'
+//     credential: 'ppps'
 // }).then(function(bool){
 //     console.log('is TURN server active? ', bool? 'yes':'no');
 // }).catch(console.error.bind(console));

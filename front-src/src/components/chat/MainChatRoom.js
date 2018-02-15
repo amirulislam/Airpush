@@ -11,6 +11,7 @@ import ChatMessenger from './ChatMessenger';
 import SocketService from '../../services/SocketService';
 import User from '../../models/User';
 import TextMessage from '../../models/TextMessage';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
 
 class MainChatRoom extends Component {
 

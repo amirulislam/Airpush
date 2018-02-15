@@ -37,7 +37,6 @@ class SimplePeer {
             this.onIceCandidate(event);
         };
         this._pc.oniceconnectionstatechange = event => {
-            debug(['ICE oniceconnectionstatechange ', this._pc.iceConnectionState]);
             if (this._pc.iceConnectionState === 'connected') {
                 this._readyState = true;
             }

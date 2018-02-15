@@ -5,6 +5,7 @@ import _ from 'lodash';
 import safe from 'undefsafe';
 import { maximizeMediaSource, openFullScreen } from '../../../actions';
 import Fullscreen from "react-full-screen";
+import VideoOff from 'material-ui/svg-icons/av/videocam-off';
 
 class MediaSource extends Component {
 
@@ -71,7 +72,7 @@ class MediaSource extends Component {
                 enabled={this.props.fullScreen}
                 onChange={isFull => this.props.openFullScreen(isFull)}
                 >                
-                    <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
+                    <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>                 
                         { this._renderVideo() }
                         <p className="media-source-user">{ userName }</p>
                     </div>

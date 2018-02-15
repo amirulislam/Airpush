@@ -20,6 +20,8 @@ import InviteModal from '../../modals/InviteModal';
 import RaisedButton from 'material-ui/RaisedButton';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
+import MediaManager from '../../../services/media/MediaManager';
+
 
 const styles = {
     smallIcon: {
@@ -43,7 +45,13 @@ class MainBottomControlls extends Component {
     
     constructor(props) {
         super(props);
-        this.state = { value: '', copied: false, alreadyShowedLink: false }
+        this.state = { 
+            value: '', 
+            copied: false, 
+            alreadyShowedLink: false,
+            videoEnabled: true,
+            audioEnabled: true            
+        }
     }
 
     static defaultProps = {
@@ -107,24 +115,58 @@ class MainBottomControlls extends Component {
         this.props.sendNotificationFromComponent('Link copied!', 2000);
     }
 
-    _renderVideoButton() {
-        return(
-            <IconButton tooltip="Camera off" tooltipPosition="top-right"
-                iconStyle={styles.smallIcon}
-                style={styles.small} >
-                <VideoOn />
-            </IconButton>          
-        )
+    _enableDisableVideo(videoEnabled = true) {    
+        this.setState({ videoEnabled });
+        if (MediaManager.getInstance().hasLocalStream()) {
+            MediaManager.getInstance().toggleVideo(videoEnabled);
+        }
     }
 
+    _renderVideoButton() {
+        if (this.state.videoEnabled) {
+            return(
+                <IconButton onClick={ e => this._enableDisableVideo(false)} tooltip="Turn camera off" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <VideoOn />
+                </IconButton> 
+            )
+        } else {
+            return(
+                <IconButton onClick={ e => this._enableDisableVideo(true)} tooltip="Turn camera on" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <VideoOff />
+                </IconButton>          
+            )
+        }
+    }
+
+    _enableDisableAudio(audioEnabled = true) {    
+        this.setState({ audioEnabled });
+        if (MediaManager.getInstance().hasLocalStream()) {
+            MediaManager.getInstance().toggleAudio(audioEnabled);
+        }
+    }    
+
     _renderMicButton() {
-        return(
-            <IconButton tooltip="Mic off" tooltipPosition="top-right"
-                iconStyle={styles.smallIcon}
-                style={styles.small} >
-                <MicOn />
-            </IconButton>          
-        )
+        if (this.state.audioEnabled) {
+            return(
+                <IconButton onClick={ e => this._enableDisableAudio(false)} tooltip="Turn mic off" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <MicOn />
+                </IconButton>                  
+            )
+        } else {
+            return( 
+                <IconButton onClick={ e => this._enableDisableAudio(true)} tooltip="Turn mic on" tooltipPosition="top-right"
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <MicOff />
+                </IconButton>                       
+            )
+        }
     }
 
     _toggleFullScreen() {

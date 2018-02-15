@@ -144,10 +144,26 @@ class SocketManager {
         })
     }
 
+    // retrive existing clients number
+    getExistingClientsNumber(roomId) {
+        let clientsNo = 0;
+        this._io.in(roomId).clients((err, clients) => {
+            if (!err && _.isArray(clients)) {
+                clientsNo = clients.length;
+            }
+        })        
+        return clientsNo;
+    }
+
     // handle messages
     handleMessages(socket) {
         socket.on(SOCKET_EVENTS.MESSAGE, data => {
             // console.log('NEW MESSAGE RECEIVED', data);
+            console.log('ROOOMSSSSS>>>>\n\n\n\n ');
+            // console.log('ROOOMSSSSS>>>> ', this._io.sockets)
+            this._io.in(socket.room.roomId).clients((err, clients) => {
+                console.log('CLIENTS>>>>>>>>', clients)
+            })
             if (_.isNil(safe(data, 'type'))) {
                 return;
             }
