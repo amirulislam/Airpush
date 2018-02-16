@@ -8,32 +8,51 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, CHAT_ROOM_MAX_CLIENTS } from '../c
 import shortId from 'shortid';
 import HtmlValidator from '../utils/HtmlValidator';
 
-
 class SocketManager {
     _io;
 
-    constructor(io) {
+    constructor(io, socketUsersInstance) {
         this._io = io;
         this.handleConnection();
     }
 
     handleConnection() {
         this._io.use((socket, next) => {
+
             const user = SocketManager.isValidAuth(socket.handshake.query.x__authorization);
             if (!user) {
                 return next(new Error('AUTH_ERROR'));
             }
             socket.user = user;
             socket.user.socketId = socket.id;
+            socket.user.shortid = shortId.generate();            
             return next();
         });
         this._io.use((socket, next) => {
-            // implement existing socket ERROR
             return next();
-        });          
-        this._io.on('connection', (socket) => {
-            // console.log('ON CONNECTION ', socket.user);
-            // this.handleJoinRoomEvent(socket);
+        });    
+        
+        // on every node
+        // this._io.of('/').adapter.customHook = (data, cb) => {
+        //     cb('hello ' + data);
+        // }
+
+        this._io.on('connection', (socket) => {            
+
+            // if (this._socketUsersInstance.userExists(socket.user)) {
+            //     console.log('EXISTS >>>>>>>>>>>>>>>>');
+            //     return;
+            // }
+            // this._socketUsersInstance.addUser(socket.user);
+
+            // this._io.of('/').adapter.customRequest('john', function(err, replies){
+            //     console.log(replies); // an array ['hello john', ...] with one element per node
+            // });  
+            
+            // console.log('AAAAAA')
+            // let c = this._io.of('/').adapter.clients;
+            // console.log('AAAAAA2 ', c);
+
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
             this.handleJoinRoom(socket);
@@ -42,24 +61,25 @@ class SocketManager {
         });        
     }
 
-    handleJoinRoomEvent(socket) {        
-        const joinedRoomId = socket.handshake.query.joinedRoomId;
-        if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-            //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
-            socket.join(joinedRoomId);
-            socket.room = {
-                isCreator: false,
-                roomId: joinedRoomId
-            }                
-            // emit to self
-            socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
-            // emit to others
-            socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
-                type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-            });
-        }
-    }
+
+    // handleJoinRoomEvent(socket) {        
+    //     const joinedRoomId = socket.handshake.query.joinedRoomId;
+    //     if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+    //         //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
+    //         socket.join(joinedRoomId);
+    //         socket.room = {
+    //             isCreator: false,
+    //             roomId: joinedRoomId
+    //         }                
+    //         // emit to self
+    //         socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
+    //         // emit to others
+    //         socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
+    //             type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+    //             payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+    //         });
+    //     }
+    // }
 
     // handle create room
     handleCreateRoom(socket) {
@@ -80,7 +100,7 @@ class SocketManager {
     handleJoinRoom(socket) {
         socket.on(SOCKET_EVENTS.JOIN_ROOM, data => {
             const { roomToJoin } = data;
-
+            
             // leve if already belongs to another room
             if (!_.isNil(safe(socket, 'room.roomId')) && roomToJoin != socket.room.roomId) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
@@ -123,6 +143,19 @@ class SocketManager {
     
     // retrive existing clients number
     getExistingClientsNumber(roomId) {
+        return new Promise((resolve, reject) => {
+            this._io.in(roomId).clients((err, clients) => {
+                if (!err && _.isArray(clients)) {
+                    resolve(clients.length);
+                } else {
+                    resolve(0);
+                }
+            })              
+        });
+    } 
+    
+    // retrive all existing clients 
+    retriveAllExistingClients() {
         return new Promise((resolve, reject) => {
             this._io.in(roomId).clients((err, clients) => {
                 if (!err && _.isArray(clients)) {

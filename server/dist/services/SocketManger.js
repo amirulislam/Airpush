@@ -34,7 +34,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SocketManager = function () {
-    function SocketManager(io) {
+    function SocketManager(io, socketUsersInstance) {
         _classCallCheck(this, SocketManager);
 
         this._io = io;
@@ -47,21 +47,41 @@ var SocketManager = function () {
             var _this = this;
 
             this._io.use(function (socket, next) {
+
                 var user = SocketManager.isValidAuth(socket.handshake.query.x__authorization);
                 if (!user) {
                     return next(new Error('AUTH_ERROR'));
                 }
                 socket.user = user;
                 socket.user.socketId = socket.id;
+                socket.user.shortid = _shortid2.default.generate();
                 return next();
             });
             this._io.use(function (socket, next) {
-                // implement existing socket ERROR
                 return next();
             });
+
+            // on every node
+            // this._io.of('/').adapter.customHook = (data, cb) => {
+            //     cb('hello ' + data);
+            // }
+
             this._io.on('connection', function (socket) {
-                // console.log('ON CONNECTION ', socket.user);
-                // this.handleJoinRoomEvent(socket);
+
+                // if (this._socketUsersInstance.userExists(socket.user)) {
+                //     console.log('EXISTS >>>>>>>>>>>>>>>>');
+                //     return;
+                // }
+                // this._socketUsersInstance.addUser(socket.user);
+
+                // this._io.of('/').adapter.customRequest('john', function(err, replies){
+                //     console.log(replies); // an array ['hello john', ...] with one element per node
+                // });  
+
+                // console.log('AAAAAA')
+                // let c = this._io.of('/').adapter.clients;
+                // console.log('AAAAAA2 ', c);
+
                 _this.handleLeaveRoom(socket);
                 _this.handleCreateRoom(socket);
                 _this.handleJoinRoom(socket);
@@ -69,25 +89,25 @@ var SocketManager = function () {
                 _this.handleDisconnect(socket);
             });
         }
-    }, {
-        key: 'handleJoinRoomEvent',
-        value: function handleJoinRoomEvent(socket) {
-            var joinedRoomId = socket.handshake.query.joinedRoomId;
-            if (joinedRoomId != 'false' && !_lodash2.default.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-                //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
-                socket.join(joinedRoomId);
-                socket.room = {
-                    isCreator: false,
-                    roomId: joinedRoomId
-                    // emit to self
-                };socket.emit(_config.SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
-                // emit to others
-                socket.broadcast.to(joinedRoomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                    type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.NEW_USER_JOINED }, socket.user)
-                });
-            }
-        }
+
+        // handleJoinRoomEvent(socket) {        
+        //     const joinedRoomId = socket.handshake.query.joinedRoomId;
+        //     if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+        //         //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
+        //         socket.join(joinedRoomId);
+        //         socket.room = {
+        //             isCreator: false,
+        //             roomId: joinedRoomId
+        //         }                
+        //         // emit to self
+        //         socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
+        //         // emit to others
+        //         socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
+        //             type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+        //             payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+        //         });
+        //     }
+        // }
 
         // handle create room
 
@@ -174,6 +194,24 @@ var SocketManager = function () {
             });
         }
 
+        // retrive all existing clients 
+
+    }, {
+        key: 'retriveAllExistingClients',
+        value: function retriveAllExistingClients() {
+            var _this4 = this;
+
+            return new Promise(function (resolve, reject) {
+                _this4._io.in(roomId).clients(function (err, clients) {
+                    if (!err && _lodash2.default.isArray(clients)) {
+                        resolve(clients.length);
+                    } else {
+                        resolve(0);
+                    }
+                });
+            });
+        }
+
         // handle disconnect
 
     }, {
@@ -213,7 +251,7 @@ var SocketManager = function () {
     }, {
         key: 'handleMessages',
         value: function handleMessages(socket) {
-            var _this4 = this;
+            var _this5 = this;
 
             socket.on(_config.SOCKET_EVENTS.MESSAGE, function (data) {
                 if (_lodash2.default.isNil((0, _undefsafe2.default)(data, 'type'))) {
@@ -226,7 +264,7 @@ var SocketManager = function () {
                         text = _HtmlValidator2.default.validateMaxLength(text);
                         data.textMessage = text;
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                            _this4._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                            _this5._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
                                 payload: data
                             });
