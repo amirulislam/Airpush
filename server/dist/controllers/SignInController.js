@@ -173,6 +173,10 @@ var SignInController = function () {
         value: function updateOrCreateUser(user) {
             if (_lodash2.default.isObject(user)) {
                 user.role = (0, _config.getUserRole)(user.email);
+                user.socketInfo = {
+                    socketId: '',
+                    connected: false
+                };
             }
             return _User2.default.findOneAndUpdate({
                 email: user.email

@@ -24,7 +24,7 @@ class SocketService {
         }
     }
 
-    connect() {
+    connect(useHere = false) {
         if (this._isConnected) {
             return;
         }
@@ -33,7 +33,8 @@ class SocketService {
         this._socket = io(uri, {
             transports: ['websocket'],
             query: {
-                x__authorization: StorageUtils.getToken()
+                x__authorization: StorageUtils.getToken(),
+                x__useHere: useHere
                 // joinedRoomId: StorageUtils.getJoinedRoom()
             }
         });
@@ -163,9 +164,9 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR:
                     openInfoAlert(data.payload, SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR);
                     break;
-                // case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
-                //     dispatchInternalMessage(data);
-                //     break;                    
+                case SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR:
+                    openInfoAlert(data.payload, SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR);
+                    break;                               
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL:                    
                     PeerService.getInstance().createPeerAndSetOffer(data.payload.fromUser, data.payload.signal);
                     break;

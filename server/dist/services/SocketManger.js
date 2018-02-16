@@ -29,6 +29,10 @@ var _HtmlValidator = require('../utils/HtmlValidator');
 
 var _HtmlValidator2 = _interopRequireDefault(_HtmlValidator);
 
+var _User = require('../models/User');
+
+var _User2 = _interopRequireDefault(_User);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -55,59 +59,43 @@ var SocketManager = function () {
                 socket.user = user;
                 socket.user.socketId = socket.id;
                 socket.user.shortid = _shortid2.default.generate();
+                socket.x__useHere = socket.handshake.query.x__useHere;
                 return next();
             });
             this._io.use(function (socket, next) {
                 return next();
             });
 
-            // on every node
-            // this._io.of('/').adapter.customHook = (data, cb) => {
-            //     cb('hello ' + data);
-            // }
-
             this._io.on('connection', function (socket) {
+                SocketManager.isUserConnected(socket.user._id, socket.id).then(function (connectedToSocketId) {
+                    if (connectedToSocketId === false) {
+                        SocketManager.setConnectedUser(socket.user._id, socket.id, true);
+                        _this.handleSocketEvents(socket);
+                    } else {
 
-                // if (this._socketUsersInstance.userExists(socket.user)) {
-                //     console.log('EXISTS >>>>>>>>>>>>>>>>');
-                //     return;
-                // }
-                // this._socketUsersInstance.addUser(socket.user);
-
-                // this._io.of('/').adapter.customRequest('john', function(err, replies){
-                //     console.log(replies); // an array ['hello john', ...] with one element per node
-                // });  
-
-                // console.log('AAAAAA')
-                // let c = this._io.of('/').adapter.clients;
-                // console.log('AAAAAA2 ', c);
-
-                _this.handleLeaveRoom(socket);
-                _this.handleCreateRoom(socket);
-                _this.handleJoinRoom(socket);
-                _this.handleMessages(socket);
-                _this.handleDisconnect(socket);
+                        socket.emit(_config.SOCKET_EVENTS.MESSAGE, {
+                            type: _config.SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR,
+                            payload: {
+                                message: 'AirPush is open in another window.<br />Since it can not connect the same user simultaneous from two windows, please use it within the original window.'
+                            }
+                        });
+                        socket.disconnect();
+                        return;
+                    }
+                }).catch(function (err) {
+                    // log error
+                });
             });
         }
-
-        // handleJoinRoomEvent(socket) {        
-        //     const joinedRoomId = socket.handshake.query.joinedRoomId;
-        //     if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
-        //         //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
-        //         socket.join(joinedRoomId);
-        //         socket.room = {
-        //             isCreator: false,
-        //             roomId: joinedRoomId
-        //         }                
-        //         // emit to self
-        //         socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: joinedRoomId });
-        //         // emit to others
-        //         socket.broadcast.to(joinedRoomId).emit(SOCKET_EVENTS.MESSAGE, {
-        //             type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-        //             payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-        //         });
-        //     }
-        // }
+    }, {
+        key: 'handleSocketEvents',
+        value: function handleSocketEvents(socket) {
+            this.handleLeaveRoom(socket);
+            this.handleCreateRoom(socket);
+            this.handleJoinRoom(socket);
+            this.handleMessages(socket);
+            this.handleDisconnect(socket);
+        }
 
         // handle create room
 
@@ -175,61 +163,6 @@ var SocketManager = function () {
                 }
             });
         }
-
-        // retrive existing clients number
-
-    }, {
-        key: 'getExistingClientsNumber',
-        value: function getExistingClientsNumber(roomId) {
-            var _this3 = this;
-
-            return new Promise(function (resolve, reject) {
-                _this3._io.in(roomId).clients(function (err, clients) {
-                    if (!err && _lodash2.default.isArray(clients)) {
-                        resolve(clients.length);
-                    } else {
-                        resolve(0);
-                    }
-                });
-            });
-        }
-
-        // retrive all existing clients 
-
-    }, {
-        key: 'retriveAllExistingClients',
-        value: function retriveAllExistingClients() {
-            var _this4 = this;
-
-            return new Promise(function (resolve, reject) {
-                _this4._io.in(roomId).clients(function (err, clients) {
-                    if (!err && _lodash2.default.isArray(clients)) {
-                        resolve(clients.length);
-                    } else {
-                        resolve(0);
-                    }
-                });
-            });
-        }
-
-        // handle disconnect
-
-    }, {
-        key: 'handleDisconnect',
-        value: function handleDisconnect(socket) {
-            socket.on(_config.SOCKET_EVENTS.DISCONNECT, function (s) {
-                // inform others in the room
-                if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
-                        type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
-                        payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
-                    });
-                    try {
-                        // socket.leave(socket.room.roomId);
-                    } catch (e) {};
-                }
-            });
-        }
     }, {
         key: 'handleLeaveRoom',
         value: function handleLeaveRoom(socket) {
@@ -251,7 +184,7 @@ var SocketManager = function () {
     }, {
         key: 'handleMessages',
         value: function handleMessages(socket) {
-            var _this5 = this;
+            var _this3 = this;
 
             socket.on(_config.SOCKET_EVENTS.MESSAGE, function (data) {
                 if (_lodash2.default.isNil((0, _undefsafe2.default)(data, 'type'))) {
@@ -264,7 +197,7 @@ var SocketManager = function () {
                         text = _HtmlValidator2.default.validateMaxLength(text);
                         data.textMessage = text;
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
-                            _this5._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                            _this3._io.in(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
                                 type: _config.SOCKET_MESSAGE_TYPES.TEXT_MESSAGE,
                                 payload: data
                             });
@@ -272,26 +205,6 @@ var SocketManager = function () {
                             console.log('ERROR >>>> NO ROOM >>>>');
                         }
                         break;
-                    // case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
-                    //     // console.log(SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE, data);
-                    //     if (!_.isNil(safe(socket, 'room.roomId'))) {      
-                    //         data.user = socket.user;
-                    //         socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
-                    //             type: data.type,
-                    //             payload: data
-                    //         });
-                    //     }
-                    // break;                
-                    // case SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL:
-                    //     if (!_.isNil(safe(data, 'peerData.sender')) && !_.isNil(safe(data, 'peerData.sendTo'))) {
-                    //         data.peerData.sender.socketId = socket.user.socketId;
-                    //         socket.to(data.peerData.sendTo).emit(SOCKET_EVENTS.MESSAGE, {
-                    //                 type: SOCKET_MESSAGE_TYPES.USER_DISCOVER_SIGNAL,
-                    //                 payload: data.peerData.sender
-                    //             }
-                    //         );
-                    //     }
-                    // break;                
                     case _config.SOCKET_MESSAGE_TYPES.PEER_SIGNAL:
                         if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.toUser.socketId'))) {
                             var sendToSocketId = data.peerData.toUser.socketId;
@@ -336,25 +249,88 @@ var SocketManager = function () {
                             });
                         }
                         break;
-                    // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                    //     // console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
-                    //     if (!_.isNil(safe(data, 'peerData.user.socketId'))) {
-                    //         const sendToSocketId = data.peerData.user.socketId;
-                    //         data.peerData.user = socket.user;
-                    //         socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
-                    //                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY,
-                    //                 payload: data.peerData
-                    //             }
-                    //         );
-                    //     }               
-                    // break;                                                
                 }
+            });
+        }
+
+        // retrive existing clients number
+
+    }, {
+        key: 'getExistingClientsNumber',
+        value: function getExistingClientsNumber(roomId) {
+            var _this4 = this;
+
+            return new Promise(function (resolve, reject) {
+                _this4._io.in(roomId).clients(function (err, clients) {
+                    if (!err && _lodash2.default.isArray(clients)) {
+                        resolve(clients.length);
+                    } else {
+                        resolve(0);
+                    }
+                });
+            });
+        }
+
+        // handle disconnect
+
+    }, {
+        key: 'handleDisconnect',
+        value: function handleDisconnect(socket) {
+            socket.on(_config.SOCKET_EVENTS.DISCONNECT, function (s) {
+                // inform others in the room
+                SocketManager.setConnectedUser(socket.user._id, '', false);
+                if (!_lodash2.default.isNil((0, _undefsafe2.default)(socket, 'room.roomId'))) {
+                    socket.broadcast.to(socket.room.roomId).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                        type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED,
+                        payload: Object.assign({ type: _config.SOCKET_MESSAGE_TYPES.USER_LEAVED }, socket.user)
+                    });
+                    try {
+                        // socket.leave(socket.room.roomId);
+                    } catch (e) {};
+                }
+            });
+        }
+    }], [{
+        key: 'isUserConnected',
+        value: function isUserConnected(userId, socketId) {
+            return new Promise(function (resolve, reject) {
+                _User2.default.findById(userId).then(function (user) {
+                    if (user && user.socketInfo && user.socketInfo.connected && user.socketInfo.socketId != socketId) {
+                        resolve(user.socketInfo.socketId);
+                    } else {
+                        resolve(false);
+                    }
+                }).catch(function (err) {
+                    resolve(false);
+                });
+            });
+        }
+    }, {
+        key: 'setConnectedUser',
+        value: function setConnectedUser(userId, socketId) {
+            var connected = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+            return new Promise(function (resolve, reject) {
+                _User2.default.findOneAndUpdate({
+                    _id: userId
+                }, {
+                    socketInfo: {
+                        connected: connected,
+                        socketId: socketId
+                    }
+                }, {
+                    new: true, upsert: true
+                }).then(function (u) {
+                    resolve(u);
+                }).catch(function (err) {
+                    // do nothing
+                });
             });
         }
 
         // validate auth
 
-    }], [{
+    }, {
         key: 'isValidAuth',
         value: function isValidAuth(x__authorization) {
             var decoded = _JWT2.default.isValidToken(x__authorization);

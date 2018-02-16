@@ -11,7 +11,8 @@ const UserSchema = new Schema({
 	name: { type: String, required: false, default: '' },
 	photo: { type: String, required: false, default: '' },
 	role: { type: String, default: USER_ROLES.PLATFORM_USER },
-	strategy: { type: String, default: '' }
+	strategy: { type: String, default: '' },
+	socketInfo: { type: Object, default: {} }
 });
 
 export default mongoose.model('User', UserSchema);

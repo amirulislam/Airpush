@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { OPEN_INFO_ALERT } from '../../../actions/Types';
 import { SOCKET_MESSAGE_TYPES } from '../../../config';
 import RommFullAlert from './RoomFullAlert';
+import AlreadyConnectedAlert from './AlreadyConnectedAlert';
 
 class InfoAlert extends Component {
 
@@ -27,6 +28,9 @@ class InfoAlert extends Component {
             case SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR:
                 return <RommFullAlert maxWidth={400} data={this.props.infoAlertData} />
             break;
+            case SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR:
+                return <AlreadyConnectedAlert maxWidth={400} data={this.props.infoAlertData} />
+            break;            
             default:
             return <noscript />;
         }

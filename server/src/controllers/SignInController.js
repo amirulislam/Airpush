@@ -54,7 +54,7 @@ class SignInController {
                 let photoUrl = '';
                 if (fbResult.picture && fbResult.picture.data) {
                     photoUrl = fbResult.picture.data.url;
-                }                
+                } 
                 const user  = {
                     name: fbResult.first_name + ' ' + fbResult.last_name,
                     email: fbResult.email || String(fbResult.id),
@@ -117,6 +117,10 @@ class SignInController {
     static updateOrCreateUser(user) {
         if (_.isObject(user)) {
             user.role = getUserRole(user.email);
+            user.socketInfo = {
+                socketId: '',
+                connected: false
+            }
         }
         return User.findOneAndUpdate({
             email: user.email
