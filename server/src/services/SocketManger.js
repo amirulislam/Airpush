@@ -4,7 +4,7 @@
 import JWT from '../utils/JWT';
 import _ from 'lodash';
 import safe from 'undefsafe';
-import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, CHAT_ROOM_MAX_CLIENTS } from '../config';
 import shortId from 'shortid';
 import HtmlValidator from '../utils/HtmlValidator';
 
@@ -33,7 +33,7 @@ class SocketManager {
         });          
         this._io.on('connection', (socket) => {
             // console.log('ON CONNECTION ', socket.user);
-            this.handleJoinRoomEvent(socket);
+            // this.handleJoinRoomEvent(socket);
             this.handleLeaveRoom(socket);
             this.handleCreateRoom(socket);
             this.handleJoinRoom(socket);
@@ -42,9 +42,10 @@ class SocketManager {
         });        
     }
 
-    handleJoinRoomEvent(socket) {
+    handleJoinRoomEvent(socket) {        
         const joinedRoomId = socket.handshake.query.joinedRoomId;
         if (joinedRoomId != 'false' && !_.isNil(joinedRoomId) && String(joinedRoomId).length < 30) {
+            //console.log('JOIN ROOM >>>>>>', this.getExistingClientsNumber(joinedRoomId))
             socket.join(joinedRoomId);
             socket.room = {
                 isCreator: false,
@@ -80,6 +81,7 @@ class SocketManager {
         socket.on(SOCKET_EVENTS.JOIN_ROOM, data => {
             const { roomToJoin } = data;
 
+            // leve if already belongs to another room
             if (!_.isNil(safe(socket, 'room.roomId')) && roomToJoin != socket.room.roomId) {
                 socket.broadcast.to(socket.room.roomId).emit(SOCKET_EVENTS.MESSAGE, {
                     type: SOCKET_MESSAGE_TYPES.USER_LEAVED,
@@ -90,29 +92,47 @@ class SocketManager {
             
             const isAlreadyConnectedToRoom = !_.isNil(safe(socket, 'room.roomId')) && roomToJoin == socket.room.roomId;
             if (!isAlreadyConnectedToRoom && _.isString(roomToJoin) && String(roomToJoin).length < 20) { 
-                socket.room = {
-                    isCreator: false,
-                    roomId: roomToJoin
-                }
-                socket.join(roomToJoin);
-                // emit to self
-                socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: roomToJoin });
-                // emit to others
-                socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
-                    type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                    payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-                });
-            } else {
-                // // emit to self
-                // socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: socket.room.roomId });
-                // // emit to others
-                // socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
-                //     type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
-                //     payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
-                // });                
+                this.getExistingClientsNumber(roomToJoin)
+                .then(existingClientsNo => {
+                    if (existingClientsNo >= CHAT_ROOM_MAX_CLIENTS) {
+                        socket.emit(SOCKET_EVENTS.MESSAGE, { 
+                            type: SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR,
+                            payload: {
+                                message: `Maximum number of group chat participants has been reached. Maximum allowed users: ${CHAT_ROOM_MAX_CLIENTS}.`
+                            }
+                        });
+                        return;
+                    }
+                    socket.room = {
+                        isCreator: false,
+                        roomId: roomToJoin
+                    }
+                    socket.join(roomToJoin);
+                    // emit to self
+                    socket.emit(SOCKET_EVENTS.JOINED_ROOM, { roomId: roomToJoin });
+                    // emit to others
+                    socket.broadcast.to(roomToJoin).emit(SOCKET_EVENTS.MESSAGE, {
+                        type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED,
+                        payload: Object.assign({type: SOCKET_MESSAGE_TYPES.NEW_USER_JOINED}, socket.user)
+                    });                    
+                })
+                .catch(err => {});
             }
         });
-    }    
+    } 
+    
+    // retrive existing clients number
+    getExistingClientsNumber(roomId) {
+        return new Promise((resolve, reject) => {
+            this._io.in(roomId).clients((err, clients) => {
+                if (!err && _.isArray(clients)) {
+                    resolve(clients.length);
+                } else {
+                    resolve(0);
+                }
+            })              
+        });
+    }       
 
     // handle disconnect
     handleDisconnect(socket) {
@@ -144,26 +164,9 @@ class SocketManager {
         })
     }
 
-    // retrive existing clients number
-    getExistingClientsNumber(roomId) {
-        let clientsNo = 0;
-        this._io.in(roomId).clients((err, clients) => {
-            if (!err && _.isArray(clients)) {
-                clientsNo = clients.length;
-            }
-        })        
-        return clientsNo;
-    }
-
     // handle messages
     handleMessages(socket) {
         socket.on(SOCKET_EVENTS.MESSAGE, data => {
-            // console.log('NEW MESSAGE RECEIVED', data);
-            console.log('ROOOMSSSSS>>>>\n\n\n\n ');
-            // console.log('ROOOMSSSSS>>>> ', this._io.sockets)
-            this._io.in(socket.room.roomId).clients((err, clients) => {
-                console.log('CLIENTS>>>>>>>>', clients)
-            })
             if (_.isNil(safe(data, 'type'))) {
                 return;
             }

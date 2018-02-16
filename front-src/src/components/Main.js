@@ -13,6 +13,7 @@ import RootSection from './RootSection';
 import StorageUtils from '../utils/Storage';
 import SocketService from '../services/SocketService';
 import queryString from 'query-string';
+import InfoAlert from './modals/info-alert/InfoAlert';
 
 
 class Main extends Component {
@@ -41,7 +42,8 @@ class Main extends Component {
                     <Route path={`${ROUTES.ROOT}`} component={ RootSection } />
                     <Route render={() => <p>Not found</p>} />
                 </Switch>
-                <Notifications />                
+                <Notifications />
+                <InfoAlert />   
             </div>
         );
     }

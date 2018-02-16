@@ -12,7 +12,7 @@ JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN,
 USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
 MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED, MEDIA_SOURCE_ADDED, 
 REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE, MESSENGER_RIGHT_CHANGE_STATE,
-OPEN_CLOSE_FULL_SCREEN } from './Types';
+OPEN_CLOSE_FULL_SCREEN, OPEN_INFO_ALERT } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 import { store } from '../index';
@@ -174,6 +174,14 @@ export const sendNotificationFromComponent = (message, timeout) => {
 			payload: { message, timeout }
 		});		
 	}
+}
+
+// open alert info / across app
+export const openInfoAlert = (data, alertType) => {
+	store.dispatch({
+		type: OPEN_INFO_ALERT,
+		payload: { data, alertType }
+	});	
 }
 
 // add new user

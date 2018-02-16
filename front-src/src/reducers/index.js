@@ -11,6 +11,7 @@ import JoinedRoomId from './JoinedRoomId';
 import MediaSources from './MediaSources';
 import ChatOpenState from './ChatOpenState';
 import FullScreen from './FullScreen';
+import InfoAlertReducer from './InfoAlertReducer';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
@@ -23,7 +24,8 @@ const rootReducers = combineReducers({
     joinedRoomId: JoinedRoomId,
     mediaSources: MediaSources,
     chatOpenState : ChatOpenState,
-    fullScreen: FullScreen
+    fullScreen: FullScreen,
+    infoAlertData: InfoAlertReducer
 });
 
 export default rootReducers;

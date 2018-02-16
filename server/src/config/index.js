@@ -30,7 +30,8 @@ export const SOCKET_MESSAGE_TYPES = {
     PEER_SIGNAL_ANSWER: 'PEER_SIGNAL_ANSWER',
     PEER_SIGNAL_ICE: 'PEER_SIGNAL_ICE',
     PEER_SIGNAL_IM_READY: 'PEER_SIGNAL_IM_READY',
-    SOCKET_STATE: 'SOCKET_STATE'
+    SOCKET_STATE: 'SOCKET_STATE',
+    ROOM_FOOL_ERROR: 'ROOM_FOOL_ERROR'
 }
 
 export const IS_PRODUCTION = process.env.NODE_ENV === 'production' ? true : false;
@@ -70,4 +71,5 @@ export const getUserRole = email => {
     return role;
 }
 
+export const CHAT_ROOM_MAX_CLIENTS = 6;
 

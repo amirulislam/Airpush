@@ -35,7 +35,8 @@ var SOCKET_MESSAGE_TYPES = exports.SOCKET_MESSAGE_TYPES = {
     PEER_SIGNAL_ANSWER: 'PEER_SIGNAL_ANSWER',
     PEER_SIGNAL_ICE: 'PEER_SIGNAL_ICE',
     PEER_SIGNAL_IM_READY: 'PEER_SIGNAL_IM_READY',
-    SOCKET_STATE: 'SOCKET_STATE'
+    SOCKET_STATE: 'SOCKET_STATE',
+    ROOM_FOOL_ERROR: 'ROOM_FOOL_ERROR'
 };
 
 var IS_PRODUCTION = exports.IS_PRODUCTION = process.env.NODE_ENV === 'production' ? true : false;
@@ -74,3 +75,5 @@ var getUserRole = exports.getUserRole = function getUserRole(email) {
     }
     return role;
 };
+
+var CHAT_ROOM_MAX_CLIENTS = exports.CHAT_ROOM_MAX_CLIENTS = 6;

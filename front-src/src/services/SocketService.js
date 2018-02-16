@@ -4,7 +4,8 @@ import debug from '../utils/debug';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
- addUser, removeUser, dispatchInternalMessage, addMediaSource, removeAllMediaSources } from '../actions';
+ addUser, removeUser, dispatchInternalMessage, addMediaSource, removeAllMediaSources,
+ openInfoAlert } from '../actions';
 import Storage from '../utils/Storage';
 import User from '../models/User';
 import PeerService from './peer-advanced/PeerService';
@@ -158,6 +159,9 @@ class SocketService {
                     break;                    
                 case SOCKET_MESSAGE_TYPES.TEXT_MESSAGE:
                     dispatchInternalMessage(data);
+                    break;
+                case SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR:
+                    openInfoAlert(data.payload, SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR);
                     break;
                 // case SOCKET_MESSAGE_TYPES.ACCEPT_FILE_MESSAGE:
                 //     dispatchInternalMessage(data);
