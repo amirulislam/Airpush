@@ -71,12 +71,12 @@ class TopBar extends Component {
     }
 
     _openSettings() {
-        console.log('AAAAA >>>> ');
+        this.props.openPopupAlert({}, ALERT_MESSAGES_TYPES.OPEN_SETTINGS);
     }
 
     _renderSettings() {
         return(
-            <IconButton onClick={e => this._openSettings()} tooltip="Settings">
+            <IconButton onClick={e => this._openSettings()} tooltip="Settings" tooltipPosition="bottom-right">
                 <ActionSettings />
             </IconButton>
         );

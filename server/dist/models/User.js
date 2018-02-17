@@ -21,6 +21,7 @@ var UserSchema = new Schema({
 	photo: { type: String, required: false, default: '' },
 	role: { type: String, default: _config.USER_ROLES.PLATFORM_USER },
 	strategy: { type: String, default: '' },
+	mediaSettings: { type: Object, default: { camState: true, micState: true } },
 	socketInfo: { type: Object, default: {} }
 });
 

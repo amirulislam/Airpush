@@ -21,6 +21,10 @@ var _RoomsController = require('../controllers/RoomsController');
 
 var _RoomsController2 = _interopRequireDefault(_RoomsController);
 
+var _SettingsController = require('../controllers/SettingsController');
+
+var _SettingsController2 = _interopRequireDefault(_SettingsController);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router({ mergeParams: true });
@@ -36,6 +40,11 @@ router.get('/', function (req, res, next) {
 router.use(_AuthorizationController2.default.validateSignature);
 
 router.post('/chat-room', _RoomsController2.default.createRoom);
+
+router.get('/account/media-settings', _SettingsController2.default.getMediaSettings);
+
+router.put('/account/media-settings', _SettingsController2.default.updateMediaSettings);
+
 router.delete('/account', _SignInController2.default.removeAccount);
 
 router.use('*', function (req, res, next) {

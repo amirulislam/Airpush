@@ -12,6 +12,7 @@ import MediaSources from './MediaSources';
 import ChatOpenState from './ChatOpenState';
 import FullScreen from './FullScreen';
 import InfoAlertReducer from './InfoAlertReducer';
+import MediaSettings from './MediaSettings';
 
 const rootReducers = combineReducers({
     authenticated: AuthReducer,
@@ -25,7 +26,8 @@ const rootReducers = combineReducers({
     mediaSources: MediaSources,
     chatOpenState : ChatOpenState,
     fullScreen: FullScreen,
-    infoAlertData: InfoAlertReducer
+    infoAlertData: InfoAlertReducer,
+    mediaSettings: MediaSettings
 });
 
 export default rootReducers;

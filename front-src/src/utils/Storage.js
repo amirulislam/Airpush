@@ -108,6 +108,30 @@ class StorageUtils {
 			return;
 		}		
 		StorageUtils.setJoinedRoom(false);
+	}
+	
+	static setUserMediaSettings(mediaSettings) {
+		if (!StorageUtils.isStorageSupported()) {
+			return;
+		}
+		let allData = StorageUtils.getStorageData();
+		if (_.isNil(allData)) {
+			allData = {};
+		}
+		allData.mediaSettings = mediaSettings;
+		StorageUtils.setStorageData(allData);
+	}
+
+	static getUserMediaSettings() {
+		if (!StorageUtils.isStorageSupported()) {
+			return false;
+		}
+		const allData = StorageUtils.getStorageData();
+		let mediaSettings = false;
+		if (allData && allData.mediaSettings) {
+			mediaSettings = allData.mediaSettings;
+		}
+		return mediaSettings;
 	}	
 
 	static removeStorageData() {

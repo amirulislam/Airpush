@@ -110,8 +110,8 @@ var SignInController = function () {
                         email: fbResult.email || String(fbResult.id),
                         photo: photoUrl
                     };
-                    return SignInController.slackNotify(user.email, user).then(function () {
-                        return SignInController.updateOrCreateUser(user);
+                    return SignInController.slackNotify(user.email, user).then(function (existingUser) {
+                        return SignInController.updateOrCreateUser(user, existingUser);
                     });
                 } else {
                     return Promise.reject({});
@@ -131,8 +131,8 @@ var SignInController = function () {
                         email: linkedinUser.emailAddress,
                         photo: linkedinUser.pictureUrl
                     };
-                    return SignInController.slackNotify(user.email, user).then(function () {
-                        return SignInController.updateOrCreateUser(user);
+                    return SignInController.slackNotify(user.email, user).then(function (existingUser) {
+                        return SignInController.updateOrCreateUser(user, existingUser);
                     });
                 } else {
                     Promise.reject({});
@@ -146,8 +146,8 @@ var SignInController = function () {
         key: 'googleSignIn',
         value: function googleSignIn(accessToken, email) {
             return _GoogleService2.default.verify(accessToken, email).then(function (result) {
-                return SignInController.slackNotify(email, result).then(function () {
-                    return SignInController.updateOrCreateUser(result);
+                return SignInController.slackNotify(email, result).then(function (existingUser) {
+                    return SignInController.updateOrCreateUser(result, existingUser);
                 });
             });
         }
@@ -162,7 +162,7 @@ var SignInController = function () {
                     debug('SLACK NOTYFY !!!!');
                     _SlackService2.default.notifyNewUser(candidate);
                 }
-                return;
+                return user;
             });
         }
 
@@ -170,13 +170,19 @@ var SignInController = function () {
 
     }, {
         key: 'updateOrCreateUser',
-        value: function updateOrCreateUser(user) {
+        value: function updateOrCreateUser(user, existingUser) {
             if (_lodash2.default.isObject(user)) {
                 user.role = (0, _config.getUserRole)(user.email);
                 user.socketInfo = {
                     socketId: '',
                     connected: false
                 };
+                if (!existingUser) {
+                    user.mediaSettings = {
+                        camState: true,
+                        micState: true
+                    };
+                }
             }
             return _User2.default.findOneAndUpdate({
                 email: user.email

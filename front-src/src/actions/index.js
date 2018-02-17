@@ -12,7 +12,7 @@ JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN,
 USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
 MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED, MEDIA_SOURCE_ADDED, 
 REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE, MESSENGER_RIGHT_CHANGE_STATE,
-OPEN_CLOSE_FULL_SCREEN, OPEN_INFO_ALERT, ALERT_MESSAGE } from './Types';
+OPEN_CLOSE_FULL_SCREEN, OPEN_INFO_ALERT, ALERT_MESSAGE, USER_MEDIA_SETTINGS } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 import { store } from '../index';
@@ -359,4 +359,52 @@ export const openPopupAlertFromClass = (data, alertType) => {
 		type: ALERT_MESSAGE,
 		payload: { data, alertType }	
 	});	
+}
+
+// retrive media settings
+export const getUserMediaSettings = (onSuccess) => {
+	return (dispatch, getState) => {   
+		axios.get(`${API_ROOT}/account/media-settings`)
+		.then(({ data }) => {
+            if (onSuccess) {
+                onSuccess();
+			}
+			dispatch({
+				type: USER_MEDIA_SETTINGS,
+				payload: data.data.mediaSettings
+			})
+		})
+		.catch(err => {
+			console.log(err);
+			if (safe(err, 'response.data.message') && _.isFunction(onError)) {
+				onError(err.response.data);
+			}
+		});
+	}
+}
+
+
+// update media settings
+export const updateUserMediaSettings = (mediaSettings, onSuccess) => {
+	return (dispatch, getState) => {   
+		axios.put(`${API_ROOT}/account/media-settings`, {
+			camState: mediaSettings.camState,
+			micState: mediaSettings.micState
+		})
+		.then(({ data }) => {
+            if (onSuccess) {
+                onSuccess();
+			}
+			dispatch({
+				type: 'nothing',
+				payload: null
+			})
+		})
+		.catch(err => {
+			console.log(err);
+			if (safe(err, 'response.data.message') && _.isFunction(onError)) {
+				onError(err.response.data);
+			}
+		});
+	}
 }

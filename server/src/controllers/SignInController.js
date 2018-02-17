@@ -61,8 +61,8 @@ class SignInController {
                     photo: photoUrl
                 }
                 return SignInController.slackNotify(user.email, user)
-                .then(() => {
-                    return SignInController.updateOrCreateUser(user);
+                .then(existingUser => {
+                    return SignInController.updateOrCreateUser(user, existingUser);
                 }); 
             } else {
                 return Promise.reject({});
@@ -81,8 +81,8 @@ class SignInController {
                     photo: linkedinUser.pictureUrl
                 }
                 return SignInController.slackNotify(user.email, user)
-                .then(() => {
-                    return SignInController.updateOrCreateUser(user);
+                .then(existingUser => {
+                    return SignInController.updateOrCreateUser(user, existingUser);
                 });                
             } else {
                 Promise.reject({});
@@ -95,8 +95,8 @@ class SignInController {
         return GoogleService.verify(accessToken, email)
         .then(result => {
             return SignInController.slackNotify(email, result)
-            .then(() => {
-                return SignInController.updateOrCreateUser(result);
+            .then(existingUser => {
+                return SignInController.updateOrCreateUser(result, existingUser);
             });
         })        
     }
@@ -109,17 +109,23 @@ class SignInController {
                 debug('SLACK NOTYFY !!!!')
                 SlackService.notifyNewUser(candidate);
             }
-            return;
+            return user;
         })
     }
 
     // update or create user
-    static updateOrCreateUser(user) {
+    static updateOrCreateUser(user, existingUser) {
         if (_.isObject(user)) {
             user.role = getUserRole(user.email);
             user.socketInfo = {
                 socketId: '',
                 connected: false
+            }
+            if (!existingUser) {
+                user.mediaSettings = {
+                    camState: true,
+                    micState: true
+                }
             }
         }
         return User.findOneAndUpdate({
