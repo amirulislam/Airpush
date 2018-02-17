@@ -7,6 +7,7 @@ import { SOCKET_MESSAGE_TYPES } from '../../../config';
 import RommFullAlert from './RoomFullAlert';
 import AlreadyConnectedAlert from './AlreadyConnectedAlert';
 import MyAccountAlert from './MyAccountAlert';
+import MediaNeededAlert from './MediaNeededAlert';
 
 class InfoAlert extends Component {
 
@@ -34,7 +35,10 @@ class InfoAlert extends Component {
             break;
             case ALERT_MESSAGES_TYPES.MY_ACCOUNT:
                 return <MyAccountAlert title="My account" maxWidth={600} data={this.props.infoAlertData} />
-            break;                        
+            break;
+            case ALERT_MESSAGES_TYPES.MELDIA_NEEDED:
+                return <MediaNeededAlert title="User media needed" maxWidth={500} data={this.props.infoAlertData} />
+            break;                                     
             default:
             return <noscript />;
         }

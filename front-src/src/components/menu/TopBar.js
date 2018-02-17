@@ -15,6 +15,7 @@ import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import LogoutIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 import shortid from 'shortid';
+import ActionSettings from 'material-ui/svg-icons/action/settings';
 
 class TopBar extends Component {
 
@@ -59,39 +60,33 @@ class TopBar extends Component {
         }
     }
 
-    _renderExistingUsers() {
-        if (this.props.users.length === 0) {
-            return;
-        }
-        return(
-            <div className="users-topbar pull-left">
-                <IconMenu
-                    iconButtonElement={
-                        <FlatButton style={{marginTop: '8px'}}>
-                            <AllUsers style={{marginTop: '4px'}} />
-                        </FlatButton>                            
-                    }
-                    anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                    >
-                    { this._interateUsers() }
-                </IconMenu>                           
-            </div>           
-        )
-    }
-
     _renderLogo() {
         return(
-            <div className="topbar-logo pull-left">
-                airpush<span>.</span>
-            </div>            
+            <div className="topbar-logo-ui">
+                <div className="topbar-logo">
+                    airpush<span>.</span>
+                </div>
+            </div>
         )        
+    }
+
+    _openSettings() {
+        console.log('AAAAA >>>> ');
+    }
+
+    _renderSettings() {
+        return(
+            <IconButton onClick={e => this._openSettings()} tooltip="Settings">
+                <ActionSettings />
+            </IconButton>
+        );
     }
 
     render() {
         return(
             <div className="top-bar-main" style={this.renderPaddingCSS()}>
                 { this._renderLogo() }
+                { this._renderSettings() }
                 { this.renderUserAvatar() }
                 <div className="clearfix"></div>
             </div>

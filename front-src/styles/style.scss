@@ -100,19 +100,27 @@ html, body, #airpush-ui {
             .users-topbar {
 
             } 
-            .topbar-logo {
-                font-family: 'Lato', sans-serif;
-                font-weight: 700;
-                font-size: 32px;
-                letter-spacing: -1px;
-                line-height: 62px;
-                text-size-adjust: 100%;
-                margin-top: -8px;
-                padding-left: 10px;
-                span {
-                    color: #fc363b;
-                    margin-left: 2px;                
-                }             
+            .topbar-logo-ui {
+                position: absolute; width: 100%; left: 0; text-align: center;
+                .topbar-logo {
+                    font-family: 'Lato', sans-serif;
+                    font-weight: 700;
+                    font-size: 32px;
+                    letter-spacing: -1px;
+                    line-height: 62px;
+                    text-size-adjust: 100%;
+                    margin-top: -8px;
+                    display: inline-block;
+                    span {
+                        color: #fc363b;
+                        margin-left: 2px;                
+                    }             
+                } 
+                @media screen and (max-width: 600px) {
+                    .topbar-logo {
+                        display: none;
+                    }
+                }                                
             }
         }
 

@@ -17,7 +17,7 @@ class CreateRoom extends PureComponent {
         if (this.state.isCreatingRoom) {
             return;
         }
-        this.setState({ isCreatingRoom: true });
+        // this.setState({ isCreatingRoom: true });
         this.props.createChatGroup();
 
     }

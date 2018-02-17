@@ -3,9 +3,10 @@ import _ from 'lodash';
 import debug from '../utils/debug';
 import StorageUtils from '../utils/Storage';
 import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../config';
+import { ALERT_MESSAGES_TYPES } from '../actions/Types';
 import { roomJoined, sendNotification, roomCreated, roomJoinedBySelf,
  addUser, removeUser, dispatchInternalMessage, addMediaSource, removeAllMediaSources,
- openInfoAlert } from '../actions';
+ openInfoAlert, openPopupAlertFromClass } from '../actions';
 import Storage from '../utils/Storage';
 import User from '../models/User';
 import PeerService from './peer-advanced/PeerService';
@@ -194,7 +195,9 @@ class SocketService {
             .then(stream => {
                 this.joinRoom(joinedRoomId);  
             })
-            .catch(this._mediaRefuseError)
+            .catch(err => {
+                this._mediaRefuseError(err, false);
+            })
         }        
     }
 
@@ -203,12 +206,14 @@ class SocketService {
         .then(stream => {
             this._socket.emit(SOCKET_EVENTS.CREATE_ROOM, { });
         })
-        .catch(this._mediaRefuseError);      
+        .catch(err => {
+            this._mediaRefuseError(err, true);
+        })  
     }    
 
-    _mediaRefuseError() {
-        alert('In order to join the call you need to allow access to media');
-        alert('Accept & Refresh the page');        
+    _mediaRefuseError(err) {
+        console.log('err', err);
+        openPopupAlertFromClass({}, ALERT_MESSAGES_TYPES.MELDIA_NEEDED);
     }
     
     _addSelfMediaSource() {

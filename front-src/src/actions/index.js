@@ -352,3 +352,11 @@ export const openPopupAlert = (data, alertType) => {
 		payload: { data, alertType }		
 	}	
 }
+
+// open popup alert / across app
+export const openPopupAlertFromClass = (data, alertType) => {
+	store.dispatch({
+		type: ALERT_MESSAGE,
+		payload: { data, alertType }	
+	});	
+}

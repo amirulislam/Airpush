@@ -29,7 +29,7 @@ class MediaManager {
                 resolve(stream);
             })
             .catch(err => {
-                reject({});
+                reject(err);
             })            
         });
     }

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "detect-browser": "^2.0.0",
     "detectrtc": "^1.3.5",
     "filesize": "^3.6.0",
     "lodash": "^4.17.4",

@@ -53,7 +53,7 @@ class MediaSource extends Component {
         if (this.isMe()) {
             return <video ref={r => { this.videRef = r }} muted autoPlay></video>
         } else {
-            return <video ref={r => { this.videRef = r }} muted autoPlay></video>
+            return <video ref={r => { this.videRef = r }} autoPlay></video>
         }
     }
 

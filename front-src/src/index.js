@@ -10,6 +10,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { deepPurple900 } from 'material-ui/styles/colors';
 
+import BrowserService from './services/browser/BrowserService';
+BrowserService.checkSupported();
+
 export const muiTheme = getMuiTheme({
   palette: {
     primary1Color: deepPurple900
