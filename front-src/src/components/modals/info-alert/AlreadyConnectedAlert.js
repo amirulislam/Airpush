@@ -33,8 +33,13 @@ class AlreadyConnectedAlert extends BaseAlert {
         }
     }
 
+    _handleClose() {
+        super.handleClose();
+    }
+
     _useHere() {
         super.handleAccept();
+        SocketService.getInstance().connect(true);
         // setTimeout(() => {
         //     window.location = '/';
         // }, 6000);
@@ -42,7 +47,9 @@ class AlreadyConnectedAlert extends BaseAlert {
 
     _getActions() {
         let actions = [];
-        actions.push(<RaisedButton label="OK" primary={true} onClick={() => this._useHere()}/>)
+        actions.push(<FlatButton label="Cancel" primary={false} onClick={() => this._handleClose()} key={shortid.generate()}/>)
+        actions.push(<div className="spacer" key={shortid.generate()}></div>)
+        actions.push(<RaisedButton key={shortid.generate()} label="Use here" primary={true} onClick={() => this._useHere()}/>)
         return actions;
     }   
 

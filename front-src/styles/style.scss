@@ -467,3 +467,21 @@ html, body, #airpush-ui {
         z-index: 3;
     }        
 }
+
+.base-alert-content {
+    .title {
+        font-size: 20px;
+        margin-bottom: 10px;        
+    }
+    .content {
+        font-size: 15px;
+    }
+    .button-actions {
+        margin-top: 23px;
+        text-align: right;
+        .spacer {
+            width: 10px;
+            display: inline-block;
+        }     
+    }
+}

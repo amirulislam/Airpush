@@ -41,8 +41,9 @@ class RommFullAlert extends BaseAlert {
 
     _getActions() {
         let actions = [];
-        actions.push(<FlatButton label="Cancel" primary={false} onClick={() => super.handleClose()}/>)    
-        actions.push(<RaisedButton label="Retry" primary={true} onClick={() => this._retryConnect()}/>)
+        actions.push(<FlatButton label="Cancel" primary={false} onClick={() => super.handleClose()} key={shortid.generate()}/>)    
+        actions.push(<div className="spacer" key={shortid.generate()}></div>)
+        actions.push(<RaisedButton label="Retry" primary={true} onClick={() => this._retryConnect()} key={shortid.generate()}/>)
         return actions;
     }   
 

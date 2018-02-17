@@ -103,7 +103,6 @@ class PeerService {
 
     // remove all peers
     disconnectAndRemoveAllPeers() {
-        console.log('DIsconnect and remove all peers');
         for (let i = 0; i < this._peers.length; i++) {
             const peer = this._peers[i];
             peer.closePeer();

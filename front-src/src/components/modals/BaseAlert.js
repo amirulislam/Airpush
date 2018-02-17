@@ -52,15 +52,24 @@ class BaseAlert extends Component {
         return {};
     }
 
+    _renderTitle() {
+        if (this.props.title) {
+            return <div className="title">{this.props.title}</div>
+        }        
+    }
+
     render() {
         return(
             <Dialog contentStyle={this._renderContentStyle()}
-            actions={this._getActions()}
             modal={false}
             open={this.state.open}
             onRequestClose={() => this.handleClose()}
             >
-            { this.state.nodes }
+                <div className="base-alert-content">
+                    { this._renderTitle() }
+                    <div className="content">{ this.state.nodes }</div>
+                    <div className="button-actions">{this._getActions()}</div>
+                </div>
             </Dialog>
         );
     }

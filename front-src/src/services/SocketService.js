@@ -174,17 +174,15 @@ class SocketService {
                     PeerService.getInstance().setAnswerFromRemote(data.payload.fromUser, data.payload.signal);
                     break;
                 case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE:
-                    // console.log('PEER_SIGNAL_ICE--->>>', data);
                     PeerService.getInstance().setIncomingIceCandidate(data.payload.user, data.payload.candidate);
                     break;
                 case SOCKET_MESSAGE_TYPES.SOCKET_STATE:
                     PeerService.getInstance().setIncomingState(data.payload.fromUser, data.payload.state);
-                    break;                    
-                    
-                // case SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY:
-                //     console.log(SOCKET_MESSAGE_TYPES.PEER_SIGNAL_IM_READY, data);
-                //     PeerService.getInstance().setRemoteReady(data);
-                //     break;                                                                                                          
+                    break;
+                case SOCKET_MESSAGE_TYPES.OTHER_CLIENT_USAGE:
+                    this._socket.disconnect();
+                    window.location = '/';
+                    break;                                                                                                         
             }
         });
     }

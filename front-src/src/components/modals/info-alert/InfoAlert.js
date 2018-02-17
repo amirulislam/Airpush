@@ -29,7 +29,7 @@ class InfoAlert extends Component {
                 return <RommFullAlert maxWidth={400} data={this.props.infoAlertData} />
             break;
             case SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR:
-                return <AlreadyConnectedAlert maxWidth={400} data={this.props.infoAlertData} />
+                return <AlreadyConnectedAlert title="Connection error" maxWidth={400} data={this.props.infoAlertData} />
             break;            
             default:
             return <noscript />;

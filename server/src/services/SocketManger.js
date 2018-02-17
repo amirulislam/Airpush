@@ -41,15 +41,27 @@ class SocketManager {
                     SocketManager.setConnectedUser(socket.user._id, socket.id, true);
                     this.handleSocketEvents(socket);
                 } else {
-
-                    socket.emit(SOCKET_EVENTS.MESSAGE, { 
-                        type: SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR,
-                        payload: {
-                            message: `AirPush is open in another window.<br />Since it can not connect the same user simultaneous from two windows, please use it within the original window.`
-                        }
-                    });
-                    socket.disconnect();
-                    return;
+                    if (socket.x__useHere === true || socket.x__useHere === 'true') {
+                        // disconnect other peer
+                        // connect here
+                        socket.broadcast.to(connectedToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                            type: SOCKET_MESSAGE_TYPES.OTHER_CLIENT_USAGE,
+                            payload: {
+                                clientId: socket.id
+                            }                            
+                        });
+                        SocketManager.setConnectedUser(socket.user._id, socket.id, true);
+                        this.handleSocketEvents(socket);
+                    } else {
+                        // disconnect and inform use here
+                        socket.emit(SOCKET_EVENTS.MESSAGE, { 
+                            type: SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR,
+                            payload: {
+                                message: `Airpush is open in another window. Click "Use here" to use Airpush in this window.`
+                            }
+                        });
+                        socket.disconnect();                        
+                    }
                 }
             })
             .catch(err => {
