@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import shortid from 'shortid';
 
 class BaseAlert extends Component {
     constructor(props) {
@@ -36,11 +38,12 @@ class BaseAlert extends Component {
 
     _getActions() {
         let actions = [];
-        if (this.props.onAccept) {
-            actions.push(<FlatButton label="OK" primary={true} onClick={() => this.handleAccept()}/>)
-        }
         if (this.props.onCancel && !this.props.hideCancelButton) {
-            actions.push(<FlatButton label="Cancel" primary={false} onClick={() => this.handleClose()}/>)
+            actions.push(<FlatButton label="Cancel" primary={false} onClick={() => this.handleClose()} key={shortid.generate()}/>)
+        }        
+        if (this.props.onAccept) {
+            actions.push(<div className="spacer" key={shortid.generate()}></div>);
+            actions.push(<RaisedButton label="OK" primary={true} onClick={() => this.handleAccept()} key={shortid.generate()}/>)
         }        
         return actions;
     }

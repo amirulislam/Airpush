@@ -12,7 +12,7 @@ JOINED_ROOM, LEAVED_ROOM, OPEN_NOTIFICATION, ROOM_CREATED_NOW, NEW_USER_JOIN,
 USER_LEFT, MESSAGE, JOINED_ROOM_ID, REMOVE_GROUP_MESSAGES, REMOVE_INTERNAL_MESSAGE, 
 MESSAGE_DOWNLOAD_PROGRESS, ALTER_MESSAGE_PAYLOAD, ACCOUNT_REMOVED, MEDIA_SOURCE_ADDED, 
 REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE, MESSENGER_RIGHT_CHANGE_STATE,
-OPEN_CLOSE_FULL_SCREEN, OPEN_INFO_ALERT } from './Types';
+OPEN_CLOSE_FULL_SCREEN, OPEN_INFO_ALERT, ALERT_MESSAGE } from './Types';
 
 import { SOCKET_EVENTS } from '../config';
 import { store } from '../index';
@@ -345,23 +345,10 @@ export const openFullScreen = val => {
 	}
 }
 
-export const test = () => {
-	const user = {
-		email: "eblocksapps@gmail.com",
-		iat: 1517557279,
-		name: "Eblocks Shopify Apps",
-		photo: "https://lh3.googleusercontent.com/-8MSgQc63eVM/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjXvFAN17fKuukGjHsKuZ81RHP2TRw/s96-c/photo.jpg",
-		_id: "5a74161feddff24834fbaf88",
-		msgType: "NEW_USER_JOINED"
-	}
-	store.dispatch({
-		type: NEW_USER_JOIN,
-		payload: user	
-	});
-	dispatchInternalMessage(user);	
-}
-setTimeout(() => {
-	for (let index = 0; index < 10; index++) {
-		//test();
+// open popup alert / across app
+export const openPopupAlert = (data, alertType) => {
+	return {
+		type: ALERT_MESSAGE,
+		payload: { data, alertType }		
 	}	
-}, 2000);
+}

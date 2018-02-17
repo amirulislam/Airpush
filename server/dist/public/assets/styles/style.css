@@ -432,8 +432,8 @@ html, body, #airpush-ui {
                   background: #000; }
                   #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-media-sources .minimized-media-sources {
                     position: absolute;
-                    left: 20px;
-                    top: 20px;
+                    left: 7px;
+                    top: 11px;
                     z-index: 100; }
                 #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-main-bottom-controlls {
                   position: absolute;
@@ -669,6 +669,11 @@ html, body, #airpush-ui {
 
 .base-alert-content .content {
   font-size: 15px; }
+  .base-alert-content .content .card-content {
+    background: #F2f2f2;
+    padding: 20px; }
+    .base-alert-content .content .card-content .info-text {
+      margin-top: 17px; }
 
 .base-alert-content .button-actions {
   margin-top: 23px;

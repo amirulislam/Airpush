@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { OPEN_INFO_ALERT } from '../../../actions/Types';
+import { OPEN_INFO_ALERT, ALERT_MESSAGES_TYPES } from '../../../actions/Types';
 import { SOCKET_MESSAGE_TYPES } from '../../../config';
 import RommFullAlert from './RoomFullAlert';
 import AlreadyConnectedAlert from './AlreadyConnectedAlert';
+import MyAccountAlert from './MyAccountAlert';
 
 class InfoAlert extends Component {
 
@@ -26,11 +27,14 @@ class InfoAlert extends Component {
         }
         switch(this.props.infoAlertData.alertType) {
             case SOCKET_MESSAGE_TYPES.ROOM_FOOL_ERROR:
-                return <RommFullAlert maxWidth={400} data={this.props.infoAlertData} />
+                return <RommFullAlert title="Participants limit" maxWidth={400} data={this.props.infoAlertData} />
             break;
             case SOCKET_MESSAGE_TYPES.ALREADY_CONNECTED_ERROR:
-                return <AlreadyConnectedAlert title="Connection error" maxWidth={400} data={this.props.infoAlertData} />
-            break;            
+                return <AlreadyConnectedAlert title="Connection usage" maxWidth={400} data={this.props.infoAlertData} />
+            break;
+            case ALERT_MESSAGES_TYPES.MY_ACCOUNT:
+                return <MyAccountAlert title="My account" maxWidth={600} data={this.props.infoAlertData} />
+            break;                        
             default:
             return <noscript />;
         }

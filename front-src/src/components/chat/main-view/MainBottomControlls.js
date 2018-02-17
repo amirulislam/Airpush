@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import shortid from 'shortid';
 import { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime, openFullScreen } from '../../../actions';
 
 import IconButton from 'material-ui/IconButton';
@@ -80,8 +81,8 @@ class MainBottomControlls extends Component {
         if (this.invite) {
             this.setState({ alreadyShowedLink: true });
             this.invite.open([
-                <p key="invite-txt">Invite others to this chat group. Copy the link below &amp; send it to your friends.</p>,
-                <div key="share-link" className="share-link">
+                <p key={shortid.generate()}>Invite others to this chat group. Copy the link below &amp; send it to your friends.</p>,
+                <div key={shortid.generate()} className="share-link">
                     <div className="room-share-url noselect pull-left">
                         {`${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}`}
                     </div>

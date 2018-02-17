@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MENU_WIDTH } from '../../config';
+import { ALERT_MESSAGES_TYPES } from '../../actions/Types';
+import { toggleMenu, logOut, openPopupAlert } from '../../actions';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
-//import ActionMenu from 'material-ui/svg-icons/navigation/menu';
 import AllUsers from 'material-ui/svg-icons/hardware/device-hub';
-import { toggleMenu, logOut } from '../../actions';
 import Avatar from 'material-ui/Avatar';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -25,23 +25,10 @@ class TopBar extends Component {
 
     renderPaddingCSS() {
         return {paddingLeft: '0px'};
-        // return (this.props.menuOpen) ? {paddingLeft: MENU_WIDTH} : {paddingLeft: '0px'};
     }
 
-    renderOpenMenuButton() {
-        // if (!this.props.menuOpen) {
-        //     return(
-        //         <div className="open-menu-button pull-left">
-        //             <IconButton onClick={ e => this.props.toggleMenu(true) }>
-        //                 <ActionMenu />
-        //             </IconButton>
-        //         </div>
-        //     );
-        // }
-    }
-
-    redirectToMyAccount() {
-
+    _openMyAccountModal() {
+        this.props.openPopupAlert({}, ALERT_MESSAGES_TYPES.MY_ACCOUNT);
     }
 
     renderUserAvatar() {
@@ -63,7 +50,7 @@ class TopBar extends Component {
                         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                         targetOrigin={{horizontal: 'right', vertical: 'top'}}
                         >
-                        <MenuItem onClick={ e => this.redirectToMyAccount() } primaryText="My account" leftIcon={<AccountIcon />} />
+                        <MenuItem onClick={ e => this._openMyAccountModal() } primaryText="My account" leftIcon={<AccountIcon />} />
                         <Divider />
                         <MenuItem onClick={e => this.props.logOut()} primaryText="Log out" leftIcon={ <LogoutIcon /> } />
                     </IconMenu>                           
@@ -72,29 +59,6 @@ class TopBar extends Component {
         }
     }
 
-    // _renderDivider(c, total) {
-    //     if (c < total - 1) {
-    //         return <Divider />;
-    //     }
-    // }
-
-    // _interateUsers() {
-    //     let c = 0;
-    //     return this.props.users.map(u => {
-            
-    //         return [
-    //             <div className="users-item" key={shortid.generate()}>
-    //                 <img className="user-img pull-left" src={u.photo} />
-    //                 <p className="pull-left">{u.name}</p>
-    //                 <div className="clearfix"></div>
-    //             </div>,
-    //             <div key={shortid.generate()}>
-    //                 { this._renderDivider(c, this.props.users.length) }
-    //             </div>
-    //         ]
-    //         c++;
-    //     });
-    // }
     _renderExistingUsers() {
         if (this.props.users.length === 0) {
             return;
@@ -152,5 +116,5 @@ TopBar.propTypes = {
     users: PropTypes.array
 }
 
-export default connect(mapStateToProps, { toggleMenu, logOut })(TopBar);
+export default connect(mapStateToProps, { toggleMenu, logOut, openPopupAlert })(TopBar);
 
