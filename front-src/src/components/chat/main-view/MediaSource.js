@@ -50,6 +50,10 @@ class MediaSource extends Component {
     }
 
     _renderVideo() {
+        let videoStreamIsEnabled = true;
+        if (this.props.source && this.props.source.stream) {
+            videoStreamIsEnabled = this.props.source.stream.enabled;
+        }
         if (this.isMe()) {
             return <video ref={r => { this.videRef = r }} muted autoPlay></video>
         } else {

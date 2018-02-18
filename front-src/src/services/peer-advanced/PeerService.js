@@ -32,6 +32,7 @@ class PeerService {
         MediaManager.getInstance().getUserMedia()
         .then(stream => {
             stream.getTracks().forEach(track => {
+                    // console.log('ADD TRACK', track.enabled);
                     peer.pc.addTrack(track, stream);
                 }
             );            

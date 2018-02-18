@@ -30,7 +30,7 @@ class SettingsModal extends BaseAlert {
             super.open(
                 [
                     <div key={shortid.generate()}>
-                        <p>You're about to enter a video meeting. The browser is blocking your camera and microphone.</p>
+                        <p>When entering a video meeting your camera and microphone are:</p>
                         <MediaSettings />
                     </div>                    
                 ]

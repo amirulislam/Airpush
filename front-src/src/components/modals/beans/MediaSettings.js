@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getUserMediaSettings, updateUserMediaSettings } from '../../../actions';
 import Checkbox from 'material-ui/Checkbox';
+import StorageUtils from '../../../utils/Storage';
 
 class MediaSettings extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            camState: true,
-            micState: true
+            camState: false,
+            micState: false
         };
     }
 
@@ -28,35 +29,24 @@ class MediaSettings extends Component {
     }
     
     updateCamCheck() {
-        const state = !this.state.camState;
-        this.setState({
-            camState: state
+        this.setState({camState: !this.state.camState }, () => {
+            this._updateMediaSettings();
         })
-        this._updateMediaSettings();
     }
 
     updateMicCheck(e) {
-        const state = !this.state.micState;
-        console.log('AAAAA', state);
-        // this.setState({
-        //     micState: false
-        // })
-   this.setState((oldState) => {
-      return {
-        micState: !this.state.micState,
-      };
-    });        
-        console.log('STATE', this.state);
-        this._updateMediaSettings();
+        this.setState({micState: !this.state.micState }, () => {
+            this._updateMediaSettings();
+        })
     }    
 
     _updateMediaSettings() {
-        console.log('STATE2', this.state);
-        return;
-        this.props.updateUserMediaSettings({
+        const mediaSettings = {
             camState: this.state.camState,
-            micState: this.state.micState
-        });        
+            micState: this.state.micState            
+        }
+        StorageUtils.setUserMediaSettings(mediaSettings);
+        this.props.updateUserMediaSettings(mediaSettings);        
     }
 
     render() {

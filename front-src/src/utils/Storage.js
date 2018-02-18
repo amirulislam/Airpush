@@ -52,6 +52,9 @@ class StorageUtils {
 		}
 		allData.authenticated = user;
 		StorageUtils.setStorageData(allData);
+		if (user && user.mediaSettings) {
+			StorageUtils.setUserMediaSettings(user.mediaSettings);
+		}
 	}
 
 	static getUser() {

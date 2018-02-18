@@ -1,4 +1,4 @@
-const isDebug = true;
+const isDebug = false;
 export default params => {
     if (!isDebug) {
         return;

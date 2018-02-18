@@ -2,6 +2,7 @@ import _ from 'lodash';
 import debug from '../../utils/debug';
 import safe from 'undefsafe';
 import { VIDEO_RESOLUTION } from '../../config';
+import StorageUtils from '../../utils/Storage';
 
 let instance;
 
@@ -26,6 +27,7 @@ class MediaManager {
             })
             .then(stream => {
                 this._localStream = stream;
+                this._checkMediaSettingsFirstTime();
                 resolve(stream);
             })
             .catch(err => {
@@ -34,7 +36,26 @@ class MediaManager {
         });
     }
 
+    _checkMediaSettingsFirstTime() {
+        if (this._localStream) {
+            const userMediaSettings = StorageUtils.getUserMediaSettings();
+            this._localStream.getTracks().forEach(track => {
+                if (userMediaSettings) {
+                    if (track && track.kind && track.kind === 'video') {
+                        track.enabled = userMediaSettings.camState;
+                    }
+                    if (track && track.kind && track.kind === 'audio') {
+                        track.enabled = userMediaSettings.micState;
+                    }
+                }
+            });
+        }
+    }
+
     toggleVideo(videoEnabled) {
+        if (!this._localStream) {
+            return;
+        }        
         this._localStream.getTracks().forEach(track => {
             if (track && track.kind && track.kind === 'video' && track.enabled != videoEnabled) {
                 track.enabled = videoEnabled;
@@ -43,6 +64,9 @@ class MediaManager {
     }
 
     toggleAudio(audioEnabled) {
+        if (!this._localStream) {
+            return;
+        }          
         this._localStream.getTracks().forEach(track => {
             if (track && track.kind && track.kind === 'audio' && track.enabled != audioEnabled) {
                 track.enabled = audioEnabled;

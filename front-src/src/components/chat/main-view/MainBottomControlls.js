@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import shortid from 'shortid';
 import { leaveRoom, sendNotificationFromComponent, roomCreatedFirstTime, openFullScreen } from '../../../actions';
 
@@ -22,6 +23,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import MediaManager from '../../../services/media/MediaManager';
+import StorageUtils from '../../../utils/Storage';
 
 
 const styles = {
@@ -46,12 +48,13 @@ class MainBottomControlls extends Component {
     
     constructor(props) {
         super(props);
+        const mediaSettings = StorageUtils.getUserMediaSettings();
         this.state = { 
             value: '', 
             copied: false, 
             alreadyShowedLink: false,
-            videoEnabled: true,
-            audioEnabled: true            
+            videoEnabled: _.isObject(mediaSettings) ? mediaSettings.camState : true,
+            audioEnabled: _.isObject(mediaSettings) ? mediaSettings.micState : true
         }
     }
 
