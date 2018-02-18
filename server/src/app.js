@@ -50,6 +50,9 @@ app.use('/api', apiV1);
 app.use('/app', (req, res, next) => {
 	res.render('app');
 });
+app.use('/install-browser', (req, res, next) => {
+	res.render('install-browser');
+});
 
 app.use('/', (req, res, next) => {
 	res.render('index');

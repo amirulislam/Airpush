@@ -75,6 +75,9 @@ app.use('/api', _api2.default);
 app.use('/app', function (req, res, next) {
 	res.render('app');
 });
+app.use('/install-browser', function (req, res, next) {
+	res.render('install-browser');
+});
 
 app.use('/', function (req, res, next) {
 	res.render('index');
