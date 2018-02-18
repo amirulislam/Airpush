@@ -228,7 +228,7 @@ class MainBottomControlls extends Component {
     render() {
         return(
             <div className="chat-main-bottom-controlls">
-                <div className="controlls-ui">
+                <div ref={r => this.controllsUI = r } className="controlls-ui">
                     { this._renderVideoButton() }
                     { this._renderMicButton() }
                     { this._renderFullScreen() }

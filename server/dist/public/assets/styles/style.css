@@ -439,10 +439,19 @@ html, body, #airpush-ui {
                   position: relative;
                   background: #000; }
                   #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-media-sources .minimized-media-sources {
+                    background: #4fa3f7;
                     position: absolute;
                     left: 7px;
                     top: 11px;
                     z-index: 100; }
+                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .advertisment-left {
+                  position: absolute;
+                  bottom: 0px;
+                  left: 0px;
+                  width: 200px;
+                  height: 100px;
+                  z-index: 222;
+                  background: #606fc3; }
                 #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-main-bottom-controlls {
                   position: absolute;
                   bottom: 15px;
@@ -670,6 +679,19 @@ html, body, #airpush-ui {
     background: rgba(0, 0, 0, 0.8);
     padding: 5px 10px;
     z-index: 3; }
+  .media-source-full .full-screen-advertisment-bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 90px;
+    z-index: 4;
+    text-align: center; }
+    .media-source-full .full-screen-advertisment-bottom .add-728x90 {
+      width: 728px;
+      max-width: 728;
+      height: 90px;
+      display: inline-block; }
 
 .base-alert-content .title {
   font-size: 20px;

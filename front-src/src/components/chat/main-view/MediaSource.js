@@ -6,16 +6,18 @@ import safe from 'undefsafe';
 import { maximizeMediaSource, openFullScreen } from '../../../actions';
 import Fullscreen from "react-full-screen";
 import VideoOff from 'material-ui/svg-icons/av/videocam-off';
+import { bannerFullScreen } from '../../../config/advertise';
 
 class MediaSource extends Component {
 
     static defaultProps = {
         source: {},
-        fullScreen: false
+        isFullScreen: false
     }
 
     constructor(props) {
         super(props);
+        this.state = { isFullScreen: false };
         this._handleClick = this._handleClick.bind(this)
     }
 
@@ -23,6 +25,10 @@ class MediaSource extends Component {
         if (!_.isNil(safe(this.props, 'source.stream')) && this.videRef) {
             this.videRef.srcObject = this.props.source.stream;
         }
+    }
+
+    componentWillReceiveProps({ fullScreen }) {
+        this.setState({isFullScreen: fullScreen});
     }
 
     isMe() {
@@ -68,17 +74,45 @@ class MediaSource extends Component {
         this.props.maximizeMediaSource(this.props.source.peerId);
     }
 
+    _openFullScreen(isFull) {
+        this.props.openFullScreen(isFull);
+        if (this.props._onFullScreenChange) {
+            this.props._onFullScreenChange(isFull);
+        }
+    }
+
+    _renderFullScreenAdvertisment() {     
+        if (this.state.isFullScreen) {
+            return(
+                <div className="full-screen-advertisment-bottom">
+                    <div className="add-728x90">
+                        { bannerFullScreen() }
+                    </div>                    
+                </div>
+            )
+        }
+    }
+    _triggerAd() {
+        if (this.state.isFullScreen) {
+            setTimeout(() => {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            }, 1000)
+        }
+    }
+
     _renderFullScrrenNode() {
         const userName = !_.isNil(safe(this.props, 'source.user.name')) ? this.props.source.user.name : '';
         if (this._isOpened()) {
             return(
                 <Fullscreen
                 enabled={this.props.fullScreen}
-                onChange={isFull => this.props.openFullScreen(isFull)}
+                onChange={isFull => this._openFullScreen(isFull)}
                 >                
                     <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>                 
                         { this._renderVideo() }
                         <p className="media-source-user">{ userName }</p>
+                        { this._renderFullScreenAdvertisment() }
+                        { this._triggerAd() }
                     </div>
                 </Fullscreen>                
             )

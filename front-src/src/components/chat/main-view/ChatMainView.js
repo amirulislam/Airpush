@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import MainBottomControlls from './MainBottomControlls';
 import MediaSource from './MediaSource';
 import Utils from '../../../utils';
@@ -21,26 +22,42 @@ class ChatMainView extends Component {
     constructor(props) {
         super(props);
         this._onResize = this._onResize.bind(this);
+        this.state = { compHeight: 0 };
+        this._delayedResize = _.debounce((w, h) => {
+            if (!this._isFullScreen) {
+                this.setState({ compHeight: h })
+            }
+        }, 700);
+    }
+
+    _onFullScreenChange(isFullScreen) {
+        this._isFullScreen = isFullScreen;
     }
 
     _renderMediaSourceFull() {
         return this.props.mediaSources.map(mediaSource => {
             if (mediaSource.isOpen) {
-                return <MediaSource source={mediaSource} key={Utils.uid()} />
+                return <MediaSource _onFullScreenChange={f => this._onFullScreenChange(f)} source={mediaSource} key={Utils.uid()} />
             }
         })
     }
 
     _onResize(w, h) {
-        this._componentHeight = h;
+        this._delayedResize(w, h);
     }
 
     _calculateMediaSourceSize() {
         let h = 150;
-        if (this._componentHeight > 0) {
-            h = (this._componentHeight - 50) / 5;
-            if (h > 300) {
-                h = 300;
+        const bottomSpace = 110;
+        const maxSourceHeight = 150;
+        let totalSlots = 5;
+        if (this.props.mediaSources) {
+            totalSlots = this.props.mediaSources.length;
+        }
+        if (this.state.compHeight > 0) {
+            h = (this.state.compHeight - bottomSpace) / totalSlots;
+            if (h > maxSourceHeight) {
+                h = maxSourceHeight;
             }
         }
         let w = (100 * h) / 75;
