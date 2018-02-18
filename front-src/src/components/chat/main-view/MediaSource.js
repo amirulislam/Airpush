@@ -7,6 +7,7 @@ import { maximizeMediaSource, openFullScreen } from '../../../actions';
 import Fullscreen from "react-full-screen";
 import VideoOff from 'material-ui/svg-icons/av/videocam-off';
 import { bannerFullScreen } from '../../../config/advertise';
+import { SHOW_ADVERT_FULL_SCREEN } from '../../../config';
 
 class MediaSource extends Component {
 
@@ -82,7 +83,7 @@ class MediaSource extends Component {
     }
 
     _renderFullScreenAdvertisment() {     
-        if (this.state.isFullScreen) {
+        if (this.state.isFullScreen && SHOW_ADVERT_FULL_SCREEN) {
             return(
                 <div className="full-screen-advertisment-bottom">
                     <div className="add-728x90">
@@ -93,9 +94,13 @@ class MediaSource extends Component {
         }
     }
     _triggerAd() {
-        if (this.state.isFullScreen) {
+        if (this.state.isFullScreen && SHOW_ADVERT_FULL_SCREEN) {
             setTimeout(() => {
-                (window.adsbygoogle = window.adsbygoogle || []).push({});
+                try {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (err) {
+                    console.log(err)
+                }
             }, 1000)
         }
     }

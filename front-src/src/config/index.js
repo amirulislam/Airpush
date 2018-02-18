@@ -65,3 +65,7 @@ export const ICE_SERVERS = [
     }    
 ]
 
+export const SHOW_ADVERT_MESSENGER = false;
+export const SHOW_ADVERT_VIDEO_CHAT = false;
+export const SHOW_ADVERT_FULL_SCREEN = false;
+

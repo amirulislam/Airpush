@@ -234,11 +234,6 @@ html, body, #airpush-ui {
                                     }
                                 }
 
-                                .advertisment-left {
-                                    position: absolute; bottom: 0px; left: 0px; width: 200px; height: 100px; z-index: 222;
-                                    background: #606fc3;
-                                }
-
                                 .chat-main-bottom-controlls {
                                     position: absolute; bottom: 15px; left: 0px; width: 100%;
                                     z-index: 200;
@@ -246,7 +241,13 @@ html, body, #airpush-ui {
                                     .controlls-ui {
                                         display: inline-block;
                                         padding: 0px; border-radius: 3px;
-                                        background: rgba(50, 28, 145, 0.8)
+                                        background: rgba(50, 28, 145, 0.8);
+                                        z-index: 1;
+                                    }
+                                    .right-controls-advertise {
+                                        height: 100px; width: 100px;
+                                        z-index: 2;
+                                        position: absolute; bottom: -15px; right: 0px;
                                     }
                                 }
                             }
@@ -263,6 +264,10 @@ html, body, #airpush-ui {
                                 border-width: 1px;
                                 border-color: #dbdbdb;                                
                             }                            
+                        }
+                        .advertise-messenger {
+                            position: absolute; left: 0px; top: 0px; width: 100%; height: 100px;
+                            z-index: 100;
                         }
                         .chat-messenger {
                             position: relative;

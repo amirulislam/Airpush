@@ -444,14 +444,6 @@ html, body, #airpush-ui {
                     left: 7px;
                     top: 11px;
                     z-index: 100; }
-                #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .advertisment-left {
-                  position: absolute;
-                  bottom: 0px;
-                  left: 0px;
-                  width: 200px;
-                  height: 100px;
-                  z-index: 222;
-                  background: #606fc3; }
                 #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-main-bottom-controlls {
                   position: absolute;
                   bottom: 15px;
@@ -463,7 +455,15 @@ html, body, #airpush-ui {
                     display: inline-block;
                     padding: 0px;
                     border-radius: 3px;
-                    background: rgba(50, 28, 145, 0.8); }
+                    background: rgba(50, 28, 145, 0.8);
+                    z-index: 1; }
+                  #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-main-bottom-controlls .right-controls-advertise {
+                    height: 100px;
+                    width: 100px;
+                    z-index: 2;
+                    position: absolute;
+                    bottom: -15px;
+                    right: 0px; }
               #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-main-messenger {
                 height: 100%;
                 position: relative;
@@ -475,6 +475,13 @@ html, body, #airpush-ui {
                   width: calc(350px); }
                 #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-main-messenger.close {
                   width: 0px; }
+            #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .advertise-messenger {
+              position: absolute;
+              left: 0px;
+              top: 0px;
+              width: 100%;
+              height: 100px;
+              z-index: 100; }
             #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .chat-messenger {
               position: relative;
               height: calc(100% - 65px);

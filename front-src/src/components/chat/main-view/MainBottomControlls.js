@@ -24,6 +24,9 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import MediaManager from '../../../services/media/MediaManager';
 import StorageUtils from '../../../utils/Storage';
+import ReactResizeDetector from 'react-resize-detector';
+import { smallBannerAd } from '../../../config/advertise';
+import { SHOW_ADVERT_VIDEO_CHAT } from '../../../config';
 
 
 const styles = {
@@ -47,15 +50,27 @@ const styles = {
 class MainBottomControlls extends Component {
     
     constructor(props) {
-        super(props);
+        super(props); 
         const mediaSettings = StorageUtils.getUserMediaSettings();
         this.state = { 
             value: '', 
             copied: false, 
             alreadyShowedLink: false,
             videoEnabled: _.isObject(mediaSettings) ? mediaSettings.camState : true,
-            audioEnabled: _.isObject(mediaSettings) ? mediaSettings.micState : true
-        }
+            audioEnabled: _.isObject(mediaSettings) ? mediaSettings.micState : true,
+            compWidth: 0,
+            adWidth: 0
+        }      
+        this._onResize = this._onResize.bind(this);
+        this._delayedResize = _.debounce((w, h) => {
+            if (this.controllsUI && this.controllsUI.getClientRects) {
+                const rectangle = this.controllsUI.getClientRects()[0];
+                if (rectangle.right && _.isNumber(rectangle.right) && _.isNumber(w)) {
+                    this.setState({ adWidth: w - rectangle.right });
+                }
+            }
+
+        }, 500);         
     }
 
     static defaultProps = {
@@ -66,6 +81,15 @@ class MainBottomControlls extends Component {
 
     componentDidMount() {
         this.setState({ value: `${window.location.protocol}//${window.location.host}/app?r=${this.props.roomId}` });
+        if (SHOW_ADVERT_VIDEO_CHAT) {
+            setTimeout(() => {
+                try {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (err) {
+                    console.log(err)
+                }
+            }, 1000)
+        }
     }
 
     componentWillReceiveProps(newProps) {
@@ -225,6 +249,24 @@ class MainBottomControlls extends Component {
         )
     }
 
+    _onResize(w, h) {
+        this._delayedResize(w, h);
+    }
+
+    _renderAdvertise() {
+        let style = { width: `${320}px`, display: 'none' };
+        if (this.state.adWidth >= 320 && this.props.chatOpenState === false) {
+            style.display = 'block';
+        }
+        if (SHOW_ADVERT_VIDEO_CHAT) {
+            return(
+                <div style={style} className="right-controls-advertise">
+                    { smallBannerAd() }
+                </div>
+            )
+        }
+    }
+
     render() {
         return(
             <div className="chat-main-bottom-controlls">
@@ -238,14 +280,16 @@ class MainBottomControlls extends Component {
                     <BaseAlert maxWidth={350} ref={ r => this.alert = r } onCancel={() => {}} onAccept={() => this.props.leaveRoom()} />
                     <InviteModal onCancel={() => {this.inviteOnClose()}} hideCancelButton={true} maxWidth={500} ref={ r => this.invite = r } />
                 </div>
+                { this._renderAdvertise() }
+                <ReactResizeDetector handleWidth handleHeight onResize={this._onResize} />
             </div>            
         )
     }
 }
 
-const mapStateToProps = ({ roomId, roomJustCreated, fullScreen }, ownProps) => {
+const mapStateToProps = ({ roomId, roomJustCreated, fullScreen, chatOpenState }, ownProps) => {
     return {
-        roomId, roomJustCreated, fullScreen
+        roomId, roomJustCreated, fullScreen, chatOpenState
     }
 }
 

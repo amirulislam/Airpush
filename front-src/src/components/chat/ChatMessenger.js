@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Utils from '../../utils';
-import { SOCKET_MESSAGE_TYPES } from '../../config';
+import { SOCKET_MESSAGE_TYPES, SHOW_ADVERT_MESSENGER } from '../../config';
 import UserActivityInfo from './beans/UserActivityInfo';
 import UserMessage from './beans/UserMessage';
 // import AcceptFileMessageUi from './beans/AcceptFileMessageUi';
@@ -63,10 +63,18 @@ class ChatMessenger extends Component {
         });
     }
 
+    _checkAdvertise() {
+        if (this.props.isMessengerOpen && SHOW_ADVERT_MESSENGER) {
+            return { paddingTop: '100px' };
+        } else {
+            return { paddingTop: '0px' };
+        }
+    }
+
     render() {
         return(
             <div className="chat-messenger" ref={(r) => { this.messangerUI = r; }}>
-                <div className="messages-content">
+                <div className="messages-content" style={ this._checkAdvertise() }>
                     { this._renderMessages() }
                 </div>
             </div>

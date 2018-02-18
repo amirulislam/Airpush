@@ -11,7 +11,8 @@ import ChatMessenger from './ChatMessenger';
 import SocketService from '../../services/SocketService';
 import User from '../../models/User';
 import TextMessage from '../../models/TextMessage';
-import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, SHOW_ADVERT_MESSENGER } from '../../config';
+import { smallBannerAd } from '../../config/advertise';
 
 class MainChatRoom extends Component {
 
@@ -23,6 +24,15 @@ class MainChatRoom extends Component {
     constructor(props) {
         super(props);
         this._sendMessage = this._sendMessage.bind(this);
+        if (SHOW_ADVERT_MESSENGER) {
+            setTimeout(() => {
+                try {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (err) {
+                    console.log(err)
+                }
+            }, 1000)
+        }        
     }
 
     _sendMessage(message) {
@@ -45,18 +55,26 @@ class MainChatRoom extends Component {
         }
     }
 
+    _renderAdvertise() {
+        let style = { display: 'none' };
+        if (this.props.chatOpenState && SHOW_ADVERT_MESSENGER) {
+            style.display = 'block';
+        }
+        return(
+            <div style={style} className="advertise-messenger">
+                { smallBannerAd() }
+            </div>
+        )
+    }    
+
     render() {
         return(
             <div className={ this._renderSizeCSS() }>
-                <ChatMessenger />
+                { this._renderAdvertise() }
+                <ChatMessenger isMessengerOpen={this.props.chatOpenState} />
                 <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
             </div>            
         )
-        // return [
-        //     <ChatControllsLeft key="chat-controlls-left" />,
-        //     <ChatMessenger key="msg-key" />,
-        //     <ChatBottomActions onEnter={this._sendMessage} key="chat-bottom-actions" />
-        // ];
     }
 }
 
