@@ -9,11 +9,23 @@ import { MEDIA_SOURCE_ADDED, REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, M
                 break;
             case REMOVE_SINGLE_MEDIA_SOURCE:
                 let clone = _.cloneDeep(state);
+                let wasOpened = false;
                 for (let i = 0; i < clone.length; i++) {
                     if(clone[i].peerId === action.payload) {
+                        if (clone[i].isOpen === true) {
+                            wasOpened = true;
+                        }
                         clone.splice(i, 1);
                     }
                 } 
+                if (wasOpened === true) {
+                    for (let j = 0; j < clone.length; j++) {
+                        if(clone[j].peerId === 'me') {
+                            clone[j].isOpen = true;
+                            break;
+                        }
+                    }
+                }
                 return clone;
                 break;
             case MAXIMIZE_MEDIA_SOURCE:
