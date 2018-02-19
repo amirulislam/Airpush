@@ -82,6 +82,22 @@ class MediaManager {
         return this._localStream ? true : false;
     }
 
+    removeLocalStream() {
+        if (!this._localStream) {
+            return;
+        }        
+        this._localStream.getTracks().forEach(track => {
+            if (track) {
+                try {
+                    track.stop();
+                } catch (e) {}
+            }
+        });
+        try {
+            delete this._localStream;
+        } catch (e) {}
+    }
+
     static getInstance() {
         if (!instance) {
             instance = new MediaManager();

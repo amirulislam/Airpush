@@ -110,6 +110,7 @@ class PeerService {
         }
         this._peers = [];
         debug(['All peers have been removed', this._peers.length]);
+        MediaManager.getInstance().removeLocalStream();
         // tbd - remove local stream ALL STREAMS
     } 
 
