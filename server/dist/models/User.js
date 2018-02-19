@@ -22,7 +22,9 @@ var UserSchema = new Schema({
 	role: { type: String, default: _config.USER_ROLES.PLATFORM_USER },
 	strategy: { type: String, default: '' },
 	mediaSettings: { type: Object, default: { camState: true, micState: true } },
-	socketInfo: { type: Object, default: {} }
+	socketInfo: { type: Object, default: {} },
+	createdAt: { type: Date },
+	lastLogin: { type: Date, default: Date.now }
 });
 
 exports.default = _mongoose2.default.model('User', UserSchema);

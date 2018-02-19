@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'airpush2913';
 import _ from 'lodash';
+import jwt from 'jsonwebtoken';
+import { TSS } from '../config';
 
 class StorageUtils {
 
@@ -135,7 +137,41 @@ class StorageUtils {
 			mediaSettings = allData.mediaSettings;
 		}
 		return mediaSettings;
+	}
+	
+	static setTurnAuth(turn_a) {
+		if (!StorageUtils.isStorageSupported()) {
+			return;
+		}
+		let allData = StorageUtils.getStorageData();
+		if (_.isNil(allData)) {
+			allData = {};
+		}
+		allData.turn_a = turn_a;
+		StorageUtils.setStorageData(allData);
+	}
+
+	static getTurnAuth() {
+		if (!StorageUtils.isStorageSupported()) {
+			return false;
+		}
+		const allData = StorageUtils.getStorageData();
+		let turn_a = false;
+		if (allData && allData.turn_a) {
+			turn_a = allData.turn_a;
+		}
+		return turn_a;
 	}	
+
+	static getDecodedTurn() {
+		let decoded = false;
+		try {
+		  decoded = jwt.verify(StorageUtils.getTurnAuth(), TSS);
+		} catch(err) {
+		  decoded = false;
+		}		
+		return decoded;		
+	}
 
 	static removeStorageData() {
 		if (!StorageUtils.isStorageSupported()) {

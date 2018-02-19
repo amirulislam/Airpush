@@ -75,3 +75,11 @@ export const getUserRole = email => {
 
 export const CHAT_ROOM_MAX_CLIENTS = 6;
 
+export const TURN_SERVER_SECRET = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
+
+export const RELAY_CREDIDENTIALS = {
+    url: 'turn:159.65.21.88:443',
+    username: 'airpush',
+    credential: 'YGHhshdg@@#^@23274'
+}    
+

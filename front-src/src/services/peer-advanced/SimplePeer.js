@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import safe from 'undefsafe';
 import debug from '../../utils/debug';
-import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES, ICE_SERVERS } from '../../config';
+import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
@@ -11,7 +11,7 @@ import { addMediaSource } from '../../actions';
 // {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
 
 const _servers = {
-    iceServers: ICE_SERVERS
+    iceServers: [StorageUtils.getDecodedTurn()]
 };    
 
 class SimplePeer {

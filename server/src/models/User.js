@@ -14,6 +14,8 @@ const UserSchema = new Schema({
 	strategy: { type: String, default: '' },
 	mediaSettings: { type: Object, default: { camState: true, micState: true } },
 	socketInfo: { type: Object, default: {} },
+	createdAt: { type: Date },
+	lastLogin: { type: Date, default: Date.now }
 });
 
 export default mongoose.model('User', UserSchema);

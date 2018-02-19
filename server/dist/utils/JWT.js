@@ -43,6 +43,11 @@ var JWT = function () {
 			}, _config.USER_TOKEN_SECRET);
 		}
 	}, {
+		key: 'getSignerTurnCredidentials',
+		value: function getSignerTurnCredidentials() {
+			return _jsonwebtoken2.default.sign(_config.RELAY_CREDIDENTIALS, _config.TURN_SERVER_SECRET);
+		}
+	}, {
 		key: 'isValidToken',
 		value: function isValidToken(token) {
 			var decoded = false;

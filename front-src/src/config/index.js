@@ -55,15 +55,7 @@ export const VIDEO_RESOLUTION = {
     }
 }
 
-// {urls: ['stun:stun.l.google.com:19302']},
-// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
-export const ICE_SERVERS = [
-    {
-        url: 'turn:159.65.21.88:443',
-        username: 'airpush',
-        credential: 'YGHhshdg@@#^@23274'
-    }    
-]
+export const TSS = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
 
 export const SHOW_ADVERT_MESSENGER = false;
 export const SHOW_ADVERT_VIDEO_CHAT = false;

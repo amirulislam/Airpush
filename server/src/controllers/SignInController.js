@@ -126,6 +126,7 @@ class SignInController {
                     camState: true,
                     micState: true
                 }
+                user.createdAt = Date.now();
             }
         }
         return User.findOneAndUpdate({
@@ -162,6 +163,9 @@ class SignInController {
     // general 200 response
     static response(res, data) {
         res.set('x-no-compression', 'true');
+        if (_.isObject(data)) {
+            data._x_turn_temp_auth = JWT.getSignerTurnCredidentials();
+        }
         res.status(200).json({
             data,
             links: {

@@ -182,6 +182,7 @@ var SignInController = function () {
                         camState: true,
                         micState: true
                     };
+                    user.createdAt = Date.now();
                 }
             }
             return _User2.default.findOneAndUpdate({
@@ -223,6 +224,9 @@ var SignInController = function () {
         key: 'response',
         value: function response(res, data) {
             res.set('x-no-compression', 'true');
+            if (_lodash2.default.isObject(data)) {
+                data._x_turn_temp_auth = _JWT2.default.getSignerTurnCredidentials();
+            }
             res.status(200).json({
                 data: data,
                 links: {

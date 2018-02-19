@@ -27,7 +27,8 @@ const rootReducers = combineReducers({
     chatOpenState : ChatOpenState,
     fullScreen: FullScreen,
     infoAlertData: InfoAlertReducer,
-    mediaSettings: MediaSettings
+    mediaSettings: MediaSettings,
+    turn_a: () => {return {}}
 });
 
 export default rootReducers;

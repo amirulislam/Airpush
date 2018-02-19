@@ -30,9 +30,12 @@ export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
 	return (dispatch, getState) => {   
 		axios.post(`${API_ROOT}/signin`, postData)
 		.then(({ data }) => {
-			StorageUtils.setUser(Object.assign({
+			//StorageUtils.setTurnAuth();
+			let user = Object.assign({
                 token: data.data.token
-			}, data.data.user));
+			}, data.data.user);
+			StorageUtils.setTurnAuth(data.data._x_turn_temp_auth);
+			StorageUtils.setUser(user);
 			SocketService.getInstance().connect();
             if (onSuccess) {
                 onSuccess();

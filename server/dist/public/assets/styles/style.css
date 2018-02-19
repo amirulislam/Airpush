@@ -439,7 +439,6 @@ html, body, #airpush-ui {
                   position: relative;
                   background: #000; }
                   #airpush-ui .airpush-main .app-section .app-section-content .section-content-ui.chat-section .main-view .chat-group-full-ui .chat-media-sources .minimized-media-sources {
-                    background: #4fa3f7;
                     position: absolute;
                     left: 7px;
                     top: 11px;
@@ -642,7 +641,7 @@ html, body, #airpush-ui {
   .media-source .media-source-user {
     color: #adacac;
     position: absolute;
-    right: 0px;
+    left: 0px;
     bottom: 0px;
     margin: 0;
     background: rgba(0, 0, 0, 0.8);
@@ -680,7 +679,7 @@ html, body, #airpush-ui {
   .media-source-full .media-source-user {
     color: #adacac;
     position: absolute;
-    right: 0px;
+    left: 0px;
     bottom: 0px;
     margin: 0;
     background: rgba(0, 0, 0, 0.8);

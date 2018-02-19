@@ -1,7 +1,7 @@
 /* jshint node: true */
 'use strict';
 
-import { USER_TOKEN_SECRET } from '../config';
+import { USER_TOKEN_SECRET, TURN_SERVER_SECRET, RELAY_CREDIDENTIALS } from '../config';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 import debugPck from 'debug';
@@ -17,6 +17,10 @@ class JWT {
 			email: user.email,
 			photo: user.photo
 		}, USER_TOKEN_SECRET);
+	}
+
+	static getSignerTurnCredidentials() {
+		return jwt.sign(RELAY_CREDIDENTIALS, TURN_SERVER_SECRET);		
 	}
 
 	static isValidToken(token) {
