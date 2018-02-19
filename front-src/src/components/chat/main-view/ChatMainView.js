@@ -48,7 +48,7 @@ class ChatMainView extends Component {
 
     _calculateMediaSourceSize() {
         let h = 150;
-        const bottomSpace = 110;
+        const bottomSpace = 50;
         const maxSourceHeight = 150;
         let totalSlots = 5;
         if (this.props.mediaSources) {

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'iconmoon';
-  src:  url('fonts/iconmoon.eot?oowe87');
-  src:  url('fonts/iconmoon.eot?oowe87#iefix') format('embedded-opentype'),
-    url('fonts/iconmoon.ttf?oowe87') format('truetype'),
-    url('fonts/iconmoon.woff?oowe87') format('woff'),
-    url('fonts/iconmoon.svg?oowe87#iconmoon') format('svg');
+  src:  url('fonts/iconmoon.eot?2j9u1v');
+  src:  url('fonts/iconmoon.eot?2j9u1v#iefix') format('embedded-opentype'),
+    url('fonts/iconmoon.ttf?2j9u1v') format('truetype'),
+    url('fonts/iconmoon.woff?2j9u1v') format('woff'),
+    url('fonts/iconmoon.svg?2j9u1v#iconmoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,8 +24,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-comments:before {
+  content: "\e906";
+}
+.icon-bubbles:before {
+  content: "\e906";
+}
+.icon-chat:before {
+  content: "\e906";
+}
+.icon-talk:before {
+  content: "\e906";
+}
 .icon-paperplane:before {
   content: "\e904";
+}
+.icon-comments2:before {
+  content: "\e907";
 }
 .icon-help-circle:before {
   content: "\e900";
@@ -35,6 +50,24 @@
 }
 .icon-share:before {
   content: "\e901";
+}
+.icon-users:before {
+  content: "\e909";
+}
+.icon-link:before {
+  content: "\e908";
+}
+.icon-chain:before {
+  content: "\e908";
+}
+.icon-url:before {
+  content: "\e908";
+}
+.icon-uri:before {
+  content: "\e908";
+}
+.icon-anchor:before {
+  content: "\e908";
 }
 .icon-files-empty:before {
   content: "\e902";
