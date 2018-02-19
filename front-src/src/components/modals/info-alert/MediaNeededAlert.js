@@ -37,7 +37,7 @@ class MediaNeededAlert extends BaseAlert {
                 [
                     <div key={shortid.generate()}>
                         <p>You're about to enter a video meeting. The browser is blocking your camera and microphone.</p>
-                        <p><b>To enter the chat group, click the camera icon in the right side of the address bar and allow access, than click "Retry".</b></p>
+                        <p><b>To enter the chat group, click the camera icon in the right side of the address bar and allow access, then click "Retry".</b></p>
                         <div></div>
                         <p style={{fontStyle: 'italic'}}>When entering a video meeting your camera and microphone are:</p>
                         <MediaSettings />
