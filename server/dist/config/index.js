@@ -82,8 +82,11 @@ var CHAT_ROOM_MAX_CLIENTS = exports.CHAT_ROOM_MAX_CLIENTS = 6;
 
 var TURN_SERVER_SECRET = exports.TURN_SERVER_SECRET = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
 
+// {urls: ['stun:stun.l.google.com:19302']},
+// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
+
 var RELAY_CREDIDENTIALS = exports.RELAY_CREDIDENTIALS = {
-    url: 'turn:159.65.21.88:443',
+    urls: 'turn:159.65.21.88:443',
     username: 'airpush',
     credential: 'YGHhshdg@@#^@23274'
 };

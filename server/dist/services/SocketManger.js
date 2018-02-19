@@ -331,7 +331,7 @@ var SocketManager = function () {
                         socketId: socketId
                     }
                 }, {
-                    new: true, upsert: true
+                    new: true, upsert: false
                 }).then(function (u) {
                     resolve(u);
                 }).catch(function (err) {

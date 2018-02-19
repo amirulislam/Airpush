@@ -7,9 +7,6 @@ import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
 import { addMediaSource } from '../../actions';
 
-// {urls: ['stun:stun.l.google.com:19302']},
-// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
-
 const _servers = {
     iceServers: [StorageUtils.getDecodedTurn()]
 };    

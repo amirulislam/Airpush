@@ -282,7 +282,7 @@ class SocketManager {
                     socketId: socketId
                 }
             }, {
-                new: true, upsert: true
+                new: true, upsert: false
             })
             .then((u) => {
                 resolve(u);
