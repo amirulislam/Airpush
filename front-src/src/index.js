@@ -13,6 +13,24 @@ import { deepPurple900 } from 'material-ui/styles/colors';
 import BrowserService from './services/browser/BrowserService';
 BrowserService.checkSupported();
 
+import { EVENTS_EXT } from './services/screen-sharing/ScreenSharingService';
+import ScreenSharingService from './services/screen-sharing/ScreenSharingService';
+let inst = ScreenSharingService.getInstance();
+
+let callback = (event) => {
+	inst.removeEvent(EVENTS_EXT.SIGNAL_PRESENCE, callback);
+	inst.addListener(EVENTS_EXT.SOURCE_AQUIRED, () => {
+		console.log('SOURCE AQUIRED');
+	})
+	inst.addListener(EVENTS_EXT.ACCESS_DENIED, () => {
+		console.log('SOURCE ACCESS_DENIED');
+	})	
+	inst.requestSourceId();
+}
+
+inst.addListener(EVENTS_EXT.SIGNAL_PRESENCE, callback)
+inst.test();
+
 export const muiTheme = getMuiTheme({
   palette: {
     primary1Color: deepPurple900
