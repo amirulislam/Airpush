@@ -8,6 +8,8 @@ import Fullscreen from "react-full-screen";
 import VideoOff from 'material-ui/svg-icons/av/videocam-off';
 import { bannerFullScreen } from '../../../config/advertise';
 import { SHOW_ADVERT_FULL_SCREEN } from '../../../config';
+import ExpandVideoIcon from 'material-ui/svg-icons/action/input';
+import IconButton from 'material-ui/IconButton';
 
 class MediaSource extends Component {
 
@@ -105,6 +107,19 @@ class MediaSource extends Component {
         }
     }
 
+    _renderExpandButton() {
+        if (!this._isOpened()) {
+            console.log('hello 2')
+            return(
+                <div className="expand-ui">
+                    <IconButton iconStyle={{ color: '#6c5dc8' }} tooltip="Expand video" tooltipPosition="bottom-left">
+                        <ExpandVideoIcon />
+                    </IconButton>
+                </div>
+            )
+        }
+    }    
+
     _renderFullScrrenNode() {
         const userName = !_.isNil(safe(this.props, 'source.user.name')) ? this.props.source.user.name : '';
         if (this._isOpened()) {
@@ -113,7 +128,7 @@ class MediaSource extends Component {
                 enabled={this.props.fullScreen}
                 onChange={isFull => this._openFullScreen(isFull)}
                 >                
-                    <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>                 
+                    <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
                         { this._renderVideo() }
                         <p className="media-source-user">{ userName }</p>
                         { this._renderFullScreenAdvertisment() }
@@ -126,6 +141,7 @@ class MediaSource extends Component {
                 <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
                     { this._renderVideo() }
                     <p className="media-source-user">{ userName }</p>
+                    { this._renderExpandButton() }
                 </div>
             )
         }

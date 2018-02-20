@@ -5,8 +5,6 @@ import Utils from '../../utils';
 import { SOCKET_MESSAGE_TYPES, SHOW_ADVERT_MESSENGER } from '../../config';
 import UserActivityInfo from './beans/UserActivityInfo';
 import UserMessage from './beans/UserMessage';
-// import AcceptFileMessageUi from './beans/AcceptFileMessageUi';
-// import FileMessageOfferUi from './beans/FileMessageOfferUi';
 import _ from 'lodash';
 
 
@@ -39,7 +37,7 @@ class ChatMessenger extends Component {
 
         switch(m.type) {
             case SOCKET_MESSAGE_TYPES.NEW_USER_JOINED:
-                return <UserActivityInfo message={m} key={Utils.uid()} txt={`joined the group`} />          
+                return <UserActivityInfo isNewUser={true} message={m} key={Utils.uid()} txt={`joined the group`} />          
             break;
             case SOCKET_MESSAGE_TYPES.USER_LEAVED:
                 return <UserActivityInfo message={m} key={Utils.uid()} txt={`left the group`} />          
