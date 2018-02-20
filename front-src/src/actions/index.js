@@ -22,7 +22,6 @@ import PeerService from '../services/peer-advanced/PeerService';
 
 // retrive apps data
 export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
-	console.log('sign in');
 	let postData = { email, strategy, accessToken };
 	if (strategy === 'FACEBOOK') {
 		postData.userID = email;
@@ -158,7 +157,6 @@ export const roomLeaved = roomId => {
 
 // leave room now
 export const leaveRoom = () => {
-	console.log('Leave room');
 	SocketService.getInstance().send({}, SOCKET_EVENTS.LEAVE_ROOM);
 	return roomLeaved();
 }

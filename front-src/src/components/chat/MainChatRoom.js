@@ -36,7 +36,6 @@ class MainChatRoom extends Component {
     }
 
     _sendMessage(message) {
-        console.log('Send message', message);
         if (message === '') { return; }
         if (!this.props.authenticated) {
             return;

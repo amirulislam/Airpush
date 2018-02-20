@@ -130,12 +130,20 @@
         margin-left: 2px; }
 
 .airpush-logo-inpage {
+  display: inline-block;
+  text-decoration: none !important;
+  outline: none !important; }
+  .airpush-logo-inpage img {
+    max-width: 156px; }
+
+.sign-in-about {
   font-family: 'Lato', sans-serif;
-  font-weight: 700;
-  font-size: 40px;
-  letter-spacing: -1px;
-  line-height: 62px;
-  text-size-adjust: 100%; }
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 150%;
+  text-size-adjust: 100%;
+  margin-top: 22px;
+  color: #d8d8d8 !important; }
 
 .login-base-button:link {
   padding: 9px 20px;

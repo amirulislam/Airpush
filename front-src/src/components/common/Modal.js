@@ -23,7 +23,10 @@ class Modal extends PureComponent {
         if (this.props.renderSignInLogo) {
             return(
                 <div className="signin-logo-ui">
-                    <div className="airpush-logo-inpage">airpush<span>.</span></div>
+                    <a href="/" className="airpush-logo-inpage">
+                        <img src="/assets/img/airpush-signin-logo.png" alt="Airpush - signin logo" />
+                    </a>
+                    <div className="sign-in-about">Free Screen Sharing, Online Meetings<br /> & Web Conferencing</div>
                 </div>
             );
         }

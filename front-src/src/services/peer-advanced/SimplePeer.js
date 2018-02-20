@@ -176,7 +176,7 @@ class SimplePeer {
 
     onStateChange() {
         if (this._readyState && this._readyRemoteState) {
-            console.log('BOTH PEERS ARE READY',);
+            debug(['BOTH PEERS ARE READY']);
             this.onBothPeersReadyEvent(this);
         }
     }
