@@ -8,8 +8,8 @@ import shortid from 'shortid';
 import { addMediaSource } from '../../actions';
 
 const _servers = {
-    iceServers: [StorageUtils.getDecodedTurn()]
-};    
+    iceServers: StorageUtils.getDecodedTurn()
+};  
 
 class SimplePeer {
     

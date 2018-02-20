@@ -77,12 +77,13 @@ export const CHAT_ROOM_MAX_CLIENTS = 6;
 
 export const TURN_SERVER_SECRET = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
 
-// {urls: ['stun:stun.l.google.com:19302']},
-// {urls: 'turn:159.65.21.88:443', credential: '', username: 'airpush'}
-
 export const RELAY_CREDIDENTIALS = {
-    urls: 'turn:159.65.21.88:443',
-    username: 'airpush',
-    credential: 'YGHhshdg@@#^@23274'
-}    
-
+    st: {
+        urls: 'stun:159.65.21.88:443'
+    },
+    tu: {
+        urls: 'turn:159.65.21.88:443',
+        username: 'airpush',
+        credential: 'YGHhshdg@@#^@23274'        
+    }
+} 

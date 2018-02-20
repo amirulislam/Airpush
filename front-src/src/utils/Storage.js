@@ -164,9 +164,10 @@ class StorageUtils {
 	}	
 
 	static getDecodedTurn() {
-		let decoded = false;
+		let decoded = false;		
 		try {
 		  decoded = jwt.verify(StorageUtils.getTurnAuth(), TSS);
+		  return [decoded.st, decoded.tu];
 		} catch(err) {
 		  decoded = false;
 		}		
