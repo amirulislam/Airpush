@@ -19,8 +19,34 @@ let inst = ScreenSharingService.getInstance();
 
 let callback = (event) => {
 	inst.removeEvent(EVENTS_EXT.SIGNAL_PRESENCE, callback);
-	inst.addListener(EVENTS_EXT.SOURCE_AQUIRED, () => {
-		console.log('SOURCE AQUIRED');
+	inst.addListener(EVENTS_EXT.SOURCE_AQUIRED, (data) => {
+		console.log('SOURCE AQUIRED', data.sourceId);
+
+		navigator.mediaDevices.getUserMedia({
+			audio: false,
+			video: {
+				mandatory: {
+					chromeMediaSource: 'desktop',
+					chromeMediaSourceId: data.sourceId,
+					minWidth: 1280,
+					maxWidth: 1280,
+					minHeight: 720,
+					maxHeight: 720					
+				}
+			}
+		})
+		.then(stream => {
+			console.log('GOT STREAM');
+			stream.getTracks().forEach(track => {
+				console.log('TRACK', track);
+				track.onended = () => { console.log('ON TRACK ENDED') }
+			})
+		})
+		.catch(err => {
+			console.log('ERROR', err);
+		}) 		
+
+
 	})
 	inst.addListener(EVENTS_EXT.ACCESS_DENIED, () => {
 		console.log('SOURCE ACCESS_DENIED');
