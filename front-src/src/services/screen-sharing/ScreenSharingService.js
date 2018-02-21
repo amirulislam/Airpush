@@ -15,7 +15,6 @@ class ScreenSharingService {
     _listeners = [];
 
     constructor() {
-        console.log('instance')
         if (instance) {
             throw new Error('Can not instantiate like this');
         }        

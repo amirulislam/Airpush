@@ -9,6 +9,7 @@ import AlreadyConnectedAlert from './AlreadyConnectedAlert';
 import MyAccountAlert from './MyAccountAlert';
 import MediaNeededAlert from './MediaNeededAlert';
 import SettingsModal from './SettingsModal';
+import InstallExtensionAlert from './InstallExtensionAlert';
 
 class InfoAlert extends Component {
 
@@ -42,7 +43,10 @@ class InfoAlert extends Component {
             break;
             case ALERT_MESSAGES_TYPES.OPEN_SETTINGS:
                 return <SettingsModal title="Settings" maxWidth={500} data={this.props.infoAlertData} />
-            break;                                                 
+            break;
+            case ALERT_MESSAGES_TYPES.SHOW_INSTALL_EXTENSION:
+                return <InstallExtensionAlert title="Chrome extension install" maxWidth={400} data={this.props.infoAlertData} />
+            break;                   
             default:
             return <noscript />;
         }

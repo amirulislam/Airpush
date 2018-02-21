@@ -55,9 +55,18 @@ export const VIDEO_RESOLUTION = {
     }
 }
 
+export const SCREEN_RESOLUTION = {
+    minWidth: 1280,
+    maxWidth: 1280,
+    minHeight: 720,
+    maxHeight: 720	    
+}
+
 export const TSS = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
 
 export const SHOW_ADVERT_MESSENGER = false;
 export const SHOW_ADVERT_VIDEO_CHAT = false;
 export const SHOW_ADVERT_FULL_SCREEN = false;
+
+export const INSTALL_EXTENSION_URL = 'https://google.com';
 

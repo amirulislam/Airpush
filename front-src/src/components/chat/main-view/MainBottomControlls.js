@@ -27,6 +27,9 @@ import StorageUtils from '../../../utils/Storage';
 import ReactResizeDetector from 'react-resize-detector';
 import { smallBannerAd } from '../../../config/advertise';
 import { SHOW_ADVERT_VIDEO_CHAT } from '../../../config';
+import ScreenMediaUtils from '../../../services/media/ScreenMediaUtils';
+import { openPopupAlertFromClass } from '../../../actions';
+import { ALERT_MESSAGES_TYPES } from '../../../actions/Types';
 
 
 const styles = {
@@ -59,7 +62,8 @@ class MainBottomControlls extends Component {
             videoEnabled: _.isObject(mediaSettings) ? mediaSettings.camState : true,
             audioEnabled: _.isObject(mediaSettings) ? mediaSettings.micState : true,
             compWidth: 0,
-            adWidth: 0
+            adWidth: 0,
+            shareBtnBusy: false
         }      
         this._onResize = this._onResize.bind(this);
         this._delayedResize = _.debounce((w, h) => {
@@ -220,9 +224,26 @@ class MainBottomControlls extends Component {
         }
     }    
 
+    _openShareScreen() {
+        this.setState({ shareBtnBusy: true })
+        const screenUtils = new ScreenMediaUtils();
+        screenUtils.isAirpushExtensionInstalled()
+        .then(() => {
+            screenUtils.getScreenStream()
+            .then(screenUtils.getUserMedia)
+            .catch(err => {
+                console.log(err);
+                alert('In order to be able to share your screen access is required.');
+            })
+        })
+        .catch(err => {
+            openPopupAlertFromClass({}, ALERT_MESSAGES_TYPES.SHOW_INSTALL_EXTENSION);
+        })
+    }
+
     _renderShareScreen() {
         return(
-            <IconButton tooltip="Screen share" tooltipPosition="top-right" 
+            <IconButton disabled={this.state.shareBtnBusy} onClick={this._openShareScreen.bind(this)} tooltip="Screen share" tooltipPosition="top-right" 
                 iconStyle={styles.smallIcon}
                 style={styles.small} >
                 <ShareScreenOn />

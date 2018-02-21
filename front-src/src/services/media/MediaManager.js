@@ -9,11 +9,17 @@ let instance;
 class MediaManager {
 
     _localStream;
+    _desktopTrack;
     
     constructor() {
         if (instance) {
             throw new Error('Can not instantiate like this');
         }
+    }
+
+    // set desktop stream
+    setDesktopStream(desktopTrack) {
+        this._desktopTrack = desktopTrack;
     }
 
     getUserMedia() {
