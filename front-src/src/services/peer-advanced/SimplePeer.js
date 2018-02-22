@@ -5,7 +5,7 @@ import { SOCKET_EVENTS, SOCKET_MESSAGE_TYPES } from '../../config';
 import SocketService from '../SocketService';
 import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
-import { addMediaSource } from '../../actions';
+import { addMediaSource, createOrUpdateMediaSource } from '../../actions';
 
 const _servers = {
     iceServers: StorageUtils.getDecodedTurn()
@@ -24,6 +24,8 @@ class SimplePeer {
     _readyState;
     _readyRemoteState;
     _remoteStream;
+    _senders = {};
+    _renegociationOnly = false;
 
     constructor(data) {
         if (data.user) {
@@ -47,17 +49,28 @@ class SimplePeer {
         // once remote stream arrives, show it in the remote video element
         this._pc.ontrack = evt => {
             if (evt && evt.streams && evt.streams[0]) {
+                console.log('HOW MANY STREAMS', evt.streams.length);
                 if (this._remoteStream !== evt.streams[0]) {
                     this._remoteStream = evt.streams[0];
-                    addMediaSource({
+                    createOrUpdateMediaSource({
                         stream: this._remoteStream,
                         peerId: this._id,
                         isOpen: false,
                         user: this._user
-                    });
+                    })
+                    // addMediaSource({
+                    //     stream: this._remoteStream,
+                    //     peerId: this._id,
+                    //     isOpen: false,
+                    //     user: this._user
+                    // });
                 }
             }
         };
+
+        this._pc.onnegotiationneeded = (event) => {
+            console.log('ON NEGOCIACION NEEDED', event);
+        }        
 
         this._pc.ondatachannel = this._onDataChannelCallback.bind(this);       
     }
@@ -114,6 +127,9 @@ class SimplePeer {
 
     onIceCandidate(event) {
         debug(['ON ICE CANDIDATE EVENT', event.candidate]);
+        if (this._renegociationOnly) {
+            return;
+        }
         if (event.candidate) {
             SocketService.getInstance().send({
                 type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL_ICE,
@@ -198,6 +214,55 @@ class SimplePeer {
             }
         }, SOCKET_EVENTS.MESSAGE);
     }
+
+    addTrack(track, stream) {
+        let sender = this._pc.addTrack(track, stream);
+        if (String(track.kind).toString().toLocaleLowerCase().startsWith('video')) {
+            this._senders.video = sender;
+        }
+        if (String(track.kind).toString().toLocaleLowerCase().startsWith('audio')) {
+            this._senders.audio = sender;
+        }        
+    }
+
+    // add desktop track
+    addDesktopTrack(track, stream) {
+        this._renegociationOnly = true;
+        try {
+            let sender = this._pc.addTrack(track, stream);
+
+            this._pc.createOffer(this._offerOptions)
+            .then(desc => {
+                console.log('NEW OFFER CREATED')
+                this._localDescription = desc;
+                // this.setLocalDescription(desc);
+                // SocketService.getInstance().send({
+                //     type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
+                //     peerData: {
+                //         signal: this._localDescription,
+                //         toUser: this._user
+                //     }
+                // }, SOCKET_EVENTS.MESSAGE);
+            })
+            .catch(err => {
+                console.log('Offer error - failed', err);
+            });            
+        } catch (e) {
+            console.log(e);
+        }
+        // this._senders.desktop = sender;
+    }
+
+    // removeAllTracks() {
+    //     this._senders.map(sender => {
+    //         try {
+    //             this._pc.removeTrack(sender);
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     })
+    //     this._senders = [];
+    // }
 
     get pc() {
         return this._pc;

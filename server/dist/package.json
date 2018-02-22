@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=dev DEBUG=airpush:* nodemon ./bin/server.js",
+    "dev-noreload": "NODE_ENV=dev DEBUG=airpush:* node ./bin/server.js",
     "watch": "babel ../src --ignore node_modules -w -d ../dist --presets es2015,stage-2",
     "build": "babel ../src --ignore node_modules -d ../dist --presets es2015,stage-2",
     "debugsocket": "NODE_ENV=dev DEBUG=*.Socket.IO nodemon ./bin/server.js"

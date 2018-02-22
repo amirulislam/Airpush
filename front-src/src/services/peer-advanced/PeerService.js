@@ -33,7 +33,7 @@ class PeerService {
         .then(stream => {
             stream.getTracks().forEach(track => {
                     // console.log('ADD TRACK', track.enabled);
-                    peer.pc.addTrack(track, stream);
+                    peer.addTrack(track, stream);
                 }
             );            
             peer.createOffer();
@@ -50,7 +50,7 @@ class PeerService {
         MediaManager.getInstance().getUserMedia()
         .then(stream => {
             stream.getTracks().forEach(track => {
-                    peer.pc.addTrack(track, stream);
+                    peer.addTrack(track, stream);
                 }
             );
             peer.setRemoteDescription(signal);
@@ -78,6 +78,21 @@ class PeerService {
         if (peer) {
             peer.setRemoteReadyState(state);      
         }  
+    }    
+
+    renegociate() {
+        console.log('PEERs')
+        for (let i = 0; i < this._peers.length; i++) {
+            console.log('PEER')
+            let peer = this._peers[i];
+            // peer.removeAllTracks();
+            let desktopStream = MediaManager.getInstance().getDesktopStream();
+            let desktopTrack = MediaManager.getInstance().getDesktopTrack();
+            peer.addDesktopTrack(desktopTrack, desktopStream);
+            // if (desktopStream) {
+            //     peer.addTrack(desktopTrack, MediaManager.getInstance().localStream);
+            // }            
+        }
     }    
 
     // user left the room 

@@ -91,6 +91,25 @@ class MediaManager {
         return this._localStream ? true : false;
     }
 
+    getDesktopStream() {
+        if (!this._desktopStream) {
+            return;
+        }
+        return this._desktopStream;      
+    }
+    getDesktopTrack() {
+        if (!this._desktopStream) {
+            return;
+        }
+        let trackData = false;
+        this._desktopStream.getTracks().forEach(track => {
+            if (track) {
+                trackData = track;
+            }
+        });
+        return trackData;                
+    }
+
     removeLocalStream() {
         if (!this._localStream) {
             return;

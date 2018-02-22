@@ -4,6 +4,7 @@ import ScreenSharingService from '../screen-sharing/ScreenSharingService';
 import { SCREEN_RESOLUTION } from '../../config';
 import MediaManager from '../media/MediaManager';
 import { updateMediaSource } from '../../actions';
+import PeerService from '../peer-advanced/PeerService';
 
 class ScreenMediaUtils {
     constructor() {
@@ -51,9 +52,9 @@ class ScreenMediaUtils {
     }
 
     // get stram
-    getUserMedia({ sourceId }) {
+    getUserMedia({ sourceId, options }) {
         return navigator.mediaDevices.getUserMedia({
-            audio: false,
+            // audio: false,
             video: {
                 mandatory: {
                     chromeMediaSource: 'desktop',
@@ -71,6 +72,7 @@ class ScreenMediaUtils {
                 peerId: 'me',
                 stream
             })
+            PeerService.getInstance().renegociate();
             return;
         })
         .catch(err => {
