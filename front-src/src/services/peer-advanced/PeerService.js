@@ -87,7 +87,22 @@ class PeerService {
             let desktopTrack = MediaManager.getInstance().getDesktopTrack();
             peer.addDesktopTrack(desktopTrack, desktopStream);         
         }
-    }    
+    } 
+    
+    renegociateVideo() {
+        for (let i = 0; i < this._peers.length; i++) {
+            let peer = this._peers[i];
+            peer.removeDesktopSender();
+            MediaManager.getInstance().getUserMedia()
+            .then(stream => {
+                stream.getTracks().forEach(track => {
+                        peer.addTrack(track, stream);
+                    }
+                );
+                peer.initRenegociation();
+            }).catch(err => {}); 
+        }       
+    }
 
     // incoming reneg offer 
     incommingRenegOffer(fromUser, signal) {

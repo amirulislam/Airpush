@@ -3,6 +3,8 @@ import debug from '../../utils/debug';
 import safe from 'undefsafe';
 import { VIDEO_RESOLUTION } from '../../config';
 import StorageUtils from '../../utils/Storage';
+import { updateMediaSource } from '../../actions';
+import PeerService from '../peer-advanced/PeerService';
 
 let instance;
 
@@ -117,6 +119,17 @@ class MediaManager {
 
     endScreenShare() {
         this.removeDesktopStream();
+        this.getUserMedia()
+        .then(stream => {
+            updateMediaSource({
+                peerId: 'me',
+                stream
+            });
+            PeerService.getInstance().renegociateVideo();
+        })
+        .catch(err => {
+            console.log('Err', err);
+        })       
     }
 
     removeLocalStream() {

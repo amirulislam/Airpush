@@ -243,6 +243,24 @@ class SimplePeer {
         // this._senders.desktop = sender;
     }
 
+    removeDesktopSender() {
+        try {
+            this._pc.removeTrack(this._senders.desktop);
+        } catch (e) {
+            console.log(e);
+        }
+        try {
+            this._pc.removeTrack(this._senders.video);
+        } catch (e) {
+            console.log(e);
+        } 
+        try {
+            this._pc.removeTrack(this._senders.audio);
+        } catch (e) {
+            console.log(e);
+        }                           
+    }
+
     initRenegociation() {
         this._pc.createOffer(this._offerOptions)
         .then(desc => {
