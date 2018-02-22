@@ -83,16 +83,20 @@ class PeerService {
     renegociate() {
         for (let i = 0; i < this._peers.length; i++) {
             let peer = this._peers[i];
+            peer.removeAllTracks();
+
             let desktopStream = MediaManager.getInstance().getDesktopStream();
             let desktopTrack = MediaManager.getInstance().getDesktopTrack();
-            peer.addDesktopTrack(desktopTrack, desktopStream);         
+            peer.addDesktopTrack(desktopTrack, desktopStream); 
+            peer.addTrack(MediaManager.getInstance().getAudioTrack(), MediaManager.getInstance().localStream);
+            peer.initRenegociation();    
         }
     } 
     
     renegociateVideo() {
         for (let i = 0; i < this._peers.length; i++) {
             let peer = this._peers[i];
-            peer.removeDesktopSender();
+            peer.removeAllTracks();
             MediaManager.getInstance().getUserMedia()
             .then(stream => {
                 stream.getTracks().forEach(track => {

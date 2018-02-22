@@ -184,7 +184,6 @@ class SocketService {
                     PeerService.getInstance().incommingRenegOffer(data.payload.fromUser, data.payload.signal);
                     break;
                 case SOCKET_MESSAGE_TYPES.RENEG_ANSWER:
-                    console.log('GGGGGG>>>>> ' )
                     PeerService.getInstance().incommingRenegAnswer(data.payload.fromUser, data.payload.signal);
                     break;                    
                 case SOCKET_MESSAGE_TYPES.OTHER_CLIENT_USAGE:

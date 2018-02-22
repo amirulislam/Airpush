@@ -49,7 +49,6 @@ class SimplePeer {
         // once remote stream arrives, show it in the remote video element
         this._pc.ontrack = evt => {
             if (evt && evt.streams && evt.streams[0]) {
-                console.log('HOW MANY STREAMS', evt.streams.length);
                 if (this._remoteStream !== evt.streams[0]) {
                     this._remoteStream = evt.streams[0];
                     createOrUpdateMediaSource({
@@ -69,7 +68,6 @@ class SimplePeer {
         };
 
         this._pc.onnegotiationneeded = (event) => {
-            console.log('ON NEGOCIACION NEEDED', event);
         }        
 
         this._pc.ondatachannel = this._onDataChannelCallback.bind(this);       
@@ -229,21 +227,21 @@ class SimplePeer {
     addDesktopTrack(track, stream) {
         this._renegociationOnly = true;
         try {
-            try {
-                this._pc.removeTrack(this._senders.video);
-            } catch (e) {
-                console.log(e);
-            }            
+            // try {
+            //     this._pc.removeTrack(this._senders.video);
+            // } catch (e) {
+            //     console.log(e);
+            // }            
             let sender = this._pc.addTrack(track, stream);      
             this._senders.desktop = sender;
-            this.initRenegociation();     
+            // this.initRenegociation();     
         } catch (e) {
             console.log(e);
         }
         // this._senders.desktop = sender;
     }
 
-    removeDesktopSender() {
+    removeAllTracks() {
         try {
             this._pc.removeTrack(this._senders.desktop);
         } catch (e) {

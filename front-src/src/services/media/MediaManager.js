@@ -13,6 +13,7 @@ class MediaManager {
     _localStream;
     _desktopStream;
     _desktopTrack;
+    _audioTrack;
     
     constructor() {
         if (instance) {
@@ -59,6 +60,7 @@ class MediaManager {
                     }
                     if (track && track.kind && track.kind === 'audio') {
                         track.enabled = userMediaSettings.micState;
+                        this._audioTrack = track;
                     }
                 }
             });
@@ -66,6 +68,12 @@ class MediaManager {
     }
 
     toggleVideo(videoEnabled) {
+        if (this._desktopTrack) {
+            try {
+                this._desktopTrack.enabled = videoEnabled;
+            } catch (e) {}
+            return;
+        }
         if (!this._localStream) {
             return;
         }        
@@ -93,6 +101,10 @@ class MediaManager {
 
     hasLocalStream() {
         return this._localStream ? true : false;
+    }
+
+    getAudioTrack() {
+        return this._audioTrack;
     }
 
     getDesktopStream() {
@@ -133,6 +145,9 @@ class MediaManager {
     }
 
     removeLocalStream() {
+        try {
+            this.removeDesktopStream();
+        } catch (e) {}
         if (!this._localStream) {
             return;
         }        
@@ -145,6 +160,7 @@ class MediaManager {
         });
         try {
             delete this._localStream;
+            delete this._audioTrack;
         } catch (e) {}
     }
 

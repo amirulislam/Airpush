@@ -109,7 +109,6 @@ class MediaSource extends Component {
 
     _renderExpandButton() {
         if (!this._isOpened()) {
-            console.log('hello 2')
             return(
                 <div className="expand-ui">
                     <IconButton iconStyle={{ color: '#6c5dc8' }} tooltip="Expand video" tooltipPosition="bottom-left">

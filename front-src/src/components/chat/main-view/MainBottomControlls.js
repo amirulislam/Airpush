@@ -237,6 +237,7 @@ class MainBottomControlls extends Component {
                 let desktopTrack = MediaManager.getInstance().getDesktopTrack();
                 if (desktopTrack) {
                     desktopTrack.onended = () => {
+                        this.setState({ shareBtnBusy: false, closeShareScreen: false })                        
                         MediaManager.getInstance().endScreenShare();
                     }
                 }
@@ -253,7 +254,6 @@ class MainBottomControlls extends Component {
     }
 
     _stopShareScreen() {
-        console.log('Stop screen sharing');
         MediaManager.getInstance().endScreenShare();
         this.setState({ shareBtnBusy: false, closeShareScreen: false })
     }
