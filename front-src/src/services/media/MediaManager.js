@@ -10,6 +10,7 @@ class MediaManager {
 
     _localStream;
     _desktopStream;
+    _desktopTrack;
     
     constructor() {
         if (instance) {
@@ -20,6 +21,7 @@ class MediaManager {
     // set desktop stream
     setDesktopStream(desktopStream) {
         this._desktopStream = desktopStream;
+        this._desktopTrack = this.getDesktopTrack();
     }
 
     getUserMedia() {
@@ -101,6 +103,9 @@ class MediaManager {
         if (!this._desktopStream) {
             return;
         }
+        if (this._desktopTrack) {
+            return this._desktopTrack;
+        }
         let trackData = false;
         this._desktopStream.getTracks().forEach(track => {
             if (track) {
@@ -108,6 +113,10 @@ class MediaManager {
             }
         });
         return trackData;                
+    }
+
+    endScreenShare() {
+        this.removeDesktopStream();
     }
 
     removeLocalStream() {
@@ -125,6 +134,23 @@ class MediaManager {
             delete this._localStream;
         } catch (e) {}
     }
+
+    removeDesktopStream() {
+        if (!this._desktopStream) {
+            return;
+        }        
+        this._desktopStream.getTracks().forEach(track => {
+            if (track) {
+                try {
+                    track.stop();
+                } catch (e) {}
+            }
+        });
+        try {
+            delete this._desktopStream;
+            delete this._desktopTrack;
+        } catch (e) {}
+    }    
 
     static getInstance() {
         if (!instance) {

@@ -232,6 +232,15 @@ class MainBottomControlls extends Component {
         .then(() => {
             screenUtils.getScreenStream()
             .then(screenUtils.getUserMedia)
+            .then(() => {
+                this.setState({ shareBtnBusy: false, closeShareScreen: true })
+                let desktopTrack = MediaManager.getInstance().getDesktopTrack();
+                if (desktopTrack) {
+                    desktopTrack.onended = () => {
+                        MediaManager.getInstance().endScreenShare();
+                    }
+                }
+            })
             .catch(err => {
                 this.setState({ shareBtnBusy: false })
                 alert('In order to be able to share your screen access is required.');
@@ -245,6 +254,8 @@ class MainBottomControlls extends Component {
 
     _stopShareScreen() {
         console.log('Stop screen sharing');
+        MediaManager.getInstance().endScreenShare();
+        this.setState({ shareBtnBusy: false, closeShareScreen: false })
     }
 
     _renderShareScreen() {
