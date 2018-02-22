@@ -63,7 +63,8 @@ class MainBottomControlls extends Component {
             audioEnabled: _.isObject(mediaSettings) ? mediaSettings.micState : true,
             compWidth: 0,
             adWidth: 0,
-            shareBtnBusy: false
+            shareBtnBusy: false,
+            closeShareScreen: false
         }      
         this._onResize = this._onResize.bind(this);
         this._delayedResize = _.debounce((w, h) => {
@@ -232,23 +233,39 @@ class MainBottomControlls extends Component {
             screenUtils.getScreenStream()
             .then(screenUtils.getUserMedia)
             .catch(err => {
-                console.log(err);
+                this.setState({ shareBtnBusy: false })
                 alert('In order to be able to share your screen access is required.');
             })
         })
         .catch(err => {
+            this.setState({ shareBtnBusy: false })
             openPopupAlertFromClass({}, ALERT_MESSAGES_TYPES.SHOW_INSTALL_EXTENSION);
         })
     }
 
+    _stopShareScreen() {
+        console.log('Stop screen sharing');
+    }
+
     _renderShareScreen() {
-        return(
-            <IconButton disabled={this.state.shareBtnBusy} onClick={this._openShareScreen.bind(this)} tooltip="Screen share" tooltipPosition="top-right" 
-                iconStyle={styles.smallIcon}
-                style={styles.small} >
-                <ShareScreenOn />
-            </IconButton>          
-        )        
+        // ShareScreenStop
+        if (!this.state.closeShareScreen) {
+            return(
+                <IconButton disabled={this.state.shareBtnBusy} onClick={this._openShareScreen.bind(this)} tooltip="Screen share" tooltipPosition="top-right" 
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <ShareScreenOn />
+                </IconButton>          
+            )
+        } else {
+            return(
+                <IconButton onClick={this._stopShareScreen.bind(this)} tooltip="Stop screen sharing" tooltipPosition="top-right" 
+                    iconStyle={styles.smallIcon}
+                    style={styles.small} >
+                    <ShareScreenStop />
+                </IconButton>          
+            )            
+        }    
     }
     _renderRoomLink() {
         return(

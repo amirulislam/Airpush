@@ -180,6 +180,13 @@ class SocketService {
                 case SOCKET_MESSAGE_TYPES.SOCKET_STATE:
                     PeerService.getInstance().setIncomingState(data.payload.fromUser, data.payload.state);
                     break;
+                case SOCKET_MESSAGE_TYPES.RENEG_OFFER:
+                    PeerService.getInstance().incommingRenegOffer(data.payload.fromUser, data.payload.signal);
+                    break;
+                case SOCKET_MESSAGE_TYPES.RENEG_ANSWER:
+                    console.log('GGGGGG>>>>> ' )
+                    PeerService.getInstance().incommingRenegAnswer(data.payload.fromUser, data.payload.signal);
+                    break;                    
                 case SOCKET_MESSAGE_TYPES.OTHER_CLIENT_USAGE:
                     this._socket.disconnect();
                     window.location = '/';

@@ -261,6 +261,29 @@ var SocketManager = function () {
                             });
                         }
                         break;
+
+                    case _config.SOCKET_MESSAGE_TYPES.RENEG_OFFER:
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.toUser.socketId'))) {
+                            var _sendToSocketId4 = data.peerData.toUser.socketId;
+                            data.peerData.fromUser = socket.user;
+                            delete data.peerData.toUser;
+                            socket.to(_sendToSocketId4).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.RENEG_OFFER,
+                                payload: data.peerData
+                            });
+                        }
+                        break;
+
+                    case _config.SOCKET_MESSAGE_TYPES.RENEG_ANSWER:
+                        if (!_lodash2.default.isNil((0, _undefsafe2.default)(data, 'peerData.fromUser.socketId'))) {
+                            var _sendToSocketId5 = data.peerData.fromUser.socketId;
+                            data.peerData.fromUser = socket.user;
+                            socket.to(_sendToSocketId5).emit(_config.SOCKET_EVENTS.MESSAGE, {
+                                type: _config.SOCKET_MESSAGE_TYPES.RENEG_ANSWER,
+                                payload: data.peerData
+                            });
+                        }
+                        break;
                 }
             });
         }

@@ -81,17 +81,32 @@ class PeerService {
     }    
 
     renegociate() {
-        console.log('PEERs')
         for (let i = 0; i < this._peers.length; i++) {
-            console.log('PEER')
             let peer = this._peers[i];
-            // peer.removeAllTracks();
             let desktopStream = MediaManager.getInstance().getDesktopStream();
             let desktopTrack = MediaManager.getInstance().getDesktopTrack();
-            peer.addDesktopTrack(desktopTrack, desktopStream);
-            // if (desktopStream) {
-            //     peer.addTrack(desktopTrack, MediaManager.getInstance().localStream);
-            // }            
+            peer.addDesktopTrack(desktopTrack, desktopStream);         
+        }
+    }    
+
+    // incoming reneg offer 
+    incommingRenegOffer(fromUser, signal) {
+        if (!PeerService.isRtcSupported()) {
+            return;
+        }
+        let peer = this._getPeer(fromUser);
+        peer.setRemoteDescription(signal);
+        peer.createRenegociationAnswer();
+    }
+    
+    // incoming reneg answer 
+    incommingRenegAnswer(fromUser, signal) {
+        if (!PeerService.isRtcSupported()) {
+            return;
+        }
+        let peer = this._getPeer(fromUser);
+        if (peer) {
+            peer.setRemoteDescription(signal);      
         }
     }    
 

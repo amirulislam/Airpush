@@ -221,7 +221,32 @@ class SocketManager {
                             }
                         );
                     }
-                break;                                             
+                break;
+                
+                case SOCKET_MESSAGE_TYPES.RENEG_OFFER:
+                    if (!_.isNil(safe(data, 'peerData.toUser.socketId'))) {
+                        const sendToSocketId = data.peerData.toUser.socketId;
+                        data.peerData.fromUser = socket.user;
+                        delete data.peerData.toUser;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.RENEG_OFFER,
+                                payload: data.peerData
+                            }
+                        );
+                    }
+                break;
+                     
+                case SOCKET_MESSAGE_TYPES.RENEG_ANSWER:
+                    if (!_.isNil(safe(data, 'peerData.fromUser.socketId'))) {
+                        const sendToSocketId = data.peerData.fromUser.socketId;
+                        data.peerData.fromUser = socket.user;
+                        socket.to(sendToSocketId).emit(SOCKET_EVENTS.MESSAGE, {
+                                type: SOCKET_MESSAGE_TYPES.RENEG_ANSWER,
+                                payload: data.peerData
+                            }
+                        );
+                    }               
+                break;                
             }
         })
     } 

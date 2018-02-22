@@ -73,7 +73,7 @@ export default (state = [], action) => {
             }
 
             let createOrUpdate = _.cloneDeep(state);
-            createOrUpdate[existingPeer.index] = payload;
+            createOrUpdate[existingPeer.index] = action.payload;
             return createOrUpdate;
             break;                                                  
         default:

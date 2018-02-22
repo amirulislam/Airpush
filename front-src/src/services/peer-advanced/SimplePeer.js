@@ -229,29 +229,57 @@ class SimplePeer {
     addDesktopTrack(track, stream) {
         this._renegociationOnly = true;
         try {
-            let sender = this._pc.addTrack(track, stream);
-
-            this._pc.createOffer(this._offerOptions)
-            .then(desc => {
-                console.log('NEW OFFER CREATED')
-                this._localDescription = desc;
-                // this.setLocalDescription(desc);
-                // SocketService.getInstance().send({
-                //     type: SOCKET_MESSAGE_TYPES.PEER_SIGNAL,
-                //     peerData: {
-                //         signal: this._localDescription,
-                //         toUser: this._user
-                //     }
-                // }, SOCKET_EVENTS.MESSAGE);
-            })
-            .catch(err => {
-                console.log('Offer error - failed', err);
-            });            
+            try {
+                this._pc.removeTrack(this._senders.video);
+            } catch (e) {
+                console.log(e);
+            }            
+            let sender = this._pc.addTrack(track, stream);      
+            this._senders.desktop = sender;
+            this.initRenegociation();     
         } catch (e) {
             console.log(e);
         }
         // this._senders.desktop = sender;
     }
+
+    initRenegociation() {
+        this._pc.createOffer(this._offerOptions)
+        .then(desc => {
+            console.log('NEW OFFER CREATED')
+            this._localDescription = desc;
+            this.setLocalDescription(desc);
+            SocketService.getInstance().send({
+                type: SOCKET_MESSAGE_TYPES.RENEG_OFFER,
+                peerData: {
+                    signal: this._localDescription,
+                    toUser: this._user
+                }
+            }, SOCKET_EVENTS.MESSAGE);
+        })
+        .catch(err => {
+            console.log('Offer error - failed', err);
+        });         
+    }
+
+    // create answer
+    createRenegociationAnswer() {
+        this._pc.createAnswer()
+        .then(desc => {
+            this._localDescription = desc;
+            this.setLocalDescription(desc);
+            SocketService.getInstance().send({
+                type: SOCKET_MESSAGE_TYPES.RENEG_ANSWER,
+                peerData: {
+                    signal: this._localDescription,
+                    fromUser: this._user
+                }
+            }, SOCKET_EVENTS.MESSAGE);
+        })
+        .catch(err => {
+            console.log('Answer error', err);
+        })
+    }     
 
     // removeAllTracks() {
     //     this._senders.map(sender => {
