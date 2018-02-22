@@ -1,4 +1,5 @@
-import { MEDIA_SOURCE_ADDED, REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE } from '../actions/Types';
+import { MEDIA_SOURCE_ADDED, REMOVE_SINGLE_MEDIA_SOURCE, 
+    REMOVE_MEDIA_SOURCES, MAXIMIZE_MEDIA_SOURCE, UPDATE_MEDIA_SOURCE } from '../actions/Types';
     
     import _ from 'lodash';
     
@@ -41,7 +42,16 @@ import { MEDIA_SOURCE_ADDED, REMOVE_SINGLE_MEDIA_SOURCE, REMOVE_MEDIA_SOURCES, M
                 break;                
             case REMOVE_MEDIA_SOURCES:
                 return [];
-                break;                      
+                break; 
+            case UPDATE_MEDIA_SOURCE:
+                let cl = _.cloneDeep(state);
+                for (let i = 0; i < cl.length; i++) {
+                    if(cl[i].peerId === action.payload.peerId) {
+                        cl[i].stream = action.payload.stream
+                    } 
+                } 
+                return cl;
+                break;                                     
             default:
                 return state;
         }

@@ -3,6 +3,7 @@ import { EVENTS_EXT } from '../screen-sharing/ScreenSharingService';
 import ScreenSharingService from '../screen-sharing/ScreenSharingService';
 import { SCREEN_RESOLUTION } from '../../config';
 import MediaManager from '../media/MediaManager';
+import { updateMediaSource } from '../../actions';
 
 class ScreenMediaUtils {
     constructor() {
@@ -65,23 +66,12 @@ class ScreenMediaUtils {
             }
         })
         .then(stream => {
-            const tracks  = stream.getTracks();
-            let track = false;
-            if (_.isArray(tracks)) {
-                for (let i = 0; i < tracks.length; i++) {
-                    if (tracks[i].kind.toString().indexOf('video') != -1) {
-                        track = tracks[i];
-                        break;
-                    }
-                }
-            }
-            if (track) {
-                MediaManager.getInstance().setDesktopStream(track);
-            }
-            // stream.getTracks().forEach(track => {
-            //     console.log('TRACK', track);
-            //     track.onended = () => { console.log('ON TRACK ENDED') }
-            // })
+            MediaManager.getInstance().setDesktopStream(stream);
+            updateMediaSource({
+                peerId: 'me',
+                stream
+            })
+            return;
         })
         .catch(err => {
             console.log('ERROR', err);

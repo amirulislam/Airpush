@@ -9,7 +9,7 @@ let instance;
 class MediaManager {
 
     _localStream;
-    _desktopTrack;
+    _desktopStream;
     
     constructor() {
         if (instance) {
@@ -18,11 +18,14 @@ class MediaManager {
     }
 
     // set desktop stream
-    setDesktopStream(desktopTrack) {
-        this._desktopTrack = desktopTrack;
+    setDesktopStream(desktopStream) {
+        this._desktopStream = desktopStream;
     }
 
     getUserMedia() {
+        if (this._desktopStream) {
+            return Promise.resolve(this._desktopStream);
+        }
         if (this._localStream) {
             return Promise.resolve(this._localStream);
         }
