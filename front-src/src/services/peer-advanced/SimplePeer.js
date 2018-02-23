@@ -241,6 +241,17 @@ class SimplePeer {
         // this._senders.desktop = sender;
     }
 
+    removeVideoTrack() {
+        if (!this._pc) {
+            return;
+        }       
+        try {
+            this._pc.removeTrack(this._senders.video);
+        } catch (e) {
+            console.log(e);
+        }         
+    }
+
     removeAllTracks() {
         if (!this._pc) {
             return;

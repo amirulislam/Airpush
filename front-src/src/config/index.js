@@ -58,10 +58,10 @@ export const VIDEO_RESOLUTION = {
 }
 
 export const SCREEN_RESOLUTION = {
-    minWidth: 640,
-    maxWidth: 640,
-    minHeight: 480,
-    maxHeight: 480	    
+    minWidth: 1280,
+    maxWidth: 1280,
+    minHeight: 720,
+    maxHeight: 720	    
 }
 
 export const TSS = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';

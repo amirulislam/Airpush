@@ -64,16 +64,22 @@ export default (state = [], action) => {
                 if (state[i].peerId === action.payload.peerId) {
                     existingPeer.exists = true;
                     existingPeer.index = i;
+                    existingPeer.isOpen = state[i].isOpen;
                     break;
                 }
             }
 
-            if (!existingPeer.exists) {
+            if (!existingPeer.exists) {          
                 return [...state, action.payload];
             }
 
             let createOrUpdate = _.cloneDeep(state);
-            createOrUpdate[existingPeer.index] = action.payload;
+            createOrUpdate[existingPeer.index] = {
+                stream: action.payload.stream,
+                peerId: action.payload.peerId,
+                isOpen: existingPeer.isOpen,
+                user: action.payload.user                
+            };
             return createOrUpdate;
             break;                                                  
         default:

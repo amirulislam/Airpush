@@ -88,6 +88,8 @@ class PeerService {
             let desktopStream = MediaManager.getInstance().getDesktopStream();
             let desktopTrack = MediaManager.getInstance().getDesktopTrack();
             peer.addDesktopTrack(desktopTrack, desktopStream); 
+
+            const audioTrack = MediaManager.getInstance().getAudioTrack();
             peer.addTrack(MediaManager.getInstance().getAudioTrack(), MediaManager.getInstance().localStream);
             peer.initRenegociation();    
         }
