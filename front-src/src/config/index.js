@@ -1,3 +1,5 @@
+import StorageUtils from '../utils/Storage';
+
 export const ROUTES = {
     ROOT: '/app',
     // MAIN: '/app/main',
