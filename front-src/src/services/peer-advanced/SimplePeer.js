@@ -242,6 +242,9 @@ class SimplePeer {
     }
 
     removeAllTracks() {
+        if (!this._pc) {
+            return;
+        }
         try {
             this._pc.removeTrack(this._senders.desktop);
         } catch (e) {
@@ -262,7 +265,6 @@ class SimplePeer {
     initRenegociation() {
         this._pc.createOffer(this._offerOptions)
         .then(desc => {
-            console.log('NEW OFFER CREATED')
             this._localDescription = desc;
             this.setLocalDescription(desc);
             SocketService.getInstance().send({
