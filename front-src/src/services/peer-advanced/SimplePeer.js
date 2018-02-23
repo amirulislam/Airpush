@@ -28,7 +28,7 @@ class SimplePeer {
         if (data.user) {
             this._user = data.user;
         }
-        _servers = {
+        this._servers = {
             iceServers: StorageUtils.getDecodedTurn()
         };          
         console.log('SERVERS AICI>>>> ', this._servers)
