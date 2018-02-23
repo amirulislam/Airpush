@@ -70,6 +70,4 @@ export const SHOW_ADVERT_MESSENGER = true;
 export const SHOW_ADVERT_VIDEO_CHAT = true;
 export const SHOW_ADVERT_FULL_SCREEN = true;
 
-export const INSTALL_EXTENSION_URL = 'https://google.com';
-
-
+export const INSTALL_EXTENSION_URL = 'https://chrome.google.com/webstore/detail/airpush-free-screen-shari/nfhkdonaoeplkgpdcehanmecmfiiionb';
