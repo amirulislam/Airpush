@@ -34,8 +34,8 @@ export const signIn = (email, strategy, accessToken, onSuccess, onError) => {
 			let user = Object.assign({
                 token: data.data.token
 			}, data.data.user);
-			StorageUtils.setTurnAuth(data.data._x_turn_temp_auth);
-			StorageUtils.setUser(user);
+			// StorageUtils.setTurnAuth(data.data._x_turn_temp_auth);
+			StorageUtils.setUser(user, data.data._x_turn_temp_auth);
 			SocketService.getInstance().connect();
             if (onSuccess) {
                 onSuccess();

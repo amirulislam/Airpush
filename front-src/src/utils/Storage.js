@@ -44,7 +44,7 @@ class StorageUtils {
 		return data;
 	}
 
-	static setUser(user) {
+	static setUser(user, _x_turn_temp_auth) {
 		if (!StorageUtils.isStorageSupported()) {
 			return;
 		}
@@ -53,6 +53,9 @@ class StorageUtils {
 			allData = {};
 		}
 		allData.authenticated = user;
+		if (_x_turn_temp_auth) {
+			allData.turn_a = _x_turn_temp_auth;
+		}
 		StorageUtils.setStorageData(allData);
 		if (user && user.mediaSettings) {
 			StorageUtils.setUserMediaSettings(user.mediaSettings);

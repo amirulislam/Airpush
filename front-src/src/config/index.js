@@ -1,5 +1,3 @@
-import StorageUtils from '../utils/Storage';
-
 export const ROUTES = {
     ROOT: '/app',
     // MAIN: '/app/main',
@@ -74,9 +72,4 @@ export const SHOW_ADVERT_FULL_SCREEN = false;
 
 export const INSTALL_EXTENSION_URL = 'https://google.com';
 
-export const _servers = {
-    iceServers: StorageUtils.getDecodedTurn()
-};  
-
-console.log('ICE>CONFIG>>>', _servers)
 
