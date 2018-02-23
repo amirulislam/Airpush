@@ -66,9 +66,9 @@ export const SCREEN_RESOLUTION = {
 
 export const TSS = 'hsaudh^^&@*@&W*@&*&E*&@E*BENsjndh828382374&*';
 
-export const SHOW_ADVERT_MESSENGER = false;
-export const SHOW_ADVERT_VIDEO_CHAT = false;
-export const SHOW_ADVERT_FULL_SCREEN = false;
+export const SHOW_ADVERT_MESSENGER = true;
+export const SHOW_ADVERT_VIDEO_CHAT = true;
+export const SHOW_ADVERT_FULL_SCREEN = true;
 
 export const INSTALL_EXTENSION_URL = 'https://google.com';
 
