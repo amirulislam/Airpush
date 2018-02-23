@@ -7,10 +7,6 @@ import StorageUtils from '../../utils/Storage';
 import shortid from 'shortid';
 import { addMediaSource, createOrUpdateMediaSource } from '../../actions';
 
-const _servers = {
-    iceServers: StorageUtils.getDecodedTurn()
-};  
-
 class SimplePeer {
     
     _id = shortid.generate();
@@ -26,13 +22,17 @@ class SimplePeer {
     _remoteStream;
     _senders = {};
     _renegociationOnly = false;
+    _servers;
 
     constructor(data) {
         if (data.user) {
             this._user = data.user;
         }
+        _servers = {
+            iceServers: StorageUtils.getDecodedTurn()
+        };          
         console.log('SERVERS AICI>>>> ', _servers)
-        this._pc = new RTCPeerConnection(_servers);
+        this._pc = new RTCPeerConnection(this._servers);
         this._pc.onicecandidate = event => {
             this.onIceCandidate(event);
         };
