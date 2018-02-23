@@ -171,9 +171,7 @@ class StorageUtils {
 		let decoded = false;		
 		try {
 			let turnAuth = StorageUtils.getTurnAuth();
-			console.log('turnAuth', turnAuth);
-			  decoded = jwt.verify(turnAuth, TSS);
-			  console.log('decoded', decoded);
+			decoded = jwt.verify(turnAuth, TSS);
 		  	return [decoded.st, decoded.tu];
 		} catch(err) {
 			console.log(err);
