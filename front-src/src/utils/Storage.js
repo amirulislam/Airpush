@@ -82,6 +82,7 @@ class StorageUtils {
 		}		
 		StorageUtils.setUser(null);
 		StorageUtils.setJoinedRoom(false);
+		StorageUtils.removeTurnAuth();
 	}
 
 	static setJoinedRoom(joinedRoomId) {
@@ -166,10 +167,7 @@ class StorageUtils {
 	static getDecodedTurn() {
 		let decoded = false;		
 		try {
-			let turnAuth = StorageUtils.getTurnAuth();
-			console.log('D1>>> ', turnAuth);
-			  decoded = jwt.verify(turnAuth, TSS);
-			  console.log('DECODED>>> ', decoded);
+		  	decoded = jwt.verify(StorageUtils.getTurnAuth(), TSS);
 		  	return [decoded.st, decoded.tu];
 		} catch(err) {
 			console.log(err);
@@ -177,6 +175,13 @@ class StorageUtils {
 		}		
 		return decoded;		
 	}
+
+	static removeTurnAuth() {
+		if (!StorageUtils.isStorageSupported()) {
+			return;
+		}		
+		StorageUtils.setTurnAuth(null);
+	}	
 
 	static removeStorageData() {
 		if (!StorageUtils.isStorageSupported()) {
