@@ -31,7 +31,7 @@ class SimplePeer {
         _servers = {
             iceServers: StorageUtils.getDecodedTurn()
         };          
-        console.log('SERVERS AICI>>>> ', _servers)
+        console.log('SERVERS AICI>>>> ', this._servers)
         this._pc = new RTCPeerConnection(this._servers);
         this._pc.onicecandidate = event => {
             this.onIceCandidate(event);
