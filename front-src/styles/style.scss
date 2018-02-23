@@ -497,6 +497,12 @@ html, body, #airpush-ui {
             width: 728px; max-width: 728; height: 90px;
             display: inline-block;
         }
+    }
+    .exit-full-screen-btn {
+        position: absolute; right: 5px; top: 5px;
+        padding: 5px;
+        background: rgba(0,0,0,.8);
+        z-index: 20;
     }       
 }
 

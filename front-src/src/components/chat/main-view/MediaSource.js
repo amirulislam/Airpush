@@ -10,6 +10,7 @@ import { bannerFullScreen } from '../../../config/advertise';
 import { SHOW_ADVERT_FULL_SCREEN } from '../../../config';
 import ExpandVideoIcon from 'material-ui/svg-icons/action/input';
 import IconButton from 'material-ui/IconButton';
+import ExistFullScreen from 'material-ui/svg-icons/action/flip-to-back';
 
 class MediaSource extends Component {
 
@@ -119,6 +120,22 @@ class MediaSource extends Component {
         }
     }    
 
+    _exitFullScreen() {
+        this.props.openFullScreen(false);
+    }
+
+    _renderExitFullScreen() {
+        if (this.props.fullScreen) {
+            return(
+                <div className="exit-full-screen-btn">
+                    <IconButton onClick={ this._exitFullScreen.bind(this) } iconStyle={{ color: '#F2F2F2' }} tooltip="Exit full screen" tooltipPosition="bottom-left">
+                        <ExistFullScreen />
+                    </IconButton>                        
+                </div>            
+            )
+        }
+    }
+
     _renderFullScrrenNode() {
         const userName = !_.isNil(safe(this.props, 'source.user.name')) ? this.props.source.user.name : '';
         if (this._isOpened()) {
@@ -130,6 +147,7 @@ class MediaSource extends Component {
                     <div className={this._renderMediaSourceClass()} onClick={this._handleClick} style={this._getSizeStyle()}>
                         { this._renderVideo() }
                         <p className="media-source-user">{ userName }</p>
+                        { this._renderExitFullScreen() }
                         { this._renderFullScreenAdvertisment() }
                         { this._triggerAd() }
                     </div>

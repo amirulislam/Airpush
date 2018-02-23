@@ -711,6 +711,13 @@ html, body, #airpush-ui {
       max-width: 728;
       height: 90px;
       display: inline-block; }
+  .media-source-full .exit-full-screen-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 20; }
 
 .base-alert-content .title {
   font-size: 20px;
