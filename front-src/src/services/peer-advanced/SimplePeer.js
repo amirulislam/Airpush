@@ -31,6 +31,7 @@ class SimplePeer {
         if (data.user) {
             this._user = data.user;
         }
+        console.log('SERVERS AICI>>>> ', _servers)
         this._pc = new RTCPeerConnection(_servers);
         this._pc.onicecandidate = event => {
             this.onIceCandidate(event);
