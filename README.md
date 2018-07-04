@@ -5,7 +5,7 @@
 Node.js, MongoDB, Express,js, React/Redux, Coturn server
 
 ### Screenshot
-![alt text](https://raw.githubusercontent.com/icrisu/airpush/master/screenshot.png)
+![airpush](https://raw.githubusercontent.com/icrisu/Airpush/master/screenshoot.png)
 
 ### Requirements
 Airpush requires a WebRTC compatible browser such as Chrome, Firefox and Opera.
