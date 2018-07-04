@@ -4,7 +4,7 @@ export const USER_ROLES = {
     ADMIN: 'ADMIN'
 }
 
-export const USER_TOKEN_SECRET = '123749823%@$#7234VBJSQKJSQJHJHSJS&^%^***ewhrh';
+export const USER_TOKEN_SECRET = '123749823%@$#722374KJSQJHJHSJS&^%^***ewhrh';
 
 export const SOCKET_EVENTS = {
     CREATE_ROOM: 'CREATE_ROOM',
@@ -43,10 +43,10 @@ export const IS_PRODUCTION = process.env.NODE_ENV === 'production' ? true : fals
 // letsencrypt config
 const getLetsEncryptConfig = () => {
     return IS_PRODUCTION ? {
-        email: 'crisu.ionel@gmail.com',
+        email: 'your.name@gmail.com',
         approvedDomains: ['airpush.io']
     } : {
-        email: 'crisu.ionel@gmail.com',
+        email: 'your.name@gmail.com',
         approvedDomains: ['127.0.0.1']
     };
 };
@@ -55,11 +55,11 @@ export const LETS_ENCRYPT_CONFIG = getLetsEncryptConfig();
 export const GOOGLE_CLIENT_ID = '540129414870-dm5d15e5768bl039hbmu4gabfer70ciq.apps.googleusercontent.com';
 
 export const SLACK_NOTIFY = {
-    webhook: 'https://hooks.slack.com/services/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',
+    webhook: 'https://hooks.slack.com/services/T3SFRCX99/B97CL13FF/veqAKF03QnjKbOUdfd',
     chanel: '#airpush'
 }
 
-const OPPS_USERS = ['crisu.ionel@gmail.com'];
+const OPPS_USERS = ['your.name@gmail.com'];
 
 export const getUserRole = email => {
     if (!email) {
