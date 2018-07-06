@@ -2,7 +2,7 @@
 <P> Airpush is a free screen sharing, online meetings & web conferencing web application similar to Google Meet.
 
 ### Tech stack
-Node.js, MongoDB, Express,js, React/Redux, Coturn server
+Node.js, MongoDB, Express,js, React/Redux, Coturn server, Socket.IO, Redis
 
 ### Screenshot
 ![airpush](https://raw.githubusercontent.com/icrisu/Airpush/master/screenshoot.png)
